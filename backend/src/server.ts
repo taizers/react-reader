@@ -23,21 +23,21 @@ app.use(cookieParser());
 
 app.use(morganMiddleware);
 
-app.use('/api/v1', router);x``
+app.use('/api/v1', router);
 app.use(errorMiddleware);
 
-try {
-  app.post('/add-admin', async (req, res) => {
-    const user = await createUser({
-      username: 'Александр Сачок',
-      role: 'admin',
-      activationkey: '1',
-    });
-    res.send(user);
-  });
-} catch (error) {
-  console.log(error);
-}
+// try {
+//   app.post('/add-admin', async (req, res) => {
+//     const user = await createUser({
+//       username: 'Александр Сачок',
+//       role: 'admin',
+//       activationkey: '1',
+//     });
+//     res.send(user);
+//   });
+// } catch (error) {
+//   console.log(error);
+// }
 
 
 // app.get('*', (req, res) => {
