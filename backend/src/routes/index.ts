@@ -14,9 +14,8 @@ import {
 } from '../validations/auth.validation';
 
 import usersRouter from './users.routes';
+import booksRouter from './books.routes';
 
-
-import { uploadAvatarMiddleware } from '../middlewares/upload.middleware';
 import verifyToken from '../middlewares/auth.middleware';
 
 const router = express.Router();
@@ -28,8 +27,9 @@ router.post('/sign-in', loginValidation, loginAction);
 router.post('/refresh-token', cookiesValidation, refreshAction);
 router.post('/logout', cookiesValidation, logoutAction);
 
+//Routes
 
-router.use('/users', usersRouter);
-// router.use('/books', booksRouter);
+router.use('/users', verifyToken, usersRouter);
+router.use('/books', verifyToken, booksRouter);
 
 export default router;

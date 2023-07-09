@@ -7,7 +7,7 @@ import {
 import {
   generateTokens,
   saveToken,
-} from '../../services/db/token.services';
+} from './token.services';
 import bcrypt from 'bcrypt';
 import UserDto from '../../dtos/user.dto';
 
