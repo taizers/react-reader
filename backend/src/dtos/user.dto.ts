@@ -15,6 +15,7 @@ export default class UserDto {
   phone;
   created_at;
   updated_at;
+  deleted_at;
 
   constructor(model: UserType) {
     this.id = model.id;

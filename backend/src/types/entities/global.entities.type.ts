@@ -26,7 +26,7 @@ export type UserType = {
   avatar: string | null;
   created_at: Date;
   updated_at: Date;
-  deleted_at: Date;
+  deleted_at: Date | null;
 };
 
 export type TaskType = {

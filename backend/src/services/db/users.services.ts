@@ -11,9 +11,6 @@ import {
 import bcrypt from 'bcrypt';
 import UserDto from '../../dtos/user.dto';
 
-
-
-
 const getUserForResponceWithToken = async (user) => {
   const userDto = new UserDto(user);
 
@@ -36,46 +33,56 @@ export const  getAllUsers = async () => {
   return usersDto;
 }
 
-export const  getUser = async (userId: string) => {
-  const user = await User.findByPk(userId);
+export const createUser = async (payload: object) => {
+  try {
+    return await User.create(payload);  
+  } catch (error) {
+    throw new Error('Пользователь не создан');
+  }
+};
+
+export const  getUser = async (where: object) => {
+  const user = await User.findOne({ where });
 
   return user;
 }
 
-export const  updateUser = async (name: string, password: string, oldPassword: string, userId: string) => {
-  const oldUser = await User.findByPk(userId);
-  const updatingUserData: any = {};
 
-  if (password && oldPassword) {
-    const isPasswordEquals = await bcrypt.compare(
-      oldPassword,
-      oldUser.password
-    );
+//name: string, password: string, oldPassword: string, userId: string
+export const  updateUser = async (id: string, payload: object) => {
+  // const oldUser = await User.findByPk(userId);
+  // const updatingUserData: any = {};
 
-    if (!isPasswordEquals) {
-      throw new BadCredentialsError('Неправильный пароль');
-    }
+  // if (password && oldPassword) {
+  //   const isPasswordEquals = await bcrypt.compare(
+  //     oldPassword,
+  //     oldUser.password
+  //   );
 
-    const encryptedPassword = await bcrypt.hash(password, 10);
+  //   if (!isPasswordEquals) {
+  //     throw new BadCredentialsError('Неправильный пароль');
+  //   }
 
-    updatingUserData.password = encryptedPassword;
-  } else {
-    updatingUserData.password = oldUser.password;
-  }
+  //   const encryptedPassword = await bcrypt.hash(password, 10);
 
-  if (name) {
-    updatingUserData.name = name;
-  } else {
-    updatingUserData.name = oldUser.name;
-  }
-  const user = await User.update(
-    { name: updatingUserData.name, password: updatingUserData.password },
-    { where: { id: userId } }
-  );
+  //   updatingUserData.password = encryptedPassword;
+  // } else {
+  //   updatingUserData.password = oldUser.password;
+  // }
 
-  return getUserForResponceWithToken(user);
+  // if (name) {
+  //   updatingUserData.name = name;
+  // } else {
+  //   updatingUserData.name = oldUser.name;
+  // }
+  // const user = await User.update(
+  //   { name: updatingUserData.name, password: updatingUserData.password },
+  //   { where: { id: userId } }
+  // );
+
+  // return getUserForResponceWithToken(user);
 }
 
-export const deleteUser = async (userId: string) => {
-  await User.destroy({ where: { id: userId } });
+export const deleteUser = async (id: string) => {
+  await User.destroy({ where: { id } });
 }

@@ -10,7 +10,7 @@ import logger from './helpers/logger';
 import morganMiddleware from './middlewares/morgan.middleware';
 import errorMiddleware from './middlewares/error.middleware';
 import { customResponse } from './helpers/responce';
-import { createUser } from './services/db/auth.services';
+// import { createUser } from './services/db/auth.services';
 
 dotenv.config();
 
@@ -50,6 +50,7 @@ app.use(
   '/manifest.json',
   express.static(path.join(__dirname, 'build', 'manifest.json'))
 );
+
 app.use(
   '/favicon.ico',
   express.static(path.join(__dirname, 'build', 'favicon.ico'))

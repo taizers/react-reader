@@ -23,7 +23,7 @@ export const getUserAction = async (
   try {
     const id = req.params.id;
 
-    const user = await getUser(id);
+    const user = await getUser({id});
     
     res.status(200).json(user);
   } catch (error) {
@@ -39,12 +39,11 @@ export const updateUserAction = async (
   try {
     const { id, name, newPassword, oldPassword } = req.body;
 
-    const user = await updateUser(
+    const user = await updateUser(id, {
       name,
       newPassword,
       oldPassword,
-      id
-    );
+    });
     
     res.status(200).json(user);
   } catch (error) {

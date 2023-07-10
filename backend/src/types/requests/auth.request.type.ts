@@ -2,7 +2,6 @@ import { Request } from 'express';
 
 export interface signUpRequest extends Request {
   body: {
-    activationkey: string;
     email: string;
     password: string;
     username: string;

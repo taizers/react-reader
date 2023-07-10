@@ -53,13 +53,6 @@ export const login = async (email: string, password: string) => {
   return { user_session, user: dtosUser };
 };
 
-export const createUser = async (payload: object) => {
-  try {
-    await User.create(payload);
-  } catch (error) {
-    throw new Error('Пользователь не создан');
-  }
-};
 
 export const logout = async (refreshToken: string) => {
   await removeToken(refreshToken);
