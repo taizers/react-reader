@@ -24,15 +24,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
       },
-      isactivated: {
-        type: Sequelize.DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: null,
-      },
-      activationlink: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,

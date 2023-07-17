@@ -16,15 +16,6 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      isactivated: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-        defaultValue: null,
-      },
-      activationlink: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
     },
     {
       paranoid: true,
