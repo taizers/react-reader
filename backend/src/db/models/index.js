@@ -8,7 +8,7 @@ const path = require('path');
 const basename = path.basename(__filename);
 const db = {};
 
-const sslOptions = {
+const options = {
   ssl: {
     sslmode: 'require',
     rejectUnauthorized: false,
@@ -19,7 +19,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
   logging:
     process.env.DATABASE_LOGGING_ENABLED === 'true' ? console.log : false,
   dialect: 'postgres',
-  dialectOptions: process.env.DATABASE_SSL_ENABLED === 'true' ? sslOptions : {},
+  dialectOptions: process.env.DATABASE_SSL_ENABLED === 'true' ? options : {},
   seederStorage: 'sequelize',
   pool: {
     max: 50,
@@ -31,6 +31,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
     underscored: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
   },
 });
 

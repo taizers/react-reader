@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "start": "npm run db:migrate && node ./src/server.js",
     "pretty": "prettier --config --write \"./{src,test}/**/*.{js,json}\"",

@@ -9,10 +9,7 @@ export default class UserDto {
   email;
   username;
   avatar;
-  post;
-  group;
   role;
-  phone;
   created_at;
   updated_at;
   deleted_at;

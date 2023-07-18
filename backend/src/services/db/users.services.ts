@@ -10,21 +10,22 @@ import {
 } from './token.services';
 import bcrypt from 'bcrypt';
 import UserDto from '../../dtos/user.dto';
+import { UserType } from '../../types/entities/global.entities.type';
 
-const getUserForResponceWithToken = async (user) => {
-  const userDto = new UserDto(user);
+// const getUserForResponceWithToken = async (user:UserType) => {
+//   const userDto = new UserDto(user);
 
-  const tokens = generateTokens(userDto.id, userDto.role);
+//   const tokens = generateTokens(userDto.id, userDto.role);
 
-  await saveToken(userDto.id, tokens.refresh_token);
+//   await saveToken(userDto.id, tokens.refresh_token);
 
-  return { ...tokens, user: userDto };
-};
+//   return { ...tokens, user: userDto };
+// };
 
 export const  getAllUsers = async () => {
   const users = await User.findAll();
 
-  const usersDto = users.map((user) => {
+  const usersDto = users.map((user:UserType) => {
     const userDto = new UserDto(user);
 
     return { ...userDto };
@@ -37,6 +38,7 @@ export const createUser = async (payload: object) => {
   try {
     return await User.create(payload);  
   } catch (error) {
+    console.log(error)
     throw new Error('Пользователь не создан');
   }
 };

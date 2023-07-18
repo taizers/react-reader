@@ -1,6 +1,5 @@
 import { NextFunction, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { login, refresh, logout } from '../services/db/auth.services';
 import { customResponse } from '../helpers/responce';
 import { getUser, updateUser, createUser } from '../services/db/users.services';
 import {
@@ -10,7 +9,17 @@ import {
 } from '../types/requests/auth.request.type';
 import { UserSessionType } from '../types/entities/global.entities.type';
 import logger from '../helpers/logger';
-import { BadCredentialsError } from '../helpers/error';
+import { ResourceNotFoundError, BadCredentialsError, ApplicationError, UnAuthorizedError } from '../helpers/error';
+import UserDto from '../dtos/user.dto';
+import { generateTokens, saveToken, validateRefreshToken, findToken, removeToken } from '../services/db/token.services';
+
+const getUserSession = async (id: number, role: string) => {
+  const session = generateTokens(id, role);
+
+  await saveToken(id, session.refresh_token);
+
+  return session;
+};
 
 export const signUpAction = async (
   req: signUpRequest,
@@ -43,7 +52,7 @@ export const signUpAction = async (
       username,
     });
 
-    return customResponse(res, 201, user);
+    return customResponse(res, 201, new UserDto(user));
   } catch (err) {
     logger.error('SignUp Action - Cannot create user', err);
     next(err);
@@ -60,20 +69,31 @@ export const loginAction = async (
   logger.info(`Login Action: { email: ${email}, password: ${password} }`);
 
   try {
-    const userSession: { user_session: UserSessionType } = await login(
-      email,
-      password
-    );
+    const user:any = getUser({ email });
 
-    res.cookie('refresh_token', userSession.user_session.refresh_token, {
+    if (!user) {
+      throw new ResourceNotFoundError('Пользователь');
+    }
+
+    const isPasswordsEqual = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordsEqual) {
+      throw new BadCredentialsError('Неправильный пароль');
+    }
+
+    const user_session = await getUserSession(user.id, user.role);
+
+    const dtosUser = new UserDto(user);
+
+    res.cookie('refresh_token', user_session.refresh_token, {
       maxAge: Number(process.env.JWT_REFRESH_MAX_AGE) * 1000,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'development' ? false : true,
     });
 
-    return customResponse(res, 200, userSession);
+    return customResponse(res, 200, { user_session, user: dtosUser });
   } catch (err) {
-    logger.error('Login Action - Cannot find user', err);
+    logger.error('Login Action - Cannot login user', err);
     next(err);
   }
 };
@@ -83,20 +103,43 @@ export const refreshAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refresh_token = req.cookies.refresh_token;
+  const refreshToken = req.cookies.refresh_token;
 
-  logger.info(`Refresh Action: { refresh_token: ${refresh_token} }`);
+  logger.info(`Refresh Action: { refresh_token: ${refreshToken} }`);
 
   try {
-    const userSession: any = await refresh(refresh_token);
+    if (!refreshToken) {
+      throw new ApplicationError('Неверный refresh токен.', 401);
+    }
+  
+    const userFormToken = validateRefreshToken(refreshToken);
+    const tokenFromBd = await findToken(refreshToken);
 
-    res.cookie('refresh_token', userSession.user_session.refresh_token, {
+    if (
+      !userFormToken ||
+      !tokenFromBd ||
+      tokenFromBd.owner_id !== userFormToken.id
+    ) {
+      throw new ApplicationError('Неправильный refresh токен.', 401);
+    }
+    const user:any = getUser({ id: userFormToken.id });
+  
+    if (!user) {
+      throw new UnAuthorizedError();
+    }
+  
+    const user_session = await getUserSession(user.id, user.role);
+  
+    const dtosUser = new UserDto(user);
+
+
+    res.cookie('refresh_token', user_session.refresh_token, {
       maxAge: Number(process.env.JWT_REFRESH_MAX_AGE) * 1000,
       httpOnly: true,
       secure: false,
     });
 
-    return customResponse(res, 200, userSession);
+    return customResponse(res, 200, { user_session, user: dtosUser });
   } catch (err) {
     logger.error('Refresh Action - Cannot refresh', err);
     next(err);
@@ -108,12 +151,12 @@ export const logoutAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refresh_token = req.cookies.refresh_token;
+  const refreshToken = req.cookies.refresh_token;
 
-  logger.info(`Logout Action: { refresh_token: ${refresh_token} }`);
+  logger.info(`Logout Action: { refresh_token: ${refreshToken} }`);
 
   try {
-    await logout(refresh_token);
+    await removeToken(refreshToken);
 
     return customResponse(res, 200, { success: true });
   } catch (err) {

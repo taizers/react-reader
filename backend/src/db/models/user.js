@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
     'user',
@@ -15,6 +17,15 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
+      },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        get() {
+          return moment(this.getDataValue('created_at')).format(
+            'YYYY-MM-DD[T]HH:mm:ss.SSS'
+          );
+        },
       },
     },
     {

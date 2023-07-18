@@ -14,11 +14,11 @@ This is backend for intership project
     ```
 
     psql postgres
-    create user intershipuser with password '1234';
-    alter user intershipuser with superuser;
-    create database testdb with owner = intershipuser;
-    grant all privileges on database testdb to intershipuser;
-    alter user intershipuser createdb;
+    create user react with password '1234';
+    alter user react with superuser;
+    create database reactreader with owner = react;
+    grant all privileges on database reactreader to react;
+    alter user react createdb;
     exit
 
     ```
