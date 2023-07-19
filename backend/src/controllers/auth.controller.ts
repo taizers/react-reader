@@ -38,9 +38,9 @@ export const signUpAction = async (
     if (user) {
       throw new Error('Пользователь уже существует');
     }
-  } catch(err) {
-    logger.error('SignUp Action - User already exist', err);
-    next(err);
+  } catch(error) {
+    logger.error('SignUp Action - User already exist', error);
+    next(error);
   }
 
   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -53,9 +53,9 @@ export const signUpAction = async (
     });
 
     return customResponse(res, 201, new UserDto(user));
-  } catch (err) {
-    logger.error('SignUp Action - Cannot create user', err);
-    next(err);
+  } catch (error) {
+    logger.error('SignUp Action - Cannot create user', error);
+    next(error);
   }
 };
 
@@ -92,9 +92,9 @@ export const loginAction = async (
     });
 
     return customResponse(res, 200, { user_session, user: dtosUser });
-  } catch (err) {
-    logger.error('Login Action - Cannot login user', err);
-    next(err);
+  } catch (error) {
+    logger.error('Login Action - Cannot login user', error);
+    next(error);
   }
 };
 
@@ -140,9 +140,9 @@ export const refreshAction = async (
     });
 
     return customResponse(res, 200, { user_session, user: dtosUser });
-  } catch (err) {
-    logger.error('Refresh Action - Cannot refresh', err);
-    next(err);
+  } catch (error) {
+    logger.error('Refresh Action - Cannot refresh', error);
+    next(error);
   }
 };
 
@@ -151,16 +151,16 @@ export const logoutAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req.cookies.refresh_token;
+  const refresToken = req.cookies.refresh_token;
 
-  logger.info(`Logout Action: { refresh_token: ${refreshToken} }`);
+  logger.info(`Logout Action: { refresh_token: ${refresToken} }`);
 
   try {
-    await removeToken(refreshToken);
+    await removeToken(refresToken);
 
     return customResponse(res, 200, { success: true });
-  } catch (err) {
-    logger.error('Logout Action - Cannot logout', err);
-    next(err);
+  } catch (error) {
+    logger.error('Logout Action - Cannot logout', error);
+    next(error);
   }
 };

@@ -13,7 +13,7 @@ export interface GetUsersRequest extends Request {
   };
 }
 
-export interface createUserRequest extends Request {
+export interface createUserrorequest extends Request {
   body: {
     username?: string;
     role: string;

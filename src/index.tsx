@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { Browserrorouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 import createAppStore from './store/index';
@@ -14,10 +14,10 @@ const store = createAppStore();
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <Browserrorouter>
       <Provider store={store}>
         <App />
       </Provider>
-    </BrowserRouter>
+    </Browserrorouter>
   </React.StrictMode>
 );

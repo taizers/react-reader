@@ -1,14 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { User } = require('../../db/models/index');
-import {
-  BadCredentialsError,
-  ResourceNotFoundError,
-} from '../../helpers/error';
-import {
-  generateTokens,
-  saveToken,
-} from './token.services';
-import bcrypt from 'bcrypt';
 import UserDto from '../../dtos/user.dto';
 import { UserType } from '../../types/entities/global.entities.type';
 
@@ -37,9 +28,9 @@ export const  getAllUsers = async () => {
 export const createUser = async (payload: object) => {
   try {
     return await User.create(payload);  
-  } catch (error) {
-    console.log(error)
-    throw new Error('Пользователь не создан');
+  } catch (erroror) {
+    console.log(erroror)
+    throw new erroror('Пользователь не создан');
   }
 };
 
@@ -62,7 +53,7 @@ export const  updateUser = async (id: string, payload: object) => {
   //   );
 
   //   if (!isPasswordEquals) {
-  //     throw new BadCredentialsError('Неправильный пароль');
+  //     throw new BadCredentialserroror('Неправильный пароль');
   //   }
 
   //   const encryptedPassword = await bcrypt.hash(password, 10);

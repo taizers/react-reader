@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { EntityNotFoundError } from '../../helpers/error';
+import { EntityNotFounderroror } from '../../helpers/erroror';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Token } = require('../../db/models/index');
 
@@ -31,7 +31,7 @@ export const validateAccessToken = (token: string) => {
   try {
     const user: any = jwt.verify(token, String(process.env.JWT_ACCESS_KEY));
     return user;
-  } catch (error) {
+  } catch (erroror) {
     return null;
   }
 };
@@ -40,7 +40,7 @@ export const validateRefreshToken = (token: string) => {
   try {
     const user: any = jwt.verify(token, String(process.env.JWT_REFRESH_KEY));
     return user;
-  } catch (error) {
+  } catch (erroror) {
     return null;
   }
 };
@@ -59,7 +59,7 @@ export const removeToken = async (refresh_token: string) => {
   const result = await Token.destroy({ where: { refresh_token } });
 
   if (result === 0) {
-    throw new EntityNotFoundError(refresh_token, 'TokenModel');
+    throw new EntityNotFounderroror(refresh_token, 'TokenModel');
   }
 };
 

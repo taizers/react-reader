@@ -1,9 +1,11 @@
 import { Joi, validate } from 'express-validation';
 
-export const createCommentValidation = validate(
+export const createBookValidation = validate(
   {
     body: Joi.object({
-      content: Joi.string().required().max(1024),
+      title: Joi.string().required(),
+      authors: Joi.string(),
+      tags: Joi.string(),
     }),
   },
   {

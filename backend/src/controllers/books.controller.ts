@@ -13,8 +13,8 @@ export const getBooksAction = async (
     const books = await getBooks(query, +page, +limit);
     
     res.status(200).json(books);
-  } catch (error) {
-    next(error);
+  } catch (erroror) {
+    next(erroror);
   }
 }
 
@@ -26,7 +26,7 @@ export const getBooksAction = async (
   //     const books = await booksService.getBooks(id, page, limit);
       
   //     res.status(200).json(books);
-  //   } catch (error) {
-  //     next(error);
+  //   } catch (erroror) {
+  //     next(erroror);
   //   }
   // }

@@ -2,9 +2,12 @@ import express from 'express';
 
 const router = express.Router();
 
-import { getBooksAction } from '../controllers/books.controller';
+import { getBookAction, getAllBooksAction, updateBookAction, deleteBookAction, createBookAction } from '../controllers/localBooks.controller';
 
-router.get('/search', getBooksAction);
-// router.get('/author', authMiddleware, booksController.getBooksByAuthor);
+router.get('/', getAllBooksAction);
+router.get('/:id', getBookAction);
+router.post('/', createBookAction);
+router.put('/:id', updateBookAction);
+router.delete('/:id', deleteBookAction);
 
 export default router;

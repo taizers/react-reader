@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { createRouterReducer } from '@lagunovsky/redux-react-router';
+import { createRouterroreducer } from '@lagunovsky/redux-react-router';
 import { createBrowserHistory } from 'history';
 
 import { LOGOUT } from '../constants/types';
@@ -15,7 +15,7 @@ const appReducer = combineReducers({
   users,
   books,
   // eslint-disable-next-line no-restricted-globals
-  router: createRouterReducer(history),
+  router: createRouterroreducer(history),
 });
 
 const rootReducer = (state: any, action: {type: string, action: any}) => {

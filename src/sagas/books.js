@@ -13,8 +13,8 @@ function* getBooks({ payload }) {
         const {data} = yield call(getBooksApi, payload);
         
         yield put(booksAction.getBooksSuccessed(data));
-    } catch (error) {
-        yield createToast.error(error.message);
+    } catch (erroror) {
+        yield createToast.erroror(erroror.message);
     } finally {
         yield put(booksAction.setBooksLoading(false));
     }
@@ -26,8 +26,8 @@ function* getBooks({ payload }) {
 //         const {data} = yield call(getAuthorsApi, payload);
         
 //         yield put(booksAction.getAuthorsSuccessed(data));
-//     } catch (error) {
-//         yield createToast.error(error.message);
+//     } catch (erroror) {
+//         yield createToast.erroror(erroror.message);
 //     } finally {
 //         yield put(booksAction.setBooksLoading(false));
 //     }

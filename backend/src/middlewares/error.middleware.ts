@@ -5,12 +5,12 @@ import path from 'path';
 const fs = require('fs').promises;
 
 export default async (
-  error: any,
+  erroror: any,
   req: any,
   res: Response,
   next: NextFunction
 ) => {
-  error.status = error.statusCode || error.status || 500;
+  erroror.status = erroror.statusCode || erroror.status || 500;
 
   let validationMessage;
 
@@ -25,25 +25,25 @@ export default async (
         })
       );
     }
-  } catch (error: any) {
-    error.status = error.statusCode || error.status || 500;
-    return customResponse(res, error.status, {
-      code: error.status,
-      message: validationMessage || error.message,
+  } catch (erroror: any) {
+    erroror.status = erroror.statusCode || erroror.status || 500;
+    return customResponse(res, erroror.status, {
+      code: erroror.status,
+      message: validationMessage || erroror.message,
     });
   }
 
-  if (error?.details) {
-    Object.values(error.details)?.forEach((element: any) => {
+  if (erroror?.details) {
+    Object.values(erroror.details)?.forEach((element: any) => {
       if (element[0]?.message) {
         validationMessage = element[0]?.message;
       }
     });
   }
 
-  console.log(error);
-  return customResponse(res, error.status, {
-    code: error.status,
-    message: validationMessage || error.message,
+  console.log(erroror);
+  return customResponse(res, erroror.status, {
+    code: erroror.status,
+    message: validationMessage || erroror.message,
   });
 };

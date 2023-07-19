@@ -13,6 +13,8 @@ import {
   cookiesValidation,
 } from '../validations/auth.validation';
 
+import { getBooksAction } from '../controllers/books.controller';
+
 import usersRouter from './users.routes';
 import booksRouter from './books.routes';
 
@@ -26,6 +28,8 @@ router.post('/sign-up', signUpValidation, signUpAction);
 router.post('/sign-in', loginValidation, loginAction);
 router.post('/refresh-token', cookiesValidation, refreshAction);
 router.post('/logout', cookiesValidation, logoutAction);
+
+router.get('/search', getBooksAction);
 
 //Routes
 
