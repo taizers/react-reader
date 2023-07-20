@@ -13,16 +13,26 @@ import { UserType } from '../../types/entities/global.entities.type';
 //   return { ...tokens, user: userDto };
 // };
 
-export const  getAllUsers = async () => {
-  const users = await User.findAll();
-
-  const usersDto = users.map((user:UserType) => {
-    const userDto = new UserDto(user);
-
-    return { ...userDto };
+export const  getAllUsers = async (page: number, limit: number) => {
+  const { count, rows } = await User.findAndCountAll({
+    offset: page * limit,
+    limit,
+    order: [['created_at', 'DESC']],
   });
 
-  return usersDto;
+  if (!rows.length) {
+    return {};
+  }
+
+  const totalPages = !count ? 1 : Math.ceil(count / limit);
+
+  const usersDto = rows.map((user:UserType) => ({...new UserDto(user)}));
+
+  return {
+    totalPages,
+    page: page + 1,
+    users: usersDto,
+  };
 }
 
 export const createUser = async (payload: object) => {
