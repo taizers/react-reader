@@ -31,8 +31,8 @@ export const  getPaginatedBooks = async (page: number, limit: number) => {
 export const createBook = async (payload: object) => {
   try {
     return await Book.create(payload);  
-  } catch (erroror) {
-    throw new erroror('Книга не создана');
+  } catch (error) {
+    throw new error('Книга не создана');
   }
 };
 

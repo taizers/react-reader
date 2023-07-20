@@ -10,8 +10,8 @@ export const getAllUsersAction = async (
     const users = await getAllUsers();
     
     res.status(200).json(users);
-  } catch (erroror) {
-    next(erroror);
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -26,8 +26,8 @@ export const getUserAction = async (
     const user = await getUser({id});
     
     res.status(200).json(user);
-  } catch (erroror) {
-    next(erroror);
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -46,8 +46,8 @@ export const updateUserAction = async (
     });
     
     res.status(200).json(user);
-  } catch (erroror) {
-    next(erroror);
+  } catch (error) {
+    next(error);
   }
 }
 
@@ -59,10 +59,10 @@ export const deleteUserAction = async (
   try {
     const id = req.params.id;
 
-    const user = await deleteUser(id);
+    await deleteUser(id);
     
     res.status(200).json(id);
-  } catch (erroror) {
-    next(erroror);
+  } catch (error) {
+    next(error);
   }
 }

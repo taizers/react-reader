@@ -16,8 +16,8 @@ function* getAllUsers() {
         const { data } = yield call(usersApi.getAllUsers);
         yield console.log(data);
         yield put(usersAction.getAllUsersSuccessed(data));
-    } catch (erroror) {
-        yield createToast.erroror(erroror.response.data.message);
+    } catch (error) {
+        yield createToast.error(error.response.data.message);
     } finally {
         yield put(usersAction.setUsersLoading(false));
     }
@@ -28,8 +28,8 @@ function* getUser({ payload }) {
     try {
         const { data } = yield call(usersApi.getUser, payload);
         yield put(usersAction.getUserSuccessed(data));
-    } catch (erroror) {
-        yield createToast.erroror(erroror.response.data.message);
+    } catch (error) {
+        yield createToast.error(error.response.data.message);
     } finally {
         yield put(usersAction.setUsersLoading(false));
     }
@@ -41,8 +41,8 @@ function* updateUser({ payload }) {
         const { data: { user, accessToken } } = yield call(usersApi.updateUser, payload);
         yield setToken(accessToken);
         yield put(authAction.loginSuccessed(user));
-    } catch (erroror) {
-        yield createToast.erroror(erroror.response.data.message);
+    } catch (error) {
+        yield createToast.error(error.response.data.message);
     } finally {
         yield put(usersAction.setUsersLoading(false));
     }
@@ -54,8 +54,8 @@ function* deleteUser({ payload }) {
         const responce = yield call(usersApi.deleteUser, payload);
         yield put(usersAction.deleteUserSuccessed(responce.status));
         yield put(usersAction.getAllUsers());
-    } catch (erroror) {
-        yield createToast.erroror(erroror.response.data.message);
+    } catch (error) {
+        yield createToast.error(error.response.data.message);
     } finally {
         yield put(usersAction.setUsersLoading(false));
     }

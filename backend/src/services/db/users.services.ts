@@ -28,9 +28,8 @@ export const  getAllUsers = async () => {
 export const createUser = async (payload: object) => {
   try {
     return await User.create(payload);  
-  } catch (erroror) {
-    console.log(erroror)
-    throw new erroror('Пользователь не создан');
+  } catch (error) {
+    throw new error('Пользователь не создан');
   }
 };
 
@@ -53,7 +52,7 @@ export const  updateUser = async (id: string, payload: object) => {
   //   );
 
   //   if (!isPasswordEquals) {
-  //     throw new BadCredentialserroror('Неправильный пароль');
+  //     throw new BadCredentialserror('Неправильный пароль');
   //   }
 
   //   const encryptedPassword = await bcrypt.hash(password, 10);
@@ -68,12 +67,14 @@ export const  updateUser = async (id: string, payload: object) => {
   // } else {
   //   updatingUserData.name = oldUser.name;
   // }
-  // const user = await User.update(
-  //   { name: updatingUserData.name, password: updatingUserData.password },
-  //   { where: { id: userId } }
-  // );
+  const user = await User.update(
+    payload,
+    { where: { id } }
+  );
 
-  // return getUserForResponceWithToken(user);
+  const userDto = new UserDto(user);
+
+  return userDto;
 }
 
 export const deleteUser = async (id: string) => {

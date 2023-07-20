@@ -1,4 +1,4 @@
-import { UnAuthorizederroror } from '../helpers/erroror';
+import { UnAuthorizederror } from '../helpers/error';
 import { Response, NextFunction } from 'express';
 import { validateAccessToken } from '../services/db/token.services';
 
@@ -7,25 +7,25 @@ const verifyToken = (req: any, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;
 
     if (!authorizationHeader) {
-      return next(new UnAuthorizederroror());
+      return next(new UnAuthorizederror());
     }
 
     const accessToken = authorizationHeader.split(' ')[1];
 
     if (!accessToken) {
-      return next(new UnAuthorizederroror());
+      return next(new UnAuthorizederror());
     }
 
     const userData = validateAccessToken(accessToken);
 
     if (!userData) {
-      return next(new UnAuthorizederroror());
+      return next(new UnAuthorizederror());
     }
 
     req.user = { ...userData };
     next();
-  } catch (erroror) {
-    return next(new UnAuthorizederroror());
+  } catch (error) {
+    return next(new UnAuthorizederror());
   }
 };
 

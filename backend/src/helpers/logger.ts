@@ -1,7 +1,7 @@
 import winston from 'winston';
 
 const levels = {
-  erroror: 0,
+  error: 0,
   warn: 1,
   info: 2,
   http: 3,
@@ -15,7 +15,7 @@ const level = () => {
 };
 
 const colors = {
-  erroror: 'red',
+  error: 'red',
   warn: 'yellow',
   info: 'green',
   http: 'magenta',
@@ -35,8 +35,8 @@ const format = winston.format.combine(
 const transports = [
   new winston.transports.Console(),
   new winston.transports.File({
-    filename: 'logs/erroror.log',
-    level: 'erroror',
+    filename: 'logs/error.log',
+    level: 'error',
   }),
   new winston.transports.File({ filename: 'logs/all.log' }),
 ];

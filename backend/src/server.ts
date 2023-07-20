@@ -8,7 +8,7 @@ import cookieParser = require('cookie-parser');
 import router from './routes/index';
 import logger from './helpers/logger';
 import morganMiddleware from './middlewares/morgan.middleware';
-import errororMiddleware from './middlewares/erroror.middleware';
+import errorMiddleware from './middlewares/error.middleware';
 import { customResponse } from './helpers/responce';
 // import { createUser } from './services/db/auth.services';
 
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(morganMiddleware);
 
 app.use('/api/v1', router);
-app.use(errororMiddleware);
+app.use(errorMiddleware);
 
 // try {
 //   app.post('/add-admin', async (req, res) => {
@@ -35,8 +35,8 @@ app.use(errororMiddleware);
 //     });
 //     res.send(user);
 //   });
-// } catch (erroror) {
-//   console.log(erroror);
+// } catch (error) {
+//   console.log(error);
 // }
 
 
@@ -58,7 +58,7 @@ app.use(
 app.use('/', express.static(path.join(__dirname, 'build'))); // work !!!!
 app.use('/*', express.static(path.join(__dirname, 'build', 'index.html'))); // work !!!!
 
-//global erroror handler
+//global error handler
 
 app.use((req: express.Request, res: express.Response) =>
   customResponse(res, 404, { code: 404, message: 'Not Found' })
