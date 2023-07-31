@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { EntityNotFounderror } from '../../helpers/error';
+import { EntityNotFoundError } from '../../helpers/error';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Token } = require('../../db/models/index');
 
@@ -59,7 +59,7 @@ export const removeToken = async (refresh_token: string) => {
   const result = await Token.destroy({ where: { refresh_token } });
 
   if (result === 0) {
-    throw new EntityNotFounderror(refresh_token, 'TokenModel');
+    throw new EntityNotFoundError(refresh_token, 'TokenModel');
   }
 };
 
