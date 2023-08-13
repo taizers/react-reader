@@ -5,7 +5,7 @@ import { validateAccessToken } from '../services/db/token.services';
 const verifyToken = (req: any, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.headers.authorization;
-
+    console.log(authorizationHeader)
     if (!authorizationHeader) {
       return next(new UnAuthorizedError());
     }

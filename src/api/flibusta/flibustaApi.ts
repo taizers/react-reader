@@ -18,7 +18,7 @@ type GetBooksByResponse = any;
 export const getBooksApi = async (data: GetBooksByName) => {
     const { query, limit = 10, page = 0 } = data;
 
-    return http.get<GetBooksByResponse>(`books/search?query=${query}&page=${page}&limit=${limit}`);
+    return http.get<GetBooksByResponse>(`search?query=${query}&page=${page}&limit=${limit}`);
 }
 
 // export const getAuthorsApi = async (data: GetAuthors) => {

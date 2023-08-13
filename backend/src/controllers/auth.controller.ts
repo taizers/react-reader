@@ -14,6 +14,7 @@ import UserDto from '../dtos/user.dto';
 import { generateTokens, saveToken, validateRefreshToken, findToken, removeToken } from '../services/db/token.services';
 
 const getUserSession = async (userData: {id: string, role?: string}) => {
+  console.log(userData);
   const session = generateTokens(userData);
 
   await saveToken(userData?.id, session.refresh_token);
@@ -103,7 +104,7 @@ export const refreshAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const refreshToken = req.cookies.refresh_token;
+  const refreshToken = req.cookies?.refresh_token;
 
   logger.info(`Refresh Action: { refresh_token: ${refreshToken} }`);
 
@@ -122,9 +123,9 @@ export const refreshAction = async (
     ) {
       throw new ApplicationError('Неправильный refresh токен.', 401);
     }
-    const user:any = getUser({ id: userFormToken.id });
-  
-    if (!user) {
+    const user:any = await getUser({ id: userFormToken.id });
+
+    if (!user?.id) {
       throw new UnAuthorizedError();
     }
   
