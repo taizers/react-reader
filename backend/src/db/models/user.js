@@ -18,6 +18,11 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,

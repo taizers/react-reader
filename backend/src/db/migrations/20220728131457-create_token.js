@@ -10,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      refreshtoken: {
+      refresh_token: {
         type: Sequelize.DataTypes.TEXT,
         allowNull: false,
       },

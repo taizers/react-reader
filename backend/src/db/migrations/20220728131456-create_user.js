@@ -15,6 +15,11 @@ module.exports = {
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
       },
+      role: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DataTypes.STRING,
+      },
       email: {
         allowNull: false,
         unique: true,

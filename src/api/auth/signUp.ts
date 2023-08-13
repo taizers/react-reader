@@ -7,5 +7,5 @@ type ValueType = {
 };
 
 export const signUp = (data: ValueType) => {
-  return http.post<AuthenticatorResponse>('auth/signUp', data);
+  return http.post<AuthenticatorResponse>('sign-up', data);
 }

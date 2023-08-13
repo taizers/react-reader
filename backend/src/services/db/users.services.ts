@@ -44,7 +44,7 @@ export const createUser = async (payload: object) => {
 };
 
 export const  getUser = async (where: object) => {
-  const user = await User.findOne({ where });
+  const user:any = await User.findOne({ where });
 
   return user;
 }

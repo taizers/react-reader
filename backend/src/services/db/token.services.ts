@@ -3,16 +3,16 @@ import { EntityNotFoundError } from '../../helpers/error';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Token } = require('../../db/models/index');
 
-export const generateTokens = (id: number, role: string) => {
+export const generateTokens = (userData: object) => {
   const access_token = jwt.sign(
-    { id, role },
+    userData,
     String(process.env.JWT_ACCESS_KEY),
     {
       expiresIn: '48h',
     }
   );
   const refresh_token = jwt.sign(
-    { id, role },
+    userData,
     String(process.env.JWT_REFRESH_KEY),
     {
       expiresIn: '7d',
@@ -45,14 +45,14 @@ export const validateRefreshToken = (token: string) => {
   }
 };
 
-export const saveToken = async (owner_id: number, refresh_token: string) => {
-  const token = await Token.findOne({ where: { owner_id } });
+export const saveToken = async (user_id: string, refresh_token: string) => {
+  const token = await Token.findOne({ where: { user_id } });
 
   if (token) {
-    return await Token.update({ refresh_token }, { where: { owner_id } });
+    return await Token.update({ refresh_token }, { where: { user_id } });
   }
 
-  await Token.create({ refresh_token, owner_id });
+  await Token.create({ refresh_token, user_id });
 };
 
 export const removeToken = async (refresh_token: string) => {

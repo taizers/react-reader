@@ -6,5 +6,5 @@ type ValueType = {
 };
 
 export const login = (data: ValueType) => {
-  return http.post<AuthenticatorResponse>('auth/login', data);
-}
+  return http.post<AuthenticatorResponse>('sign-in', data);
+};

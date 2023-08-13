@@ -4,7 +4,7 @@ export default (sequelize, DataTypes) => {
   const Token = sequelize.define(
     'token',
     {
-      refreshtoken: {
+      refresh_token: {
         type: DataTypes.TEXT,
         allowNull: false,
       },

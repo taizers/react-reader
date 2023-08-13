@@ -7,7 +7,7 @@ import { editPath } from '../utils/path';
 export default class UserDto {
   id;
   email;
-  username;
+  name;
   avatar;
   role;
   created_at;
@@ -19,7 +19,7 @@ export default class UserDto {
     this.email = model.email;
     this.role = model.role;
     this.avatar = model.avatar && editPath(model.avatar);
-    this.username = model.username;
+    this.name = model.name;
     this.created_at = model.created_at;
     this.updated_at = model.updated_at;
     this.deleted_at = model.deleted_at;

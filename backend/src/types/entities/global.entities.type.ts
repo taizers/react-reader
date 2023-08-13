@@ -21,7 +21,7 @@ export type TaskAttachmentType = {
 export type UserType = {
   id: number;
   email: string;
-  username: string | null;
+  name: string | null;
   role: string;
   avatar: string | null;
   created_at: Date;
@@ -34,7 +34,7 @@ export type TaskType = {
   title: string;
   description: string;
   due_date: Date;
-  owner_id: number;
+  user_id: number;
   assigned_to: number | null;
   project_id: number;
   is_completed: boolean;
@@ -54,7 +54,7 @@ export type TaskFromDBType = {
 export type CommentType = {
   id: number;
   content: string;
-  owner_id: number;
+  user_id: number;
   task_id: number;
   attachments: Array<CommentAttachmentType>;
   created_at: Date;

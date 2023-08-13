@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { customResponse } from '../helpers/responce';
-import { getUser, updateUser, createUser } from '../services/db/users.services';
+import { getUser, createUser } from '../services/db/users.services';
 import {
   signUpRequest,
   loginRequest,
@@ -13,10 +13,10 @@ import { ResourceNotFoundError, BadCredentialsError, ApplicationError, UnAuthori
 import UserDto from '../dtos/user.dto';
 import { generateTokens, saveToken, validateRefreshToken, findToken, removeToken } from '../services/db/token.services';
 
-const getUserSession = async (id: number, role: string) => {
-  const session = generateTokens(id, role);
+const getUserSession = async (userData: {id: string, role?: string}) => {
+  const session = generateTokens(userData);
 
-  await saveToken(id, session.refresh_token);
+  await saveToken(userData?.id, session.refresh_token);
 
   return session;
 };
@@ -35,7 +35,7 @@ export const signUpAction = async (
   try {
     const user = await getUser({ email });
 
-    if (user) {
+    if (user?.id) {
       throw new Error('Пользователь уже существует');
     }
   } catch(error) {
@@ -52,7 +52,7 @@ export const signUpAction = async (
       username,
     });
 
-    return customResponse(res, 201, new UserDto(user));
+    return customResponse(res, 201, {...new UserDto(user)});
   } catch (error) {
     logger.error('SignUp Action - Cannot create user', error);
     next(error);
@@ -69,23 +69,23 @@ export const loginAction = async (
   logger.info(`Login Action: { email: ${email}, password: ${password} }`);
 
   try {
-    const user:any = getUser({ email });
+    const user = await getUser({ email });
 
     if (!user) {
       throw new ResourceNotFoundError('Пользователь');
     }
 
-    const isPasswordsEqual = await bcrypt.compare(password, user.password);
+    const isPasswordsEqual = await bcrypt.compare(password, user?.password);
 
     if (!isPasswordsEqual) {
       throw new BadCredentialsError('Неправильный пароль');
     }
 
-    const user_session = await getUserSession(user.id, user.role);
+    const user_session = await getUserSession({id: user?.id, role: user?.role});
 
     const dtosUser = new UserDto(user);
 
-    res.cookie('refresh_token', user_session.refresh_token, {
+    res.cookie('refresh_token', user_session?.refresh_token, {
       maxAge: Number(process.env.JWT_REFRESH_MAX_AGE) * 1000,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'development' ? false : true,
@@ -118,7 +118,7 @@ export const refreshAction = async (
     if (
       !userFormToken ||
       !tokenFromBd ||
-      tokenFromBd.owner_id !== userFormToken.id
+      tokenFromBd.user_id !== userFormToken.id
     ) {
       throw new ApplicationError('Неправильный refresh токен.', 401);
     }
@@ -128,7 +128,7 @@ export const refreshAction = async (
       throw new UnAuthorizedError();
     }
   
-    const user_session = await getUserSession(user.id, user.role);
+    const user_session = await getUserSession({id: user?.id, role: user?.role});
   
     const dtosUser = new UserDto(user);
 
