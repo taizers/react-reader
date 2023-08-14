@@ -6,14 +6,14 @@ import { UsersType } from '../../constants/tsSchemes';
 
 const mapStateToProps = (state: { users: { 
     isLoading: boolean,
-    users: UsersType,
+    users: {users: any, totalPages: number},
 }}) => ({
   isLoading: state.users.isLoading,
   users: state.users.users,
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-    getAllUsers: () => dispatch(getAllUsers()),
+    getAllUsers: (page: number, limit?: number) => dispatch(getAllUsers(page, limit)),
     deleteUser: (id: string) => dispatch(deleteUser(id)),
 });
 

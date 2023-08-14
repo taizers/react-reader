@@ -12,6 +12,7 @@ import Pagination from '@mui/material/Pagination';
 
 import Book from '../../components/BookItem/index';
 import { BooksResponceType, BookType } from '../../constants/tsSchemes';
+import { startPage } from '../../constants/constants';
 
 type BooksComponentType = {
     books: BooksResponceType;
@@ -21,7 +22,7 @@ type BooksComponentType = {
 
 export const Books: FC<BooksComponentType> = ({ books, getBooks }) => {
     const [query, setQuery] = useState('');
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(startPage);
     // const [queryType, setQueryType] = useState('');
 
     const booksCount = books?.items?.length;
@@ -32,7 +33,7 @@ export const Books: FC<BooksComponentType> = ({ books, getBooks }) => {
         event.preventDefault();
         console.log(query);
         if (query) {
-            setPage(0);
+            setPage(startPage);
             getBooks(query);
         }
     };
@@ -110,7 +111,7 @@ export const Books: FC<BooksComponentType> = ({ books, getBooks }) => {
                     page={page + 1} 
                     onChange={onPaginationChange} 
                 />
-            }
+                }
             </Box>
         </Box>
     );

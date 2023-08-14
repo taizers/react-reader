@@ -10,10 +10,10 @@ import {
 } from "../constants/types";
 import { createToast } from '../utils/toasts';
 
-function* getAllUsers() {
+function* getAllUsers({ payload }) {
     yield put(usersAction.setUsersLoading(true));
     try {
-        const { data } = yield call(usersApi.getAllUsers);
+        const { data } = yield call(usersApi.getAllUsers, payload);
         yield console.log(data);
         yield put(usersAction.getAllUsersSuccessed(data));
     } catch (error) {

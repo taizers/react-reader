@@ -21,7 +21,7 @@ const Copyright = (props: any) => {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="#">
-        Your Website
+        Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

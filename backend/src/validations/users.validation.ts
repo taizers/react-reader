@@ -49,8 +49,8 @@ export const getUserValidation = validate(
 export const getUsersValidation = validate(
   {
     query: Joi.object({
-      page: Joi.number(),
-      limit: Joi.number(),
+      page: Joi.number().required(),
+      limit: Joi.number().allow("null"),
     }),
   },
   {

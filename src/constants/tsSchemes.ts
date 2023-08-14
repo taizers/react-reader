@@ -76,3 +76,11 @@ export type BooksResponceType = {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
 };
+export type UsersResponceType = {
+    items: Array<BookType>;
+    currentPage: number;
+    totalCountItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+};

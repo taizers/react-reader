@@ -1,6 +1,8 @@
 import { NextFunction, Response, Request } from 'express';
 import { getAllUsers, getUser, updateUser, deleteUser } from '../services/db/users.services';
 import logger from '../helpers/logger';
+import { defaultPageLimit } from '../constants/global';
+import { customResponse } from '../helpers/responce';
 
 export const getAllUsersAction = async (
   req: Request,
@@ -11,9 +13,9 @@ export const getAllUsersAction = async (
 
   logger.info(`Get Paginated Users Action: { page: ${page}, limit: ${limit} }`);
   try {
-    const users = await getAllUsers(+page - 1, +limit);
+    const users = await getAllUsers(+page, +limit || defaultPageLimit);
     
-    res.status(200).json(users);
+    return customResponse(res, 200, users);
   } catch (error) {
     logger.error('Get All Users Action - Cannot get users', error);
     next(error);
@@ -32,8 +34,8 @@ export const getUserAction = async (
   try {
 
     const user = await getUser({id});
-    
-    res.status(200).json(user);
+
+    return customResponse(res, 200, user);
   } catch (error) {
     logger.error('Get User Action - Cannot get user', error);
     next(error);
@@ -56,7 +58,7 @@ export const updateUserAction = async (
       oldPassword,
     });
     
-    res.status(200).json(user);
+    return customResponse(res, 200, user);
   } catch (error) {
     logger.error('Update User Action - Cannot update user', error);
     next(error);
@@ -75,7 +77,7 @@ export const deleteUserAction = async (
   try {
     await deleteUser(id);
     
-    res.status(200).json(id);
+    return customResponse(res, 200, id);
   } catch (error) {
     logger.error('Delete User Action - Cannot delete user', error);
     next(error);

@@ -15,8 +15,9 @@ import {
 } from '../constants/types';
 import { UpdateUserType, UserType, UsersType } from '../constants/tsSchemes';
 
-export const getAllUsers = () => ({
+export const getAllUsers = (page: number, limit?: number) => ({
     type: GET_ALL_USERS,
+    payload: { page , limit },
 });
 
 export const getAllUsersFailed= () => ({

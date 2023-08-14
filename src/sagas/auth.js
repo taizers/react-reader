@@ -14,7 +14,7 @@ import { createToast } from '../utils/toasts';
 function* login({ payload: { data, history } }) {
     yield put(authAction.setAuthLoading(true));
     try {
-        const { data: { data: { user, user_session }} } = yield call(authApi.login, data);
+        const { data: { user, user_session } } = yield call(authApi.login, data);
         yield setToken(user_session.access_token);
         yield put(authAction.loginSuccessed(user));
         yield history('/');
