@@ -6,7 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import Main from './containers/Main/index';
 import Login from './components/Login';
 import SignUp from './containers/SignUp/index';
-import Users from './containers/Users/index';
+import Users from './containers/Users';
 import SingleUser from './containers/SingleUser/index';
 import Books from './containers/Books/index';
 import Book from './containers/Book/index';
@@ -54,6 +54,7 @@ const App: FC = () => {
           {/* protected routes */}
           <Route element={<RequireAuth />}>
             <Route path={'profile'} element={<Profile />}/>
+            <Route path={'users'} element={<Users />}/>
           </Route>
           <Route path="*" element={<NotFound />} />
       </Route>

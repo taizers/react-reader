@@ -3,6 +3,7 @@ import { getAllUsers, getUser, updateUser, deleteUser } from '../services/db/use
 import logger from '../helpers/logger';
 import { defaultPageLimit } from '../constants/global';
 import { customResponse } from '../helpers/responce';
+import { UnProcessableEntityError } from '../helpers/error';
 
 export const getAllUsersAction = async (
   req: Request,
@@ -66,15 +67,19 @@ export const updateUserAction = async (
 }
 
 export const deleteUserAction = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   const id = req.params.id;
+  const userId = req?.user?.id;
 
-  logger.info(`Get User Action: { id: ${id} }`);
+  logger.info(`Get User Action: { deletionUserId: ${id}, userId: ${userId} }`);
 
   try {
+    if (userId === id) {
+      throw new UnProcessableEntityError('Нельзя удалть себя');
+    }
     await deleteUser(id);
     
     return customResponse(res, 200, id);

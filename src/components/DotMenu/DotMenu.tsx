@@ -6,11 +6,12 @@ import IconButton from '@mui/material/IconButton';
 
 type DotMenuType = {
     id: string;
+    currentUserId: string;
     onDeleteClick: (id: string) => void;
     onShowMoreClick: (id: string) => void;
 }
 
-export const DotMenu: FC<DotMenuType> = ({ id, onShowMoreClick, onDeleteClick }) => {
+export const DotMenu: FC<DotMenuType> = ({ id, currentUserId, onShowMoreClick, onDeleteClick }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -51,7 +52,7 @@ export const DotMenu: FC<DotMenuType> = ({ id, onShowMoreClick, onDeleteClick })
         }}
       >
         <MenuItem onClick={onSelectShowMoreItem}>Подробнее</MenuItem>
-        <MenuItem onClick={onSelectDeleteItem}>Удалить</MenuItem>
+        {currentUserId !== id &&<MenuItem onClick={onSelectDeleteItem}>Удалить</MenuItem>}
       </Menu>
     </>
   );
