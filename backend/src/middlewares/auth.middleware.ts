@@ -1,11 +1,14 @@
 import { UnAuthorizedError } from '../helpers/error';
 import { Response, NextFunction } from 'express';
 import { validateAccessToken } from '../services/db/token.services';
+import logger from '../helpers/logger';
 
 const verifyToken = (req: any, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.headers.authorization;
-    console.log(authorizationHeader)
+    
+    logger.info(`Token: ${authorizationHeader}`);
+
     if (!authorizationHeader) {
       return next(new UnAuthorizedError());
     }

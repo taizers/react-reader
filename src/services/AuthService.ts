@@ -5,6 +5,7 @@ import { IAuthDataResponce, ILoginData, ISignUpData } from '../models/IAuth';
 export const authApi = createApi({
   reducerPath: 'AuthApi',
   baseQuery: fetchBaseQuery({ baseUrl }),
+  tagTypes: ['Profile'],
   endpoints: (build) => ({
     logout: build.mutation<{ data: 'ok' }, string>({
       query: () => ({
@@ -18,6 +19,7 @@ export const authApi = createApi({
         method: 'POST',
         body: data
       }), 
+      invalidatesTags: ['Profile'],
     }),
     signUp: build.mutation<IAuthDataResponce, ISignUpData>({
       query: (data) => ({
@@ -32,6 +34,7 @@ export const authApi = createApi({
         method: 'POST',
         credentials: "include"
       }),
+      invalidatesTags: ['Profile'],
     }),
   }),
 });

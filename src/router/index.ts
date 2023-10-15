@@ -4,7 +4,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import GroupIcon from '@mui/icons-material/Group';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 
-import { Sidebar } from '../../constants/enums';
+import { Sidebar } from '../constants/enums';
 
 export const menuItems = [
   {
@@ -27,7 +27,7 @@ export const menuItems = [
   },
 ];
 
-export const secondMenuItems = [
+export const subMenuItems = [
 
   {
     title: Sidebar.Login,

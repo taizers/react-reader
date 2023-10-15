@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,7 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import { LoginUserType } from '../../constants/tsSchemes';
+import { LoginUserType } from '../constants/tsSchemes';
+import { authApiSlice } from '../store/reducers/AuthApiSlice';
+import { useAppDispatch } from '../hooks';
+import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
+import { setToken } from '../utils';
 
 const Copyright = (props: any) => {
   return (
@@ -29,27 +33,32 @@ const Copyright = (props: any) => {
   );
 }
 
-type LoginTypes = {
-    login : (data: { data: LoginUserType; history: any }) => Promise<any>;
-    isLoading: boolean;
-}
-
 const theme = createTheme();
 
-export const Login: FC<LoginTypes> = ({ login, isLoading }) => {
+const Login: FC = () => {
     let history = useNavigate();
+    const dispatch = useAppDispatch();
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [login, {data, error, isLoading}] = authApiSlice.useLoginMutation();
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const data = {
-            email: formData.get('email')?.toString() || '',
-            password: formData.get('password')?.toString() || '',
-        };
+    useEffect(() => {
+        if (data?.user?.id) {
+            const token = data.user_session?.access_token;
 
-        if (data.email && data.password) {
-            login({ data, history });
+            dispatch(setUserData(data.user));
+            dispatch(setUserToken(token));
+            setToken(token);
         }
+    }, [data]);  
+
+    const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();
+        console.log(email,password);
+        if (email && password) {
+            return login({ email,password });
+        }
+        alert('login error');
     };
 
     return (
@@ -80,6 +89,7 @@ export const Login: FC<LoginTypes> = ({ login, isLoading }) => {
                     label="Почтовый адрес"
                     name="email"
                     autoComplete="email"
+                    onChange={(evt) => setEmail(evt.target.value)}
                     autoFocus
                 />
                 <TextField
@@ -90,6 +100,7 @@ export const Login: FC<LoginTypes> = ({ login, isLoading }) => {
                     label="Пароль"
                     type="password"
                     id="password"
+                    onChange={(evt) => setPassword(evt.target.value)}
                     autoComplete="current-password"
                 />
                 <FormControlLabel
@@ -123,3 +134,5 @@ export const Login: FC<LoginTypes> = ({ login, isLoading }) => {
         </ThemeProvider>
     );
 }
+
+export default Login;

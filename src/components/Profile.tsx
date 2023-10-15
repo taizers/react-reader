@@ -1,14 +1,18 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { UserType } from '../../constants/tsSchemes';
-import UpdateUserModal from '../UpdateUserModal/index';
+// import UpdateUserModal from '../UpdateUserModal/index';
+import { authApiSlice } from '../store/reducers/AuthApiSlice';
+import {  useAppDispatch, useAppSelector } from '../hooks';
+import { setUserData } from '../store/reducers/AuthSlice';
 
-export const Profile: FC<{ user: UserType; }> = ({user}) => {
+const Profile: FC = () => {
+    const { user } = useAppSelector((state) => state.auth);
+
     return(
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -37,11 +41,13 @@ export const Profile: FC<{ user: UserType; }> = ({user}) => {
                         Имя: {user?.name}
                     </Typography>
                     <Typography component="h3" variant="h5">
-                        Активирован: {user?.isActivated ? 'Да' : 'Нет'}
+                        Удалён: {user?.deleted_at ? 'Да' : 'Нет'}
                     </Typography>
-                    <UpdateUserModal />
+                    {/* <UpdateUserModal /> */}
                 </Box>
             </Box>
         </Container>
     );
-}
+};
+
+export default Profile;

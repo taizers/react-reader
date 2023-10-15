@@ -5,6 +5,7 @@ import {
   loginAction,
   refreshAction,
   logoutAction,
+  getProfileAction,
 } from '../controllers/auth.controller';
 
 import {
@@ -25,9 +26,10 @@ const router = express.Router();
 // Authorization
 
 router.post('/sign-up', signUpValidation, signUpAction);
-router.post('/sign-in', loginValidation, loginAction);
-router.post('/refresh-token', cookiesValidation, refreshAction);
+router.post('/login', loginValidation, loginAction);
+router.get('/refresh', cookiesValidation, refreshAction);
 router.post('/logout', cookiesValidation, logoutAction);
+router.get('/profile', verifyToken, getProfileAction);
 
 router.get('/search', getBooksAction);
 

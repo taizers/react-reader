@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import bcrypt from 'bcrypt';
 import { customResponse } from '../helpers/responce';
 import { getUser, createUser } from '../services/db/users.services';
@@ -165,3 +165,22 @@ export const logoutAction = async (
     next(error);
   }
 };
+
+export const getProfileAction = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  logger.info(`Get Profile Action: { id: ${req?.user?.id} }`);
+
+  try {
+    const user = await getUser({ id: req?.user?.id });
+
+    const dtosUser = new UserDto(user);
+
+    return customResponse(res, 200, {...dtosUser});
+  } catch (error) {
+    logger.error('Get User Action - Cannot get user', error);
+    next(error);
+  }
+}

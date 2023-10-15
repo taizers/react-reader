@@ -36,6 +36,11 @@ export const usersApi = createApi({
         url: `/users/${id}`,
       }),
     }),
+    fetchProfile: build.query<{ data: IUser }, string>({
+      query: (id) => ({
+        url: `/users/${id}`,
+      }),
+    }),
     deleteUser: build.mutation<{ data: 'ok' }, string>({
       query: (id) => ({
         url: `/users/${id}`,
@@ -49,6 +54,5 @@ export const usersApi = createApi({
         body: user
       }),
     }),
-
   }),
 });

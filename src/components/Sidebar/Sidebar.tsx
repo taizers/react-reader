@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, ReactNode } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -17,8 +17,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';  
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
-import { menuItems, secondMenuItems } from '../../router/menu';
+import { menuItems, subMenuItems } from '../../router';
 import { Sidebar as SidebarEnum } from '../../constants/enums';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { logOut } from '../../store/reducers/AuthSlice';
+import { clearToken } from '../../utils';
 
 const drawerWidth = 240;
 
@@ -71,15 +74,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-type Sidebartype = {
-    children: any;
-    isAuth: boolean;
-    logout: (history: any) => Promise<any>;
+type SideBartype = {
+  child: ReactNode;
 }
 
-export const Sidebar: FC<Sidebartype> = ({ children, isAuth, logout }) => {
+const SideBar: FC<SideBartype> = ({ child }) => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
+  const { token } = useAppSelector((state) => state.auth);
+
   let history = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -90,11 +94,16 @@ export const Sidebar: FC<Sidebartype> = ({ children, isAuth, logout }) => {
     setOpen(false);
   };
 
+  const logOutAction = () => {
+    dispatch(logOut());
+    clearToken();
+  }
+
   const getAccess = (item: { access: string; }) => {
-    if (item.access === 'private' && isAuth) {
+    if (item.access === 'private' && token) {
       return true;
     }
-    if (item.access === 'public' && !isAuth) {
+    if (item.access === 'public' && !token) {
       return true;
     }
     if (item.access === 'all') {
@@ -157,10 +166,10 @@ export const Sidebar: FC<Sidebartype> = ({ children, isAuth, logout }) => {
         </List>
         <Divider />
         <List>
-          {secondMenuItems.map((item) => (
+          {subMenuItems.map((item) => (
             getAccess(item) && 
               <ListItem key={item.title} disablePadding>
-                  <ListItemButton onClick={() => {item.title === SidebarEnum.Logout ? logout(history) : history(item.path)}}>
+                  <ListItemButton onClick={() => {item.title === SidebarEnum.Logout ? logOutAction() : history(item.path)}}>
                       <ListItemIcon>
                         {<item.icon/>}
                       </ListItemIcon>
@@ -172,8 +181,10 @@ export const Sidebar: FC<Sidebartype> = ({ children, isAuth, logout }) => {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        {children}
+        {child}
       </Main>
     </Box>
   );
-}
+};
+
+export default SideBar;
