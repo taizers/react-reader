@@ -20,8 +20,9 @@ import { useNavigate } from 'react-router-dom';
 import { menuItems, subMenuItems } from '../../router';
 import { Sidebar as SidebarEnum } from '../../constants/enums';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logOut } from '../../store/reducers/AuthSlice';
+import { localLogout } from '../../store/reducers/AuthSlice';
 import { clearToken } from '../../utils';
+import { authApiSlice } from '../../store/reducers/AuthApiSlice';
 
 const drawerWidth = 240;
 
@@ -83,6 +84,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const { token } = useAppSelector((state) => state.auth);
+  const [logout, {data, isLoading, error}] = authApiSlice.useLogoutMutation();
 
   let history = useNavigate();
 
@@ -94,10 +96,11 @@ const SideBar: FC<SideBartype> = ({ child }) => {
     setOpen(false);
   };
 
-  const logOutAction = () => {
-    dispatch(logOut());
+  const localLogoutAction = () => {
+    dispatch(localLogout());
     clearToken();
-  }
+    logout('');
+  };
 
   const getAccess = (item: { access: string; }) => {
     if (item.access === 'private' && token) {
@@ -169,7 +172,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
           {subMenuItems.map((item) => (
             getAccess(item) && 
               <ListItem key={item.title} disablePadding>
-                  <ListItemButton onClick={() => {item.title === SidebarEnum.Logout ? logOutAction() : history(item.path)}}>
+                  <ListItemButton onClick={() => {item.title === SidebarEnum.Logout ? localLogoutAction() : history(item.path)}}>
                       <ListItemIcon>
                         {<item.icon/>}
                       </ListItemIcon>

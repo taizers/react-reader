@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { logOut, setUserToken, setUserData } from '../reducers/AuthSlice';
+import { localLogout, setUserToken, setUserData } from '../reducers/AuthSlice';
 import { apiUrl } from '../../constants/constants';
 import { clearToken, getToken, setToken } from '../../utils';
 import { useAppDispatch } from '../../hooks';
@@ -53,7 +53,7 @@ const baseQueryWithReauth = async(args: any, api: any, extraOptions: any) => {
             //retry original query with new access token
             result = await baseQuery(args, api, extraOptions);
         } else {
-            api.dispatch(logOut());
+            api.dispatch(localLogout());
             clearToken();
         }
     }
