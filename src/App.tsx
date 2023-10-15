@@ -4,7 +4,6 @@ import { connect, useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
 import Main from './containers/Main/index';
-import NotFound from './components/NotFound/index';
 import Login from './components/Login';
 import SignUp from './containers/SignUp/index';
 import Users from './containers/Users/index';
@@ -23,6 +22,7 @@ import PublicRoute from './components/PublicRoute';
 import Profile from './components/Profile';
 import { setUserData, setUserToken } from './store/reducers/AuthSlice';
 import { useAppDispatch } from './hooks';
+import NotFound from './components/NotFound';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -41,7 +41,7 @@ const App: FC = () => {
       dispatch(setUserToken(localToken));
     }
   }, []);
-  
+
   return (
     <Routes>
       <Route path={'/'} element={<LayOut/>}>
@@ -55,6 +55,7 @@ const App: FC = () => {
           <Route element={<RequireAuth />}>
             <Route path={'profile'} element={<Profile />}/>
           </Route>
+          <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
     // <StyledApp>
