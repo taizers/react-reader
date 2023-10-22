@@ -17,6 +17,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' })); // server's ip
+// app.use(cors({ credentials: true })); // server's ip
 
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -29,7 +30,7 @@ app.use(errorMiddleware);
 // try {
 //   app.post('/add-admin', async (req, res) => {
 //     const user = await createUser({
-//       username: 'Александр Сачок',
+//       username: 'f',
 //       role: 'admin',
 //       activationkey: '1',
 //     });

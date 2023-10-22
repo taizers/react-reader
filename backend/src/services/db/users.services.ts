@@ -49,42 +49,13 @@ export const  getUser = async (where: object) => {
   return user;
 }
 
-
-//name: string, password: string, oldPassword: string, userId: string
 export const  updateUser = async (id: string, payload: object) => {
-  // const oldUser = await User.findByPk(userId);
-  // const updatingUserData: any = {};
-
-  // if (password && oldPassword) {
-  //   const isPasswordEquals = await bcrypt.compare(
-  //     oldPassword,
-  //     oldUser.password
-  //   );
-
-  //   if (!isPasswordEquals) {
-  //     throw new BadCredentialserror('Неправильный пароль');
-  //   }
-
-  //   const encryptedPassword = await bcrypt.hash(password, 10);
-
-  //   updatingUserData.password = encryptedPassword;
-  // } else {
-  //   updatingUserData.password = oldUser.password;
-  // }
-
-  // if (name) {
-  //   updatingUserData.name = name;
-  // } else {
-  //   updatingUserData.name = oldUser.name;
-  // }
   const user = await User.update(
     payload,
     { where: { id } }
   );
 
-  const userDto = new UserDto(user);
-
-  return userDto;
+  return user;
 }
 
 export const deleteUser = async (id: string) => {

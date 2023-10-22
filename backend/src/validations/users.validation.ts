@@ -19,9 +19,9 @@ export const createUserValidation = validate(
 export const updateUserValidation = validate(
   {
     body: Joi.object({
-      name: Joi.string().max(256),
-      oldPassword: Joi.string().max(256),
-      newPassword: Joi.string().max(256),
+      name: Joi.string().max(256).allow(''),
+      oldPassword: Joi.string().max(256).allow(''),
+      newPassword: Joi.string().max(256).allow(''),
     }),
   },
   {

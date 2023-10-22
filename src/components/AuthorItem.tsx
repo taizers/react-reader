@@ -1,36 +1,34 @@
 import React, { FC } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
 
-import { StyledListItemAvatar } from './styled';
-import Image from '../Image/Image';
-import { BookType } from '../../constants/tsSchemes';
+import Image from './Image/Image';
+import { AuthorRType } from '../constants/tsSchemes';
 
-type BookItemType = {
-  book: BookType;
+type AuthorItemType = {
+  authors: AuthorRType;
 };
 
-const BookItem: FC<BookItemType> = ({ book }) => {
-  const { cover, title, author, categories, downloads } = book;
+const AuthorItem: FC<AuthorItemType> = ({ authors }) => {
+  const { cover, title, author, categories } = authors;
 
   return (
     <ListItem
       alignItems="flex-start"
       sx={{ maxWidth: 500, bgcolor: '#cad2de', mb: 1 }}
     >
-      <StyledListItemAvatar>
+      <ListItemAvatar>
         <Image
           src={
             cover
               ? `http://flibusta.site/${cover}`
-              : `/static/images/no-image.png`
+              : `/static/images/NoCover.jpg`
           }
           alt="Book cover"
         />
-      </StyledListItemAvatar>
+      </ListItemAvatar>
       <ListItemText
         sx={{ ml: 1 }}
         primary={title}
@@ -76,22 +74,6 @@ const BookItem: FC<BookItemType> = ({ book }) => {
                 {item}
               </Typography>
             ))}
-            <Typography
-              sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}
-              component="span"
-              variant="body2"
-            >
-              {downloads?.map((item, index) => (
-                <Button
-                  key={`download button ${index}`}
-                  variant="outlined"
-                  href={`http://flibusta.site/${item.link}`}
-                  endIcon={<DownloadIcon />}
-                >
-                  {item.type.replace('application/', '')}
-                </Button>
-              ))}
-            </Typography>
           </>
         }
       />
@@ -99,4 +81,4 @@ const BookItem: FC<BookItemType> = ({ book }) => {
   );
 };
 
-export default BookItem;
+export default AuthorItem;

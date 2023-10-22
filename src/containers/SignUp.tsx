@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,11 +12,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import { LoginUserType } from '../constants/tsSchemes';
+import { SignUpUserType } from '../constants/tsSchemes';
 import { authApiSlice } from '../store/reducers/AuthApiSlice';
 import { useAppDispatch } from '../hooks';
-import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
-import { setToken } from '../utils';
 
 const Copyright = (props: any) => {
   return (
@@ -30,7 +26,7 @@ const Copyright = (props: any) => {
     >
       {'Copyright © '}
       <Link color="inherit" href="#">
-        Website
+        Your Website
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -40,30 +36,34 @@ const Copyright = (props: any) => {
 
 const theme = createTheme();
 
-const Login: FC = () => {
+const SignUp: FC = () => {
   let history = useNavigate();
   const dispatch = useAppDispatch();
+  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [login, { data, error, isLoading }] = authApiSlice.useLoginMutation();
+  const [repeatPassword, setRepeatPassword] = useState<string>('');
+  const [signUp, { data, error, isLoading }] = authApiSlice.useSignUpMutation();
 
   useEffect(() => {
-    if (data?.user?.id) {
-      const token = data.user_session?.access_token;
-
-      dispatch(setUserData(data.user));
-      dispatch(setUserToken(token));
-      setToken(token);
+    if (!!data) {
+      history('/login');
     }
   }, [data]);
 
-  const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     console.log(email, password);
-    if (email && password) {
-      return login({ email, password });
+
+    if (email && name && password && repeatPassword) {
+      if (password === repeatPassword) {
+        return signUp({ email, name, password, repeatPassword });
+      }
+      return alert('passwords not equal');
     }
-    alert('login error');
+
+    alert('signup error');
   };
 
   return (
@@ -87,9 +87,20 @@ const Login: FC = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Вход
+            Регистрация
           </Typography>
           <Box component="form" onSubmit={onSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Имя"
+              name="name"
+              autoComplete="text"
+              onChange={(evt) => setName(evt.target.value)}
+              autoFocus
+            />
             <TextField
               margin="normal"
               required
@@ -112,9 +123,16 @@ const Login: FC = () => {
               onChange={(evt) => setPassword(evt.target.value)}
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Запомнить меня"
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="secondPassword"
+              label="Павторите пароль"
+              type="password"
+              id="secondPassword"
+              onChange={(evt) => setRepeatPassword(evt.target.value)}
+              autoComplete="current-password"
             />
             <Button
               type="submit"
@@ -122,17 +140,12 @@ const Login: FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Войти
+              Зарегистрироваться
             </Button>
             <Grid container>
-              <Grid item xs>
-                <Link href="/forgotPassword" variant="body2">
-                  Забыли пароль?
-                </Link>
-              </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
-                  {'Нет аккаунта? Зарегистрироваться'}
+                <Link href="/login" variant="body2">
+                  {'Есть аккаунт? Войти'}
                 </Link>
               </Grid>
             </Grid>
@@ -144,4 +157,4 @@ const Login: FC = () => {
   );
 };
 
-export default Login;
+export default SignUp;

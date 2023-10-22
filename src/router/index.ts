@@ -28,7 +28,6 @@ export const menuItems = [
 ];
 
 export const subMenuItems = [
-
   {
     title: Sidebar.Login,
     path: '/login',

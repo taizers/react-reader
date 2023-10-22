@@ -24,7 +24,9 @@ const NotFound = () => {
       <Typography variant="h6" style={{ color: textColor }}>
         {subTitle}
       </Typography>
-      <Button variant="contained" href={'/'} >{buttonText}</Button>
+      <Button variant="contained" href={'/'}>
+        {buttonText}
+      </Button>
     </Box>
   );
 };

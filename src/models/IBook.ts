@@ -1,3 +1,1 @@
-export interface IFlibustaBook {
-
-}
+export interface IFlibustaBook {}

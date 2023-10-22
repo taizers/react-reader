@@ -1,86 +1,88 @@
 export type UserType = {
-    id: string;
-    name: string;
-    email: string;
-    isActivated: string;
+  id: string;
+  role: string | null;
+  name: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 };
 
 export type LoginUserType = {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 };
 
 export type SignUpUserType = {
-    name: string;
-    email: string;
-    password: string;
+  name: string;
+  email: string;
+  password: string;
 };
 
 export type UpdateUserType = {
-    id: string;
-    name?: string;
-    newPassword?: string;
-    oldPassword?: string;
+  id: string;
+  name?: string;
+  newPassword?: string;
+  oldPassword?: string;
 };
 
 export type AuthorType = {
-    name: string;
-    uri: string;
+  name: string;
+  uri: string;
 };
 
 export type DownloadsType = {
-    link: string;
-    type: string;
+  link: string;
+  type: string;
 };
 
 export type BookType = {
-    author: Array<AuthorType>;
-    title: string;
-    updated: string;
-    cover?: string;
-    categories: Array<string>;
-    downloads: Array<DownloadsType>;
-    description: string;
+  author: Array<AuthorType>;
+  title: string;
+  updated: string;
+  cover?: string;
+  categories: Array<string>;
+  downloads: Array<DownloadsType>;
+  description: string;
 };
 
 export type AuthorRType = {
-    author: Array<AuthorType>;
-    title: string;
-    updated: string;
-    cover?: string;
-    categories: Array<string>;
-    downloads: Array<DownloadsType>;
-    description: string;
+  author: Array<AuthorType>;
+  title: string;
+  updated: string;
+  cover?: string;
+  categories: Array<string>;
+  downloads: Array<DownloadsType>;
+  description: string;
 };
-  
+
 export type BookInfoType = {
-    id: number;
-    title: string;
-    author: string;
+  id: number;
+  title: string;
+  author: string;
 };
 
 export type BookFileType = {
-    id: string;
-    file: Buffer;
-    fileName: string;
-    filePath?: string;
+  id: string;
+  file: Buffer;
+  fileName: string;
+  filePath?: string;
 };
 
 export type UsersType = Array<UserType>;
 export type BooksType = Array<BookType>;
 export type BooksResponceType = {
-    items: Array<BookType>;
-    currentPage: number;
-    totalCountItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
+  items: Array<BookType>;
+  currentPage: number;
+  totalCountItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 };
 export type UsersResponceType = {
-    items: Array<BookType>;
-    currentPage: number;
-    totalCountItems: number;
-    totalPages: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
+  items: Array<BookType>;
+  currentPage: number;
+  totalCountItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 };

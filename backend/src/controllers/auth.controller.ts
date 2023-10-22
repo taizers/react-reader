@@ -53,7 +53,8 @@ export const signUpAction = async (
       username,
     });
 
-    return customResponse(res, 201, {...new UserDto(user)});
+    // return customResponse(res, 201, {...new UserDto(user)});
+    return customResponse(res, 201, 'ok');
   } catch (error) {
     logger.error('SignUp Action - Cannot create user', error);
     next(error);

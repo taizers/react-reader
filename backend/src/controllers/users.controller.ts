@@ -1,9 +1,11 @@
 import { NextFunction, Response, Request } from 'express';
+import bcrypt from 'bcrypt';
 import { getAllUsers, getUser, updateUser, deleteUser } from '../services/db/users.services';
 import logger from '../helpers/logger';
 import { defaultPageLimit } from '../constants/global';
 import { customResponse } from '../helpers/responce';
-import { UnProcessableEntityError } from '../helpers/error';
+import { BadCredentialsError, UnProcessableEntityError } from '../helpers/error';
+import UserDto from '../dtos/user.dto';
 
 export const getAllUsersAction = async (
   req: Request,
@@ -21,7 +23,7 @@ export const getAllUsersAction = async (
     logger.error('Get All Users Action - Cannot get users', error);
     next(error);
   }
-}
+};
 
 export const getUserAction = async (
   req: Request,
@@ -41,30 +43,56 @@ export const getUserAction = async (
     logger.error('Get User Action - Cannot get user', error);
     next(error);
   }
-}
+};
 
 export const updateUserAction = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { id, name, newPassword, oldPassword } = req.body;
+  const id = req.params.id;
+  const { name, newPassword, oldPassword } = req.body;
 
   logger.info(`Update User Action: { id: ${id}, name: ${name}, newPassword: ${newPassword}, oldPassword: ${oldPassword} }`);
 
   try {
-    const user = await updateUser(id, {
+    const user = await getUser({id});
+
+    const updateData = {} as any;
+
+    if (newPassword && oldPassword) {
+      const isPasswordEquals = await bcrypt.compare(
+        oldPassword,
+        user.password
+      );
+
+      if (!isPasswordEquals) {
+        throw new BadCredentialsError('Неправильный пароль');
+      }
+
+      const encryptedPassword = await bcrypt.hash(newPassword, 10);
+
+      updateData.password = encryptedPassword;
+    }
+
+    if (name) {
+      updateData.name = name;
+    }
+
+    const resultUser = await updateUser(id, {
       name,
       newPassword,
       oldPassword,
     });
     
-    return customResponse(res, 200, user);
+    const userDto = new UserDto(resultUser);
+    
+    return customResponse(res, 200, {...userDto});
   } catch (error) {
     logger.error('Update User Action - Cannot update user', error);
     next(error);
   }
-}
+};
 
 export const deleteUserAction = async (
   req: any,
@@ -87,4 +115,4 @@ export const deleteUserAction = async (
     logger.error('Delete User Action - Cannot delete user', error);
     next(error);
   }
-}
+};

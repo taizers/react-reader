@@ -14,7 +14,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';  
+import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import { menuItems, subMenuItems } from '../../router';
@@ -77,14 +77,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 type SideBartype = {
   child: ReactNode;
-}
+};
 
 const SideBar: FC<SideBartype> = ({ child }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const { token } = useAppSelector((state) => state.auth);
-  const [logout, {data, isLoading, error}] = authApiSlice.useLogoutMutation();
+  const [logout, { data, isLoading, error }] = authApiSlice.useLogoutMutation();
 
   let history = useNavigate();
 
@@ -102,7 +102,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
     logout('');
   };
 
-  const getAccess = (item: { access: string; }) => {
+  const getAccess = (item: { access: string }) => {
     if (item.access === 'private' && token) {
       return true;
     }
@@ -114,7 +114,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
     }
 
     return false;
-  }
+  };
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
@@ -150,36 +150,50 @@ const SideBar: FC<SideBartype> = ({ child }) => {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {menuItems.map((item) => (
-              getAccess(item) && 
+          {menuItems.map(
+            (item) =>
+              getAccess(item) && (
                 <ListItem key={item.title} disablePadding>
-                  <ListItemButton onClick={()=> {history(item.path)}}>
-                    <ListItemIcon>
-                      {<item.icon/>}
-                    </ListItemIcon>
+                  <ListItemButton
+                    onClick={() => {
+                      history(item.path);
+                    }}
+                  >
+                    <ListItemIcon>{<item.icon />}</ListItemIcon>
                     <ListItemText primary={item.title} />
                   </ListItemButton>
                 </ListItem>
-          ))}
+              )
+          )}
         </List>
         <Divider />
         <List>
-          {subMenuItems.map((item) => (
-            getAccess(item) && 
-              <ListItem key={item.title} disablePadding>
-                  <ListItemButton onClick={() => {item.title === SidebarEnum.Logout ? localLogoutAction() : history(item.path)}}>
-                      <ListItemIcon>
-                        {<item.icon/>}
-                      </ListItemIcon>
-                      <ListItemText primary={item.title} />
+          {subMenuItems.map(
+            (item) =>
+              getAccess(item) && (
+                <ListItem key={item.title} disablePadding>
+                  <ListItemButton
+                    onClick={() => {
+                      item.title === SidebarEnum.Logout
+                        ? localLogoutAction()
+                        : history(item.path);
+                    }}
+                  >
+                    <ListItemIcon>{<item.icon />}</ListItemIcon>
+                    <ListItemText primary={item.title} />
                   </ListItemButton>
-              </ListItem>
-          ))}
+                </ListItem>
+              )
+          )}
         </List>
       </Drawer>
       <Main open={open}>

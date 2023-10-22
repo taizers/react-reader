@@ -5,63 +5,69 @@ import { clearToken, getToken, setToken } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: `${apiUrl}`,
-    credentials: 'include',
-    prepareHeaders: (headers, state: any) => {
-        const token = state.getState().auth.token;
-        try {
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+  baseUrl: `${apiUrl}`,
+  credentials: 'include',
+  prepareHeaders: (headers, state: any) => {
+    const token = state.getState().auth.token;
+    try {
+      headers.set(
+        'Access-Control-Allow-Methods',
+        'GET, POST, OPTIONS, PUT, DELETE, UPDATE'
+      );
 
-        return headers;
+      if (token) {
+        headers.set('authorization', `Bearer ${token}`);
+      }
+    } catch (error) {
+      console.log(error);
     }
-})
+
+    return headers;
+  },
+});
 
 type IRefreshResultData = {
-    user: object;
-    user_session: {
-        access_token: string;
-        refresh_token: string;
-    };
+  user: object;
+  user_session: {
+    access_token: string;
+    refresh_token: string;
+  };
 };
 
-const baseQueryWithReauth = async(args: any, api: any, extraOptions: any) => {
-    let result = await baseQuery(args, api, extraOptions);
+const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+  let result = await baseQuery(args, api, extraOptions);
 
-    if (result?.error?.status === 403) {
-        console.log('sending refresh token');
-        //send refresh token to get new access token
-        const refreshResult = await baseQuery('/refresh', api, extraOptions);
-        console.log(refreshResult);
+  if (result?.error?.status === 403) {
+    console.log('sending refresh token');
+    //send refresh token to get new access token
+    const refreshResult = await baseQuery('/refresh', api, extraOptions);
+    console.log(refreshResult);
 
-        if (refreshResult?.data) {
-            const resultData = {...refreshResult.data} as IRefreshResultData;
+    if (refreshResult?.data) {
+      const resultData = { ...refreshResult.data } as IRefreshResultData;
 
-            const token = resultData.user_session?.access_token;
-            const user = resultData.user;
+      const token = resultData.user_session?.access_token;
+      const user = resultData.user;
 
-            //store the new token
-            setToken(token);
-            api.dispatch(setUserToken(token));
+      //store the new token
+      setToken(token);
+      api.dispatch(setUserToken(token));
 
-            api.dispatch(setUserData(user));
+      api.dispatch(setUserData(user));
 
-            //retry original query with new access token
-            result = await baseQuery(args, api, extraOptions);
-        } else {
-            api.dispatch(localLogout());
-            clearToken();
-        }
+      //retry original query with new access token
+      result = await baseQuery(args, api, extraOptions);
+    } else {
+      api.dispatch(localLogout());
+      clearToken();
     }
-    console.log(result);
-    return result;
-}
+  }
+  console.log(result);
+  return result;
+};
 
 export const apiSlice = createApi({
-    baseQuery: baseQueryWithReauth,
-    endpoints: builder => ({}),
-}) 
+  baseQuery: baseQueryWithReauth,
+  tagTypes: ['User', 'Book'],
+  endpoints: (builder) => ({}),
+});

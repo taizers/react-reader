@@ -26,4 +26,4 @@
 // });
 
 // export default coinModalSlice.reducer;
-export const f='';
+export const f = '';

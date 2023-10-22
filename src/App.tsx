@@ -3,14 +3,12 @@ import { Routes, Route, useNavigate, Link } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 
-import Main from './containers/Main/index';
 import Login from './components/Login';
-import SignUp from './containers/SignUp/index';
+import SignUp from './containers/SignUp';
 import Users from './containers/Users';
-import SingleUser from './containers/SingleUser/index';
-import Books from './containers/Books/index';
-import Book from './containers/Book/index';
-// import { PublicRoute, PrivateRoute } from './router/components/index';
+import User from './containers/User';
+import Books from './containers/Books';
+import Book from './containers/Book';
 import { getToken } from './utils/index';
 import { checkAuth } from './actions/auth';
 import { StyledApp } from './styled';
@@ -27,7 +25,7 @@ import NotFound from './components/NotFound';
 const App: FC = () => {
   const dispatch = useAppDispatch();
   const { data, error, isLoading } = authApiSlice.useProfileQuery('');
-  
+
   useEffect(() => {
     if (data?.id) {
       dispatch(setUserData(data));
@@ -44,19 +42,32 @@ const App: FC = () => {
 
   return (
     <Routes>
-      <Route path={'/'} element={<LayOut/>}>
-          {/* public routes */}
-          <Route index  element={<><Link to={'profile'}>PROFILE</Link ></>} />
-          <Route element={<PublicRoute />}>
-            <Route path={'login'}  element={<Login />} />
-          </Route>
+      <Route path={'/'} element={<LayOut />}>
+        {/* public routes */}
+        <Route
+          index
+          element={
+            <>
+              <Link to={'profile'}>PROFILE</Link>
+            </>
+          }
+        />
+        <Route element={<PublicRoute />}>
+          <Route path={'login'} element={<Login />} />
+          <Route path={'signup'} element={<SignUp />} />
+        </Route>
 
-          {/* protected routes */}
-          <Route element={<RequireAuth />}>
-            <Route path={'profile'} element={<Profile />}/>
-            <Route path={'users'} element={<Users />}/>
-          </Route>
-          <Route path="*" element={<NotFound />} />
+        {/* protected routes */}
+        <Route element={<RequireAuth />}>
+          <Route path={'profile'} element={<Profile />} />
+          <Route path={'books'} element={<Books />} />
+          <Route path={'books/:id'} element={<Book />} />
+          <Route path={'users'} element={<Users />} />
+          <Route path={'users/:id'} element={<User />} />
+        </Route>
+
+        {/* Not Found route */}
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
     // <StyledApp>
