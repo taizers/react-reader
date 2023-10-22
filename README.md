@@ -1,7 +1,6 @@
 # The React Reader Project
 
-Main directory contains Frontend part of project/ 
-and `/backend` directory contains backend part of project.
+Main directory contains Frontend part of project and `/backend` directory contains backend part of project.
 
 ## Backend part of project
 

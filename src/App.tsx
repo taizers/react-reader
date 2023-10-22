@@ -1,6 +1,5 @@
 import React, { useEffect, FC } from 'react';
-import { Routes, Route, useNavigate, Link } from 'react-router-dom';
-import { connect, useDispatch } from 'react-redux';
+import { Routes, Route, Link } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 import Login from './components/Login';
@@ -10,9 +9,6 @@ import User from './containers/User';
 import Books from './containers/Books';
 import Book from './containers/Book';
 import { getToken } from './utils/index';
-import { checkAuth } from './actions/auth';
-import { StyledApp } from './styled';
-import { authApi } from './services/AuthService';
 import LayOut from './components/Layout';
 import RequireAuth from './components/RequireAuth';
 import { authApiSlice } from './store/reducers/AuthApiSlice';
