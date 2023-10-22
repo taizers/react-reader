@@ -19,6 +19,7 @@ import { authApiSlice } from '../store/reducers/AuthApiSlice';
 import { useAppDispatch } from '../hooks';
 import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
 import { setToken } from '../utils';
+import { createToast } from '../utils/toasts';
 
 const Copyright = (props: any) => {
   return (
@@ -57,13 +58,20 @@ const Login: FC = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    console.log(error);
+    if (error && 'status' in error) {
+      createToast.error(error.data, error.status);
+    }
+  }, [error]);
+
   const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    console.log(email, password);
+
     if (email && password) {
       return login({ email, password });
     }
-    alert('login error');
+    createToast.error('Не введён логин или пароль');
   };
 
   return (

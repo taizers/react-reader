@@ -1,6 +1,6 @@
 import React, { useEffect, FC } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+// import { Toaster } from 'react-hot-toast';
 
 import Login from './components/Login';
 import SignUp from './containers/SignUp';

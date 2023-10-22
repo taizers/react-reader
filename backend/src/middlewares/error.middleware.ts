@@ -27,10 +27,7 @@ export default async (
     }
   } catch (error: any) {
     error.status = error.statusCode || error.status || 500;
-    return customResponse(res, error.status, {
-      code: error.status,
-      message: validationMessage || error.message,
-    });
+    return customResponse(res, error.status, validationMessage || error.message);
   }
 
   if (error?.details) {
@@ -42,8 +39,5 @@ export default async (
   }
 
   console.log(error);
-  return customResponse(res, error.status, {
-    code: error.status,
-    message: validationMessage || error.message,
-  });
+  return customResponse(res, error.status, validationMessage || error.message);
 };
