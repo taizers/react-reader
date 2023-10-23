@@ -27,10 +27,10 @@ export const signUpAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { email, password, username } = req.body;
+  const { email, password, name } = req.body;
 
   logger.info(
-    `SignUp Action: { password: ${password}, email: ${email}, username: ${username} }`
+    `SignUp Action: { password: ${password}, email: ${email}, name: ${name} }`
   );
 
   try {
@@ -50,7 +50,7 @@ export const signUpAction = async (
     const user = await createUser({
       email,
       password: encryptedPassword,
-      username,
+      name,
     });
 
     // return customResponse(res, 201, {...new UserDto(user)});

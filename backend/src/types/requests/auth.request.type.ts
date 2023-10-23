@@ -4,7 +4,7 @@ export interface signUpRequest extends Request {
   body: {
     email: string;
     password: string;
-    username: string;
+    name: string;
   };
 }
 

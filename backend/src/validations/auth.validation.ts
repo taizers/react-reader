@@ -5,7 +5,7 @@ export const signUpValidation = validate(
     body: Joi.object({
       email: Joi.string().email().max(256).required(),
       password: Joi.string().max(256).required(),
-      username: Joi.string().max(256).allow(null),
+      name: Joi.string().max(256).allow(null),
     }),
   },
   {

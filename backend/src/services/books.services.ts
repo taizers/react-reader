@@ -2,7 +2,7 @@ import FlibustaAPI from 'flibusta';
 
 export const  getBooks = async (query: string, page: number, limit: number) => {
   const flibustaApi = new FlibustaAPI();
-
+  
   const books = await flibustaApi.getBooksByNameFromOpdsPaginated(query, page, limit);
 
   return books;

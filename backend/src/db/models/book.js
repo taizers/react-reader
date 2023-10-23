@@ -43,8 +43,8 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      text: {
-        type: DataTypes.TEXT,
+      link: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       created_at: {
