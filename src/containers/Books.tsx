@@ -117,6 +117,7 @@ const Books: FC = () => {
               display: 'flex',
               justifyContent: 'space-around',
               flexWrap: 'wrap',
+              gap: 2,
               width: '100%',
               bgcolor: 'background.paper',
             }}

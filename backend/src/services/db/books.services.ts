@@ -7,11 +7,12 @@ export const  getAllBooks = async () => {
   return books;
 }
 
-export const  getPaginatedBooks = async (page: number, limit: number) => {
+export const  getPaginatedBooks = async (page: number, limit: number, id: number) => {
 
   const { count, rows } = await Book.findAndCountAll({
     offset: page * limit,
     limit,
+    where: { user_id: id },
     order: [['created_at', 'DESC']],
   });
 
@@ -45,8 +46,8 @@ export const  updateBook = async (where: object, payload: object) => {
     payload,
     { 
       where,
-      returning: true,
-      plain: true,
+      // returning: true,
+      // plain: true,
     }
   );
 }

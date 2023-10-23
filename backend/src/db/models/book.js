@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      jenre: {
+      categories: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -45,7 +45,13 @@ export default (sequelize, DataTypes) => {
       },
       link: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: null,
+      },
+      downloads: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
       },
       created_at: {
         type: DataTypes.DATE,
@@ -62,9 +68,9 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  // Book.associate = (models) => {
-  //   Book.hasOne(models.Token, { onDelete: 'cascade' });
-  // };
+  Book.associate = (models) => {
+    Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
+  };
 
   return Book;
 };

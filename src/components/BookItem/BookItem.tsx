@@ -4,6 +4,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 import { StyledListItemAvatar } from './styled';
 import Image from '../Image/Image';
@@ -18,8 +19,13 @@ const BookItem: FC<BookItemType> = ({ book }) => {
 
   return (
     <ListItem
-      alignItems="flex-start"
-      sx={{ maxWidth: 500, bgcolor: '#cad2de', mb: 1 }}
+      sx={{ 
+        flexGrow: 1,
+        flexBasis: 500,
+        bgcolor: '#cad2de',
+        display: 'flex',
+        justifySelf: 'center'
+      }}
     >
       <StyledListItemAvatar>
         <Image
@@ -91,6 +97,13 @@ const BookItem: FC<BookItemType> = ({ book }) => {
                   {item.type.replace('application/', '')}
                 </Button>
               ))}
+                {!!downloads?.length && <Button
+                  key={`save button`}
+                  variant="outlined"
+                  endIcon={<ArrowUpwardIcon />}
+                >
+                  {'Сохранить'}
+                </Button>}
             </Typography>
           </>
         }

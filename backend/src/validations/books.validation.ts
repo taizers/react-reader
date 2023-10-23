@@ -6,12 +6,13 @@ export const createBookValidation = validate(
       title: Joi.string().max(512).required(),
       author: Joi.string().max(512),
       tags: Joi.string().max(512),
+      categories: Joi.string().max(512),
       releaseDate: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
-      jenre: Joi.string().max(512),
+      link: Joi.string().max(512),
+      downloads: Joi.string().max(512),
       source: Joi.string().max(512),
-      text: Joi.string().required(),
     }),
   },
   {
@@ -28,12 +29,13 @@ export const updateBookValidation = validate(
       title: Joi.string().max(512),
       author: Joi.string().max(512),
       tags: Joi.string().max(512),
+      categories: Joi.string().max(512),
       releaseDate: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
-      jenre: Joi.string().max(512),
+      link: Joi.string().max(512),
+      downloads: Joi.string().max(512),
       source: Joi.string().max(512),
-      text: Joi.string(),
     }),
     params: Joi.object({
       id: Joi.string().required(),
@@ -49,6 +51,9 @@ export const updateBookValidation = validate(
 
 export const getPaginatedBooksValidation = validate(
   {
+    body: Joi.object({
+      userId: Joi.number().required(),
+    }),
     params: Joi.object({
       page: Joi.number().required(),
       limit: Joi.number().required(),

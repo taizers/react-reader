@@ -10,6 +10,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
+      user_id: {
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        type: Sequelize.DataTypes.INTEGER,
+      },
       title: {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
@@ -39,7 +47,7 @@ module.exports = {
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
       },
-      jenre: {
+      categories: {
         allowNull: true,
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
@@ -49,8 +57,14 @@ module.exports = {
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
       },
-      text: {
-        allowNull: false,
+      link: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DataTypes.TEXT,
+      },
+      downloads: {
+        allowNull: true,
+        defaultValue: null,
         type: Sequelize.DataTypes.TEXT,
       },
       created_at: {
