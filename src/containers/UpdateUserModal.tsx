@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { UserType, UpdateUserType } from '../constants/tsSchemes';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
+import { useShowErrorToast } from '../hooks';
 
 type UpdateUserModalType = {
   user: UserType;
@@ -21,6 +22,8 @@ const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {
 
   const [updateUser, { data, error, isLoading }] =
     usersApiSlice.useUpdateUserMutation();
+
+  useShowErrorToast(error);
 
   useEffect(() => {
     if (!!data) {

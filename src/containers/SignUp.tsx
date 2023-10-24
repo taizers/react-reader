@@ -14,7 +14,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { SignUpUserType } from '../constants/tsSchemes';
 import { authApiSlice } from '../store/reducers/AuthApiSlice';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useShowErrorToast } from '../hooks';
 
 const Copyright = (props: any) => {
   return (
@@ -44,6 +44,8 @@ const SignUp: FC = () => {
   const [password, setPassword] = useState<string>('');
   const [repeatPassword, setRepeatPassword] = useState<string>('');
   const [signUp, { data, error, isLoading }] = authApiSlice.useSignUpMutation();
+
+  useShowErrorToast(error);
 
   useEffect(() => {
     if (!!data) {

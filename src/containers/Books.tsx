@@ -14,7 +14,7 @@ import BookItem from '../components/BookItem/BookItem';
 import { BooksResponceType, BookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';
-import { useDebounce } from '../hooks';
+import { useDebounce, useShowErrorToast } from '../hooks';
 
 const Books: FC = () => {
   const [query, setQuery] = useState<string>('');
@@ -32,6 +32,8 @@ const Books: FC = () => {
     limit,
     query: debouncedValue,
   });
+
+  useShowErrorToast(error);
 
   const booksCount = books?.items?.length;
 

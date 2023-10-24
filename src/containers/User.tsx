@@ -10,12 +10,13 @@ import { useParams } from 'react-router-dom';
 
 import { UserType } from '../constants/tsSchemes';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
+import { useShowErrorToast } from '../hooks';
 
 const User: FC = () => {
   let { id } = useParams();
   const { data: user, error, isLoading } = usersApiSlice.useGetUserQuery(id);
 
-  useEffect(() => {}, []);
+  useShowErrorToast(error);
 
   return (
     <Container component="main" maxWidth="xs">
