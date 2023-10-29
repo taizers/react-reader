@@ -52,7 +52,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
-      },
+      }, 
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -70,6 +70,7 @@ export default (sequelize, DataTypes) => {
 
   Book.associate = (models) => {
     Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
+    Book.belongsTo(models.Seria, { onDelete: 'cascade', foreignKey: "seria_id",});
   };
 
   return Book;

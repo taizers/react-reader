@@ -1,28 +1,43 @@
 import moment from 'moment';
 
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'user',
+  const Seria = sequelize.define(
+    'seria',
     {
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      name: {
+      cover: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
       },
-      role: {
+      releaseDate: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
       },
+      author: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
+      annotation: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
+      tags: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
+      categories: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      }, 
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -38,10 +53,9 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = (models) => {
-    User.hasOne(models.Token, { onDelete: 'cascade' });
-    User.hasMany(models.Book, { onDelete: 'cascade' });
+  Seria.associate = (models) => {
+    Seria.hasMany(models.Book, { onDelete: 'cascade' });
   };
 
-  return User;
+  return Seria;
 };
