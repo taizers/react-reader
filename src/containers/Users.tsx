@@ -15,7 +15,7 @@ import DotMenu from '../components/DotMenu/index';
 import { UsersType } from '../constants/tsSchemes';
 import { defaultStartPage, defaultLimit } from '../constants/constants';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
-import { useAppSelector } from '../hooks';
+import { useAppSelector, useShowErrorToast } from '../hooks';
 
 const Users: FC = () => {
   const history = useNavigate();
@@ -31,7 +31,8 @@ const Users: FC = () => {
     usersApiSlice.useDeleteUserMutation();
   const { user: currentUser } = useAppSelector((state) => state.auth);
 
-  console.log(data);
+  useShowErrorToast(getUsersError);
+  useShowErrorToast(error);
 
   const onShowMoreClick = (id: string) => {
     history(`/users/${id}`);
@@ -62,7 +63,7 @@ const Users: FC = () => {
                   <TableCell>ID</TableCell>
                   <TableCell align="center">Имя</TableCell>
                   <TableCell align="center">Почта</TableCell>
-                  <TableCell align="center">Активирован</TableCell>
+                  <TableCell align="center">Удалён</TableCell>
                   <TableCell align="center"></TableCell>
                 </TableRow>
               </TableHead>
@@ -78,7 +79,7 @@ const Users: FC = () => {
                     </TableCell>
                     <TableCell align="center">{user.email}</TableCell>
                     <TableCell align="center">
-                      {user.isActivated ? 'Да' : 'Нет'}
+                      {user.deleted_at ? 'Да' : 'Нет'}
                     </TableCell>
                     <TableCell align="center">
                       {currentUser?.id && user?.id && (
