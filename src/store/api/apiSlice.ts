@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { localLogout, setUserToken, setUserData } from '../reducers/AuthSlice';
 import { apiUrl } from '../../constants/constants';
 import { clearToken, getToken, setToken } from '../../utils';
-import { useAppDispatch } from '../../hooks';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${apiUrl}`,
@@ -41,7 +40,6 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
     console.log('sending refresh token');
     //send refresh token to get new access token
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
-    console.log(refreshResult);
 
     if (refreshResult?.data) {
       const resultData = { ...refreshResult.data } as IRefreshResultData;
@@ -62,7 +60,6 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
       clearToken();
     }
   }
-  console.log(result);
   return result;
 };
 

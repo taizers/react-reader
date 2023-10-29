@@ -3,6 +3,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import GroupIcon from '@mui/icons-material/Group';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import BookIcon from '@mui/icons-material/Book';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
 import { Sidebar } from '../constants/enums';
 
@@ -20,6 +22,12 @@ export const menuItems = [
     access: 'private',
   },
   {
+    title: Sidebar.LocalBooks,
+    path: '/local-books',
+    icon: BookmarkBorderIcon,
+    access: 'private',
+  },
+  {
     title: Sidebar.Books,
     path: '/books',
     icon: MenuBookIcon,
@@ -28,6 +36,12 @@ export const menuItems = [
 ];
 
 export const subMenuItems = [
+  {
+    title: Sidebar.Library,
+    path: '/library',
+    icon: BookIcon,
+    access: 'private',
+  },
   {
     title: Sidebar.Login,
     path: '/login',

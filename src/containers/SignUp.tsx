@@ -12,9 +12,9 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
-import { SignUpUserType } from '../constants/tsSchemes';
 import { authApiSlice } from '../store/reducers/AuthApiSlice';
-import { useAppDispatch, useShowErrorToast } from '../hooks';
+import { useShowErrorToast } from '../hooks';
+import { createToast } from '../utils/toasts';
 
 const Copyright = (props: any) => {
   return (
@@ -38,7 +38,6 @@ const theme = createTheme();
 
 const SignUp: FC = () => {
   let history = useNavigate();
-  const dispatch = useAppDispatch();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -56,16 +55,14 @@ const SignUp: FC = () => {
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    console.log(email, password);
-
     if (email && name && password && repeatPassword) {
       if (password === repeatPassword) {
         return signUp({ email, name, password, repeatPassword });
       }
-      return alert('passwords not equal');
+      return createToast.error('Пароли не идентичны');
     }
 
-    alert('signup error');
+    createToast.error('Заполните все данные');
   };
 
   return (

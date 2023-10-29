@@ -1,5 +1,4 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-// import CoinModalReducer from './reducers/CoinModalSlice';
 import AuthReducer from './reducers/AuthSlice';
 import { apiSlice } from './api/apiSlice';
 

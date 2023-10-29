@@ -14,6 +14,11 @@ export const booksApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ['Book'],
     }),
+    getUserBooks: builder.query({
+      query: ({ page, limit, id }) => ({
+        url: `/books/user/${id}?page=${page}&limit=${limit}`,
+      }),
+     }),
     updatBook: builder.mutation({
       query: ({ id, user }) => ({
         url: `/books/${id}`,
