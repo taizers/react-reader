@@ -18,6 +18,7 @@ import { getBooksAction } from '../controllers/books.controller';
 
 import usersRouter from './users.routes';
 import booksRouter from './books.routes';
+import seriesRouter from './series.routes';
 
 import verifyToken from '../middlewares/auth.middleware';
 
@@ -37,5 +38,6 @@ router.get('/search', getBooksAction);
 
 router.use('/users', verifyToken, usersRouter);
 router.use('/books', verifyToken, booksRouter);
+router.use('/series', verifyToken, seriesRouter);
 
 export default router;

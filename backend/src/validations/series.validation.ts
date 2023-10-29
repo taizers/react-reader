@@ -1,6 +1,6 @@
 import { Joi, validate } from 'express-validation';
 
-export const createBookValidation = validate(
+export const createSeriaValidation = validate(
   {
     body: Joi.object({
       title: Joi.string().max(512).required(),
@@ -10,9 +10,6 @@ export const createBookValidation = validate(
       releaseDate: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
-      link: Joi.string().max(512),
-      downloads: Joi.string().max(512),
-      source: Joi.string().max(512),
     }),
   },
   {
@@ -23,7 +20,7 @@ export const createBookValidation = validate(
   }
 );
 
-export const updateBookValidation = validate(
+export const updateSeriaValidation = validate(
   {
     body: Joi.object({
       title: Joi.string().max(512),
@@ -33,9 +30,6 @@ export const updateBookValidation = validate(
       releaseDate: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
-      link: Joi.string().max(512),
-      downloads: Joi.string().max(512),
-      source: Joi.string().max(512),
     }),
     params: Joi.object({
       id: Joi.string().required(),
@@ -49,7 +43,7 @@ export const updateBookValidation = validate(
   }
 );
 
-export const getPaginatedBooksValidation = validate(
+export const getPaginatedSeriesValidation = validate(
   {
     query: Joi.object({
       page: Joi.number().required(),
@@ -65,25 +59,7 @@ export const getPaginatedBooksValidation = validate(
   }
 );
 
-export const getPaginatedUserBooksValidation = validate(
-  {
-    params: Joi.object({
-      id: Joi.number().required(),
-    }),
-    query: Joi.object({
-      page: Joi.number().required(),
-      limit: Joi.number().required(),
-    }),
-  },
-  {
-    context: true,
-  },
-  {
-    stripUnknown: true,
-  }
-);
-
-export const getBookValidation = validate(
+export const getSeriaValidation = validate(
   {
     params: Joi.object({
       id: Joi.number().required(),
@@ -97,7 +73,7 @@ export const getBookValidation = validate(
   }
 );
 
-export const deleteBookValidation = validate(
+export const deleteSeriaValidation = validate(
   {
     params: Joi.object({
       id: Joi.number().required(),

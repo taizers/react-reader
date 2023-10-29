@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book } = require('../../db/models/index');
+const { Book, Seria } = require('../../db/models/index');
 
 export const  getAllBooks = async () => {
   const books = await Book.findAll();
@@ -7,7 +7,36 @@ export const  getAllBooks = async () => {
   return books;
 }
 
-export const  getPaginatedBooks = async (page: number, limit: number, id: number) => {
+export const  getPaginatedBooks = async (page: number, limit: number, query: string) => {
+
+  const { count, rows } = await Book.findAndCountAll({
+    offset: page * limit,
+    limit,
+    where: { title: query },    
+    include: [
+      {
+        model: Seria,
+        as: 'seria',
+        attributes: { include: ['id', 'title',] },
+      },
+    ],
+    order: [['created_at', 'DESC']],
+  });
+
+  if (!rows.length) {
+    return {};
+  }
+
+  const totalPages = !count ? 1 : Math.ceil(count / limit);
+
+  return {
+    totalPages,
+    page: page + 1,
+    books: rows,
+  };
+}
+
+export const  getPaginatedUserBooks = async (page: number, limit: number, id: number) => {
 
   const { count, rows } = await Book.findAndCountAll({
     offset: page * limit,
