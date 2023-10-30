@@ -3,18 +3,9 @@ import moment from 'moment';
 
 const filesStorage = multer.diskStorage({
   destination(req, file, callback) {
-    callback(null, 'storage/files/');
-  },
-  filename(req, file, callback) {
-    const date = moment().format('DDMMYYYY-HHmmss_SSS');
-
-    callback(null, `${date}-${file.originalname}`);
-  },
-});
-
-const galeriesStorage = multer.diskStorage({
-  destination(req, file, callback) {
-    callback(null, 'storage/galeries-items/');
+    const id = req?.params?.id;
+    
+    callback(null, `storage/${id}/`);
   },
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
@@ -67,12 +58,6 @@ const filesLimits = {
 
 export const uploadAvatarMiddleware = multer({
   storage: avatarsStorage,
-  fileFilter,
-  limits,
-});
-
-export const uploadGaleryMiddleware = multer({
-  storage: galeriesStorage,
   fileFilter,
   limits,
 });

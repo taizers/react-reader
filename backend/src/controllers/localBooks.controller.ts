@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
 import { getAllBooks, getBook, updateBook, deleteBook, createBook, getPaginatedBooks } from '../services/db/books.services';
 import logger from '../helpers/logger';
+import { UnProcessableEntityError } from '../helpers/error';
 
 export const getAllBooksAction = async (
   req: Request,
@@ -53,6 +54,30 @@ export const createBookAction = async (
     res.status(200).json(book);
   } catch (error) {
     logger.error('Create Book Action - Cannot create book', error);
+    next(error);
+  }
+};
+
+export const uploadBookFileAction = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.file) {
+    return next(new UnProcessableEntityError('File Not Found'));
+  }
+  const books = req.files;
+  console.log(req.files);
+  const payload = req.body;
+
+  logger.info(`Upload Book File Action: { payload: ${payload} }`);
+
+  try {
+    // const book = await createBook(payload);
+    
+    res.status(200).json('ok');
+  } catch (error) {
+    logger.error('Upload Book File Action - Cannot upload book file', error);
     next(error);
   }
 };
