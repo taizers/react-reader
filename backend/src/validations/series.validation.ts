@@ -58,31 +58,3 @@ export const getPaginatedSeriesValidation = validate(
     stripUnknown: true,
   }
 );
-
-export const getSeriaValidation = validate(
-  {
-    params: Joi.object({
-      id: Joi.number().required(),
-    }),
-  },
-  {
-    context: true,
-  },
-  {
-    stripUnknown: true,
-  }
-);
-
-export const deleteSeriaValidation = validate(
-  {
-    params: Joi.object({
-      id: Joi.number().required(),
-    }),
-  },
-  {
-    context: true,
-  },
-  {
-    stripUnknown: true,
-  }
-);

@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { getAllBooks, getBook, updateBook, deleteBook, createBook, getPaginatedUserBooks, getPaginatedBooks } from '../services/db/books.services';
+import { getAllBooks, getBook, updateBook, deleteBook, createBook, getPaginatedBooks } from '../services/db/books.services';
 import logger from '../helpers/logger';
 
 export const getAllBooksAction = async (
@@ -34,26 +34,6 @@ export const getPaginatedBooksAction = async (
     res.status(200).json(books);
   } catch (error) {
     logger.error('Get Paginated Books Action - Cannot get books', error);
-    next(error);
-  }
-};
-
-export const getPaginatedUserBooksAction = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { page, limit } = req.query;
-  const { id } = req.params;
-
-  logger.info(`Get Paginated User Books Action: { page: ${page}, limit: ${limit}, user id: ${id} }`);
-
-  try {
-    const books = await getPaginatedUserBooks(+page-1, +limit, +id);
-    
-    res.status(200).json(books);
-  } catch (error) {
-    logger.error('Get Paginated User Books Action - Cannot get books', error);
     next(error);
   }
 };

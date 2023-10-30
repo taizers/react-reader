@@ -32,39 +32,11 @@ export const updateUserValidation = validate(
   }
 );
 
-export const getUserValidation = validate(
-  {
-    params: Joi.object({
-      id: Joi.number().required(),
-    }),
-  },
-  {
-    context: true,
-  },
-  {
-    stripUnknown: true,
-  }
-);
-
 export const getUsersValidation = validate(
   {
     query: Joi.object({
       page: Joi.number().required(),
       limit: Joi.number().allow("null"),
-    }),
-  },
-  {
-    context: true,
-  },
-  {
-    stripUnknown: true,
-  }
-);
-
-export const deleteUserValidation = validate(
-  {
-    params: Joi.object({
-      id: Joi.number().required(),
     }),
   },
   {

@@ -36,28 +36,6 @@ export const  getPaginatedBooks = async (page: number, limit: number, query: str
   };
 }
 
-export const  getPaginatedUserBooks = async (page: number, limit: number, id: number) => {
-
-  const { count, rows } = await Book.findAndCountAll({
-    offset: page * limit,
-    limit,
-    where: { user_id: id },
-    order: [['created_at', 'DESC']],
-  });
-
-  if (!rows.length) {
-    return {};
-  }
-
-  const totalPages = !count ? 1 : Math.ceil(count / limit);
-
-  return {
-    totalPages,
-    page: page + 1,
-    books: rows,
-  };
-}
-
 export const createBook = async (payload: object) => {
   try {
     return await Book.create(payload);  
