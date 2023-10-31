@@ -30,7 +30,7 @@ export const getPaginatedBooksAction = async (
   logger.info(`Get Paginated Books Action: { page: ${page}, limit: ${limit}, query: ${query} }`);
 
   try {
-    const books = await getPaginatedBooks(+page-1, +limit, query.toString());
+    const books = await getPaginatedBooks(+page-1, +limit, query?.toString());
     
     res.status(200).json(books);
   } catch (error) {
@@ -44,14 +44,16 @@ export const createBookAction = async (
   res: Response,
   next: NextFunction
 ) => {
+  if (!req.file) {
+    return next(new UnProcessableEntityError('File Not Found'));
+  }
+
+  const cover = `${req.file?.destination}${req.file?.filename}`;
+  const payload = {...req?.body, cover};
+
+  logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
 
   try {
-    const cover = `${req.file?.destination}${req.file?.filename}`;
-    const body = req.body;
-    // console.log(req)
-    const payload = {...body, cover};
-  
-    logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
     const book = await createBook(payload);
     
     res.status(200).json(book);
@@ -62,23 +64,28 @@ export const createBookAction = async (
 };
 
 export const uploadBookFileAction = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.file) {
-    return next(new UnProcessableEntityError('File Not Found'));
+  if (!req.files.length) {
+    return next(new UnProcessableEntityError('Files Not Found'));
   }
-  const books = req.files;
-  console.log(req.files);
-  const payload = req.body;
 
-  logger.info(`Upload Book File Action: { payload: ${payload} }`);
+  const id = req.params;
+  
+  let link = '';
+
+  req.files?.forEach((item: {destination: string; filename: string})=>{
+    link+= `${item.destination}${item.filename}=!=`;
+  });
+
+  logger.info(`Upload Book File Action: { link: ${link} }`);
 
   try {
-    // const book = await createBook(payload);
+    const book = await updateBook({id}, {link});
     
-    res.status(200).json('ok');
+    res.status(200).json(book);
   } catch (error) {
     logger.error('Upload Book File Action - Cannot upload book file', error);
     next(error);

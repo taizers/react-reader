@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export default (sequelize, DataTypes) => {
   const Library = sequelize.define(
-    'Library',
+    'library',
     {
       state: {
         type: DataTypes.STRING,
@@ -21,6 +21,7 @@ export default (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
+      tableName: 'libraries',
     }
   );
 

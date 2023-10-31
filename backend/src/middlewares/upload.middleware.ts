@@ -1,16 +1,22 @@
 import multer from 'multer';
 import moment from 'moment';
+import fs from 'fs';
 
 const filesStorage = multer.diskStorage({
   destination(req, file, callback) {
     const id = req?.params?.id;
+    const dir = `storage/books/${id}/`;
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
     
-    callback(null, `storage/books/${id}/`);
+    callback(null, dir);
   },
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
 
-    callback(null, `${date}-${file.originalname}`);
+    callback(null, `${date}---${file.originalname}`);
   },
 });
 
@@ -21,7 +27,7 @@ const coversStorage = multer.diskStorage({
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
 
-    callback(null, `${date}-${file.originalname}`);
+    callback(null, `${date}---${file.originalname}`);
   },
 });
 
@@ -32,7 +38,7 @@ const avatarsStorage = multer.diskStorage({
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
 
-    callback(null, `${date}-${file.originalname}`);
+    callback(null, `${date}---${file.originalname}`);
   },
 });
 
@@ -43,7 +49,7 @@ const newsCoverStorage = multer.diskStorage({
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
 
-    callback(null, `${date}-${file.originalname}`);
+    callback(null, `${date}---${file.originalname}`);
   },
 });
 

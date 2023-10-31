@@ -13,7 +13,7 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      releaseDate: {
+      release_date: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -50,11 +50,12 @@ export default (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
+      tableName: 'series'
     }
   );
 
   Seria.associate = (models) => {
-    Seria.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "seria_id" });
+    Seria.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
   };
 
   return Seria;

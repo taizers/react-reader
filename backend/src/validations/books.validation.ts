@@ -53,7 +53,7 @@ export const getPaginatedBooksValidation = validate(
     query: Joi.object({
       page: Joi.number().required(),
       limit: Joi.number().required(),
-      query: Joi.string().required(),
+      query: Joi.string(),
     }),
   },
   {

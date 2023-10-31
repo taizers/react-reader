@@ -1,24 +1,14 @@
 import moment from 'moment';
 
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'user',
+  const Book_storage = sequelize.define(
+    'book_storage',
     {
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      link: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-      },
-      role: {
+      type: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -38,11 +28,10 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  User.associate = (models) => {
-    User.hasOne(models.Token, { onDelete: 'cascade' });
-    User.hasMany(models.Library, { onDelete: 'cascade' });
-    User.hasMany(models.Book_storage, { onDelete: 'cascade' });
+  Book_storage.associate = (models) => {
+    Book_storage.belongsTo(models.Book, { onDelete: 'cascade', foreignKey: "book_id",});
+    Book_storage.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
   };
 
-  return User;
+  return Book_storage;
 };

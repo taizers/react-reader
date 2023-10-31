@@ -19,6 +19,14 @@ module.exports = {
         },
         type: Sequelize.DataTypes.INTEGER,
       },
+      user_id: {
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        type: Sequelize.DataTypes.INTEGER,
+      },
       title: {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
