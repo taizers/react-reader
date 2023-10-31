@@ -40,7 +40,6 @@ export default (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasOne(models.Token, { onDelete: 'cascade' });
-    User.hasMany(models.Book, { onDelete: 'cascade' });
     User.hasMany(models.Library, { onDelete: 'cascade' });
   };
 

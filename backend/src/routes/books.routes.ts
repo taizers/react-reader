@@ -4,9 +4,9 @@ const router = express.Router();
 import { paramsIdValidation } from '../validations/global.validation';
 import { getBookAction, getPaginatedBooksAction, updateBookAction, deleteBookAction, createBookAction, uploadBookFileAction } from '../controllers/localBooks.controller';
 import { getPaginatedBooksValidation, updateBookValidation, createBookValidation } from '../validations/books.validation';
-import { uploadFilesMiddleware } from '../middlewares/upload.middleware';
+import { uploadCoversMiddleware, uploadFilesMiddleware } from '../middlewares/upload.middleware';
 
-router.post('/', createBookValidation, createBookAction);
+router.post('/',createBookValidation, uploadCoversMiddleware.single('cover'), createBookAction);
 router.get('/', getPaginatedBooksValidation, getPaginatedBooksAction);
 router.get('/:id', paramsIdValidation, getBookAction);
 router.post('/:id/upload', paramsIdValidation, uploadFilesMiddleware.array('book', 5), uploadBookFileAction);

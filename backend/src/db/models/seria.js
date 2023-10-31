@@ -54,7 +54,7 @@ export default (sequelize, DataTypes) => {
   );
 
   Seria.associate = (models) => {
-    Seria.hasMany(models.Book, { onDelete: 'cascade' });
+    Seria.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "seria_id" });
   };
 
   return Seria;

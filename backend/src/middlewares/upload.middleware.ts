@@ -5,7 +5,18 @@ const filesStorage = multer.diskStorage({
   destination(req, file, callback) {
     const id = req?.params?.id;
     
-    callback(null, `storage/${id}/`);
+    callback(null, `storage/books/${id}/`);
+  },
+  filename(req, file, callback) {
+    const date = moment().format('DDMMYYYY-HHmmss_SSS');
+
+    callback(null, `${date}-${file.originalname}`);
+  },
+});
+
+const coversStorage = multer.diskStorage({
+  destination(req, file, callback) {
+    callback(null, 'storage/covers/');
   },
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
@@ -71,4 +82,10 @@ export const uploadNewsCoverMiddleware = multer({
 export const uploadFilesMiddleware = multer({
   storage: filesStorage,
   limits: filesLimits,
+});
+
+export const uploadCoversMiddleware = multer({
+  storage: coversStorage,
+  fileFilter,
+  limits: limits,
 });

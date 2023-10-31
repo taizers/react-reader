@@ -16,6 +16,10 @@ logs/
 # Compiled Python bytecode
 *.py[cod]
 
+#storage
+/storage/covers/*
+/storage/books/*
+
 # Log files
 *.log
 

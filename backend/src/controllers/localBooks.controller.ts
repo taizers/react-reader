@@ -44,11 +44,15 @@ export const createBookAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const payload = req.body;
 
-  logger.info(`Create Book Action: { payload: ${payload} }`);
 
   try {
+    const cover = `${req.file?.destination}${req.file?.filename}`;
+    const body = req.body;
+    // console.log(req)
+    const payload = {...body, cover};
+  
+    logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
     const book = await createBook(payload);
     
     res.status(200).json(book);

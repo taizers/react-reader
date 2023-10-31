@@ -40,7 +40,8 @@ export const createBook = async (payload: object) => {
   try {
     return await Book.create(payload);  
   } catch (error) {
-    throw new error('Книга не создана');
+    console.log(error)
+    throw new Error('Книга не создана');
   }
 };
 

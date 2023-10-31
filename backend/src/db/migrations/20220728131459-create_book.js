@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
       },
-      releaseDate: {
+      release_date: {
         allowNull: true,
         defaultValue: null,
         type: Sequelize.DataTypes.DATE,

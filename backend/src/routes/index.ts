@@ -25,6 +25,12 @@ import verifyToken from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
+router.use(
+  '/storage/covers',
+  verifyToken,
+  express.static('storage/covers')
+);
+
 // Authorization
 
 router.post('/sign-up', signUpValidation, signUpAction);
@@ -34,6 +40,8 @@ router.post('/logout', cookiesValidation, logoutAction);
 router.get('/profile', verifyToken, getProfileAction);
 
 router.get('/search', getBooksAction);
+
+
 
 //Routes
 
