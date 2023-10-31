@@ -45,7 +45,6 @@ export const createBookAction = async (
   next: NextFunction
 ) => {
 
-
   try {
     const cover = `${req.file?.destination}${req.file?.filename}`;
     const body = req.body;
