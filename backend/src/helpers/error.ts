@@ -38,6 +38,12 @@ export class UnAuthorizedError extends ApplicationError {
   }
 }
 
+export class UnCreatedError extends ApplicationError {
+  constructor(message: string) {
+    super(`Ошибка создания ${message}`, 401);
+  }
+}
+
 export class BadCredentialsError extends ApplicationError {
   constructor(message: string) {
     super(`Неверные данные ${message}`, 401);

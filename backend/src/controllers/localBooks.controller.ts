@@ -40,7 +40,7 @@ export const getPaginatedBooksAction = async (
 };
 
 export const createBookAction = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
@@ -48,8 +48,9 @@ export const createBookAction = async (
     return next(new UnProcessableEntityError('File Not Found'));
   }
 
+  const user_id = req.user?.id;
   const cover = `${req.file?.destination}${req.file?.filename}`;
-  const payload = {...req?.body, cover};
+  const payload = {...req?.body, cover, user_id};
 
   logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
 
@@ -103,6 +104,7 @@ export const getBookAction = async (
 
   try {
     const book = await getBook({id});
+
     
     res.status(200).json(book);
   } catch (error) {
@@ -140,7 +142,7 @@ export const deleteBookAction = async (
 
   logger.info(`Delete Book Action: { id: ${id} }`);
 
-  try {
+  try {    
     await deleteBook(id);
     
     res.status(200).json(id);

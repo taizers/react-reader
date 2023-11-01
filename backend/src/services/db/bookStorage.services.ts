@@ -1,15 +1,21 @@
 import fs from 'fs';
-import { EntityNotFoundError } from "../../helpers/error";
+import { EntityNotFoundError, UnCreatedError } from "../../helpers/error";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Book_storage } = require('../../db/models/index');
 
-export const createBookStorage = async (payload: object) => {
-  try {
-    return await Book_storage.create(payload);  
-  } catch (error) {
-    throw new Error('Книга не создана');
-  }
+interface ICreationPayload {
+  user_id: string;
+  book_id: string;
+  files: Array<{destination: string; filename: string}>;
+}
+
+export const createBookStorage = async (payload: ICreationPayload) => {
+    await Promise.all(
+      payload.files?.map(async (item)=>{
+        await  Book_storage.create({book_id: payload.book_id, user_id: payload.user_id, link: `${item.destination}${item.filename}`});
+      })
+    )
 };
 
 

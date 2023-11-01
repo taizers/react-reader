@@ -11,23 +11,15 @@ export const uploadBookFilesAction = async (
   if (!req.files.length) {
     return next(new UnProcessableEntityError('Files Not Found'));
   }
+  const bookId = req.params?.bookId;
+  const userId = req.user?.id;
 
-  const id = req.body.id;
-  
-  const links = req.files?.map((item: {destination: string; filename: string})=>{
-    return `${item.destination}${item.filename}`;
-  });
-
-  logger.info(`Upload Book File Action: { book id: ${id}, links: ${JSON.stringify(links)} }`);
+  logger.info(`Upload Book File Action: { book id: ${bookId}, user id: ${userId}, links: ${JSON.stringify(req.files)} }`);
 
   try {
-    Promise.all(
-      links.map(async (item: string)=>{
-        await createBookStorage({book_id: id, link: item});
-      })
-    )
+    await createBookStorage({book_id: bookId, user_id: userId, files: req.files});
     
-    res.status(201).json('ok');
+    res.status(201).json('created');
   } catch (error) {
     logger.error('Upload Book File Action - Cannot upload book file', error);
     next(error);
@@ -41,14 +33,14 @@ export const deleteBookStoragesAction = async (
 ) => {
   const ids = req.body.ids;
 
-  logger.info(`Delete Book Action: { id: ${JSON.stringify(ids)} }`);
+  logger.info(`Delete Book Storages Action: { id: ${JSON.stringify(ids)} }`);
 
   try {
     await deleteBookStorage(ids);
     
     res.status(200).json('ok');
   } catch (error) {
-    logger.error('Delete Book Action - Cannot delete book', error);
+    logger.error('Delete Book Storages Action - Cannot delete book storages', error);
     next(error);
   }
 };

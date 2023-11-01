@@ -4,7 +4,7 @@ import fs from 'fs';
 
 const filesStorage = multer.diskStorage({
   destination(req, file, callback) {
-    const id = req?.params?.id;
+    const id = req.params?.bookId;
     const dir = `storage/books/${id}/`;
 
     if (!fs.existsSync(dir)){

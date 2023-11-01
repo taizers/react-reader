@@ -70,8 +70,9 @@ export default (sequelize, DataTypes) => {
 
   Book.associate = (models) => {
     Book.belongsTo(models.Seria, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
-    Book.hasMany(models.Library, { onDelete: 'cascade' });
-    Book.hasMany(models.Book_storage, { onDelete: 'cascade' });
+    Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id" });
+    Book.hasMany(models.Library, { onDelete: 'cascade', foreignKey: "book_id" });
+    Book.hasMany(models.Book_storage, { onDelete: 'cascade', foreignKey: "book_id" });
   };
 
   return Book;

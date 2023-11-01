@@ -5,7 +5,7 @@ import { uploadBookFilesAction, deleteBookStoragesAction } from '../controllers/
 import { uploadFilesMiddleware } from '../middlewares/upload.middleware';
 import { deleteBookStorageValidation } from '../validations/bookStorage.validation';
 
-router.post('/', uploadFilesMiddleware.array('books', 5), uploadBookFilesAction);
+router.post('/:bookId', uploadFilesMiddleware.array('books', 5), uploadBookFilesAction);
 router.delete('/', deleteBookStorageValidation, deleteBookStoragesAction);
 
 export default router;
