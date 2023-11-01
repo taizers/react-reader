@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book, Seria } = require('../../db/models/index');
+const { Book, Seria, Book_storage } = require('../../db/models/index');
 import { Op } from "sequelize";
 import fs from 'fs';
+import { UnCreatedError } from "../../helpers/error";
+import book_storage from "../../db/models/book_storage";
 
 export const  getAllBooks = async () => {
   const books = await Book.findAll();
@@ -49,13 +51,20 @@ export const createBook = async (payload: object) => {
   try {
     return await Book.create(payload);  
   } catch (error) {
-    console.log(error)
-    throw new Error('Книга не создана');
+    throw new UnCreatedError('Книга');
   }
 };
 
 export const  getBook = async (where: object) => {
-  return await Book.findOne({ where });
+  return await Book.findOne({ 
+    where,
+    include: [
+      {
+        model: Book_storage,
+        as: 'storages',
+      },
+    ],
+  });
 }
 
 export const  updateBook = async (where: object, payload: object) => {

@@ -38,6 +38,11 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
+      primory_link: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
       source: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -72,7 +77,7 @@ export default (sequelize, DataTypes) => {
     Book.belongsTo(models.Seria, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
     Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id" });
     Book.hasMany(models.Library, { onDelete: 'cascade', foreignKey: "book_id" });
-    Book.hasMany(models.Book_storage, { onDelete: 'cascade', foreignKey: "book_id" });
+    Book.hasMany(models.Book_storage, { onDelete: 'cascade', foreignKey: "book_id", as: 'storages' });
   };
 
   return Book;

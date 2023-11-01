@@ -29,8 +29,8 @@ export default (sequelize, DataTypes) => {
   );
 
   Book_storage.associate = (models) => {
-    Book_storage.belongsTo(models.Book, { onDelete: 'cascade', foreignKey: "book_id",});
-    Book_storage.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
+    Book_storage.belongsTo(models.Book, { onDelete: 'cascade', foreignKey: "book_id", as: 'storages' });
+    Book_storage.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id" });
   };
 
   return Book_storage;

@@ -40,7 +40,7 @@ export class UnAuthorizedError extends ApplicationError {
 
 export class UnCreatedError extends ApplicationError {
   constructor(message: string) {
-    super(`Ошибка создания ${message}`, 401);
+    super(`Сущность ${message} не создана`, 401);
   }
 }
 

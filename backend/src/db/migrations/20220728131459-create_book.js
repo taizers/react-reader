@@ -36,6 +36,11 @@ module.exports = {
         defaultValue: null,
         type: Sequelize.DataTypes.DATE,
       },
+      primory_link: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DataTypes.STRING,
+      },
       cover: {
         allowNull: true,
         defaultValue: null,
