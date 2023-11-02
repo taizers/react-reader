@@ -23,11 +23,19 @@ const getCodeForEncoding = (file: Buffer) => {
     return encodingArray[code];
 };
 
-const getTagList = (string: string, tag: string) =>  {
+const getTagsList = (string: string, tag: string) =>  {
 
     const clearString = string.replace(/[\r\n]+/g, "").split(`<${tag}`).join('').split(`</${tag}>`).slice(0,-1);
 
-    const result = clearString.map((item) => item.trim());
+    const result = clearString.map((item) => {
+        const str = item.trim();
+
+        if (str.charAt(0) === '>'){
+            return str.slice(1).trim();
+        }
+
+        return str;
+    });
 
     return result;
 };
@@ -43,22 +51,31 @@ const getTagContainsString = (string: string ,tag: string) => {
 const getTagValue = (string: string, tag: string) => {
     const containsString = '"';
     const equalString = '=';
-    console.log('1', string);
-    console.log('2', tag);
 
     const startIndex = string.indexOf(tag + equalString) + tag.length + containsString.length + 1;
     const endIndex = string.indexOf(containsString, startIndex);
 
-    console.log('3', startIndex);
-    console.log('4', endIndex);
     const value = string.slice(startIndex, endIndex);
-    console.log('5', value);
 
     return value;
 };
 
+const getSections = (body: string, sectionTag: string) => {
+    const sections = getTagsList(body, sectionTag);
+    const result = sections.map((item) => {
+        const title = getTagContainsString(item, titleTag);
+        const titleParagrafs = getTagsList(title, paragrafTag);
+        const paragrafs = getTagsList(item, paragrafTag);
+
+        paragrafs.shift();
+
+        return {titleParagrafs, paragrafs};
+    });
+    return result;
+}
+
 const getBinaryData = (book: string, tag: string) => {
-    const binaries = getTagList(book, tag);
+    const binaries = getTagsList(book, tag);
     const idString = 'id';
     const contenttypeString = 'content-type';
     
@@ -98,9 +115,10 @@ export const getBookText = (link: string | null | undefined) => {
 
     const annotation = getTagContainsString(description, annotaionTag);
 
-    const sections = getTagList(body, sectionTag);
+    // const sections = getTagsList(body, sectionTag);
+    const sections = getSections(body, sectionTag);
 
-    const clearAnnotation = getTagList(annotation, paragrafTag);
+    const clearAnnotation = getTagsList(annotation, paragrafTag);
 
-    return {binaries}
+    return {sections}
 }
