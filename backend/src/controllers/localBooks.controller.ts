@@ -59,13 +59,13 @@ export const createBookAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.file) {
-    return next(new UnProcessableEntityError('File Not Found'));
-  }
+  // if (!req.file) {
+  //   return next(new UnProcessableEntityError('File Not Found'));
+  // }
 
   const user_id = req.user?.id;
   const cover = `${req.file?.destination}${req.file?.filename}`;
-  const payload = {...req?.body, cover, user_id};
+  const payload = {...req?.body, cover: req.file ? cover : null, user_id};
 
   logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
 
@@ -75,35 +75,6 @@ export const createBookAction = async (
     res.status(200).json(book);
   } catch (error) {
     logger.error('Create Book Action - Cannot create book', error);
-    next(error);
-  }
-};
-
-export const uploadBookFileAction = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
-  if (!req.files.length) {
-    return next(new UnProcessableEntityError('Files Not Found'));
-  }
-
-  const id = req.params;
-  
-  let link = '';
-
-  req.files?.forEach((item: {destination: string; filename: string})=>{
-    link+= `${item.destination}${item.filename}=!=`;
-  });
-
-  logger.info(`Upload Book File Action: { link: ${link} }`);
-
-  try {
-    const book = await updateBook({id}, {link});
-    
-    res.status(200).json(book);
-  } catch (error) {
-    logger.error('Upload Book File Action - Cannot upload book file', error);
     next(error);
   }
 };
@@ -120,15 +91,21 @@ export const getBookAction = async (
   try {
     const book = await getBook({id});
 
-    const file = readFileSync(book.primory_link);
+    const text: any = {}; 
 
-    const code = getEncodingCode(file);
+    if (book?.primory_link) {
+      const file = readFileSync(book.primory_link);
 
-    const result = iconv.encode(iconv.decode (file, code), 'utf8').toString();
+      const code = getEncodingCode(file);
 
-    const annotation = result.slice(result.indexOf('<annotation>'), result.indexOf('</annotation>'))
+      const result = iconv.encode(iconv.decode (file, code), 'utf8').toString();
+  
+      const annotation = result.slice(result.indexOf('<annotation>'), result.indexOf('</annotation>'));
+      text.annotation = annotation;
+      text.result = result;
+    }
 
-    res.status(200).json({annotation, result});
+    res.status(200).json({book, text});
   } catch (error) {
     logger.error('Get Book Action - Cannot get book', error);
     next(error);
