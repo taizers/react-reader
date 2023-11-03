@@ -37,6 +37,9 @@ const getTagsList = (string: string, tag: string) =>  {
         return str;
     });
 
+    result.shift();
+    result.pop();
+
     return result;
 };
 
@@ -66,8 +69,6 @@ const getSections = (body: string, sectionTag: string) => {
         const title = getTagContainsString(item, titleTag);
         const titleParagrafs = getTagsList(title, paragrafTag);
         const paragrafs = getTagsList(item, paragrafTag);
-
-        paragrafs.shift();
 
         return {titleParagrafs, paragrafs};
     });
