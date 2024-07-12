@@ -20,6 +20,25 @@ const filesStorage = multer.diskStorage({
   },
 });
 
+const booksStorage = multer.diskStorage({
+  destination(req, file, callback) {
+    const id = req.params?.bookId;
+    const dir = `storage/books/${id}/`;
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+    
+    callback(null, dir);
+  },
+  filename(req, file, callback) {
+    const date = moment().format('DDMMYYYY-HHmmss_SSS');
+
+    callback(null, `${date}---${file.originalname}`);
+  },
+});
+
+
 const coversStorage = multer.diskStorage({
   destination(req, file, callback) {
     callback(null, 'storage/covers/');
@@ -65,6 +84,18 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   }
 };
 
+const booksFilter = (req: any, file: Express.Multer.File, callback: any) => {
+  if (
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/png'
+  ) {
+    callback(null, true);
+  } else {
+    callback(null, false);
+  }
+};
+
 const limits = {
   fileSize: 1024 * 1024 * 5,
 };
@@ -94,4 +125,9 @@ export const uploadCoversMiddleware = multer({
   storage: coversStorage,
   fileFilter,
   limits: limits,
+});
+export const uploadBooksMiddleware = multer({
+  storage: booksStorage,
+  // fileFilter: booksFilter,
+  limits: filesLimits,
 });

@@ -15,11 +15,16 @@ import { BooksResponceType, BookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';
 import { useDebounce, useShowErrorToast } from '../hooks';
+import UploadFile from '../components/UploadFile';
+import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import UploadBookModal from './UploadBookModal';
 
 const LocalBooks: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
+  const [name, setName] = useState<string>('');
   const debouncedValue = useDebounce(query);
 
   // const [queryType, setQueryType] = useState('');
@@ -84,23 +89,6 @@ const LocalBooks: FC = () => {
           autoFocus
           onChange={(e: any) => setQuery(e.currentTarget.value)}
         />
-        {/* <FormControl sx={{minWidth: '20%', ml: 1}} margin="normal">
-                    <InputLabel id="select-type-query-label">Тип</InputLabel>
-                    <Select
-                    required
-                    labelId="select-type-query-label"
-                    id="demo-simple-select-autowidth"
-                    value={queryType}
-                    onChange={onSelectChange}
-                    autoWidth
-                    label="Тип"
-                    >
-                        <MenuItem value={'books'}>Книги</MenuItem>
-                        <MenuItem value={'authors'}>Авторы</MenuItem>
-                        <MenuItem value={'series'}>Серии</MenuItem>
-                        <MenuItem value={'genres'}>Жанры</MenuItem>
-                    </Select>
-                </FormControl> */}
         <Button
           type="submit"
           fullWidth
@@ -109,6 +97,7 @@ const LocalBooks: FC = () => {
         >
           Найти
         </Button>
+        <UploadBookModal/>
       </Box>
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}

@@ -4,26 +4,29 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { UserType, UpdateUserType } from '../constants/tsSchemes';
-import { usersApiSlice } from '../store/reducers/UsersApiSlice';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useShowErrorToast } from '../hooks';
+import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
+import UploadFile from '../components/UploadFile';
+import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 
-type UpdateUserModalType = {
-  user: UserType;
+type UploadBookModalType = {
+  // user: UserType;
 };
 
-const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {
+const UploadBookModal: FC<UploadBookModalType> = ({ }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
-  const [oldPassword, setOldPassword] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
+  const [genres, setGenres] = useState<string>('');
+  const [fieldsError, setFieldsError] = useState<string>('');
+  const [book, setBook] = useState<ExtendedFileProps[]>();
 
-  const [updateUser, { data, error, isLoading }] =
-    usersApiSlice.useUpdateUserMutation();
+  const [createBook, { data, error, isLoading }] =
+    booksApiSlice.useCreateBookMutation();
 
   useShowErrorToast(error);
+  useShowErrorToast(fieldsError);
 
   useEffect(() => {
     if (!!data) {
@@ -38,33 +41,35 @@ const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {
   const handleClose = () => {
     setOpen(false);
     setName('');
-    setOldPassword('');
-    setNewPassword('');
+    setGenres('');
   };
 
   const onSubmitForm = () => {
-    if ((!name || name === user.name) && (!oldPassword || !newPassword)) {
-      return console.log('Empty');
+    if ((!name) && !genres) {
+      return setFieldsError('some fields Empty');
     }
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('genres', genres);
+    book?.forEach((item) => {
+      formData.append('books', item);
+    })
 
-    console.log({ id: user.id, user: { name, oldPassword, newPassword } });
-    updateUser({ id: user.id, user: { name, oldPassword, newPassword } });
+    createBook(formData);
   };
 
   return (
     <>
       <Button
-        fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        sx={{ m: 2 }}
         onClick={handleClickOpen}
       >
-        Редактировать профиль
+        <CloudUploadIcon/>
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
-          <DialogContentText>Редактирование профиля</DialogContentText>
+          <DialogTitle>Загрузить книгу</DialogTitle>
           <TextField
             autoFocus
             margin="dense"
@@ -73,29 +78,19 @@ const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {
             type="text"
             fullWidth
             variant="standard"
-            defaultValue={user.name || ''}
             onChange={(evt) => setName(evt.target.value)}
           />
           <TextField
             autoFocus
             margin="dense"
-            id="oldPassword"
-            label="Старый пароль"
-            type="password"
+            id="genres"
+            label="Жанры"
+            type="text"
             fullWidth
             variant="standard"
-            onChange={(evt) => setOldPassword(evt.target.value)}
+            onChange={(evt) => setGenres(evt.target.value)}
           />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="newPassword"
-            label="Новый пароль"
-            type="password"
-            fullWidth
-            variant="standard"
-            onChange={(evt) => setNewPassword(evt.target.value)}
-          />
+          <UploadFile setFiles={setBook} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Отмена</Button>
@@ -106,4 +101,4 @@ const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {
   );
 };
 
-export default UpdateUserModal;
+export default UploadBookModal;

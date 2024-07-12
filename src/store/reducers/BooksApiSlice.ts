@@ -2,6 +2,14 @@ import { apiSlice } from '../api/apiSlice';
 
 export const booksApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createBook: builder.mutation({
+      query: (book) => ({
+        url: `/books`,
+        method: 'POST',
+        body: book,
+      }),
+      invalidatesTags: ['Book'],
+    }),
     getBook: builder.query({
       query: (id) => ({
         url: `/books/${id}`,
@@ -20,10 +28,10 @@ export const booksApiSlice = apiSlice.injectEndpoints({
       }),
      }),
     updatBook: builder.mutation({
-      query: ({ id, user }) => ({
+      query: ({ id, book }) => ({
         url: `/books/${id}`,
         method: 'PUT',
-        body: { ...user },
+        body: { ...book },
       }),
       invalidatesTags: ['Book'],
     }),

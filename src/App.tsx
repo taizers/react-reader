@@ -17,6 +17,7 @@ import Profile from './components/Profile';
 import { setUserData, setUserToken } from './store/reducers/AuthSlice';
 import { useAppDispatch } from './hooks';
 import NotFound from './components/NotFound';
+import LocalBooks from './containers/LocalBooks';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -58,6 +59,7 @@ const App: FC = () => {
           <Route path={'profile'} element={<Profile />} />
           <Route path={'books'} element={<Books />} />
           <Route path={'books/:id'} element={<Book />} />
+          <Route path={'/local-books'} element={<LocalBooks />} />
           <Route path={'users'} element={<Users />} />
           <Route path={'users/:id'} element={<User />} />
         </Route>

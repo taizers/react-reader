@@ -25,10 +25,15 @@ export function useDebounce<T>(value: T, delay?: number): T {
   return debouncedValue;
 };
 
-export const useShowErrorToast = (error: FetchBaseQueryError | SerializedError | undefined) => {
+export const useShowErrorToast = (error: FetchBaseQueryError | SerializedError | string | undefined) => {
   useEffect(() => {
+    if (typeof error === 'string') {
+      createToast.error(error);
+      return;
+    }
+  
     if (error && 'status' in error) {
-      createToast.error(error.data, error.status);
+      createToast.error({message: error.data, status: error.status});
     }
   }, [error]);
 };
