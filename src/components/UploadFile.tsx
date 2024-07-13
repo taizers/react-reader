@@ -4,7 +4,7 @@ import { useShowErrorToast } from '../hooks';
 import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
 
 type UploadFileType = {
-  setFiles: (file?: ExtendedFileProps[]) => void;
+  setFiles: (file?: ExtendedFileProps) => void;
   isMulti?: boolean;
 };
 
@@ -12,15 +12,15 @@ const UploadFile: FC<UploadFileType> = ({setFiles, isMulti = true}) => {
   const [error, setError] = useState<string>();
 
   useShowErrorToast(error);
-  const handleFilesChange = (files: ExtendedFileProps[]) => {
+  const handleFilesChange = (file: ExtendedFileProps[]) => {
     // Do something...
-    setFiles([...files]);
+    setFiles(file[0]);
   };
 
   return (
     <FileUpload 
       getBase64={false}
-      multiFile={isMulti}
+      // multiFile={isMulti}
       disabled={false}
       title="Загрузить файлы"
       header="[Drag to drop]"

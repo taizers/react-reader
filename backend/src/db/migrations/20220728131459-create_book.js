@@ -56,16 +56,6 @@ module.exports = {
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
       },
-      tags: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
-      },
-      categories: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
-      },
       source: {
         allowNull: true,
         defaultValue: null,
@@ -74,7 +64,7 @@ module.exports = {
       link: {
         allowNull: true,
         defaultValue: null,
-        type: Sequelize.DataTypes.TEXT,
+        type: Sequelize.DataTypes.STRING,
       },
       downloads: {
         allowNull: true,

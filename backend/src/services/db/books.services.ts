@@ -3,7 +3,6 @@ const { Book, Seria, Book_storage } = require('../../db/models/index');
 import { Op } from "sequelize";
 import fs from 'fs';
 import { UnCreatedError } from "../../helpers/error";
-import book_storage from "../../db/models/book_storage";
 
 export const  getAllBooks = async () => {
   const books = await Book.findAll();
@@ -18,10 +17,12 @@ export const  getPaginatedBooks = async (page: number, limit: number, query: str
     where.title = {
       [Op.like]: `%${query}%`,
     };
-  }
+  };
+
+  const offset = page * limit;
 
   const { count, rows } = await Book.findAndCountAll({
-    offset: page * limit,
+    offset,
     limit,
     where,
     include: [
@@ -57,13 +58,7 @@ export const createBook = async (payload: object) => {
 
 export const  getBook = async (where: object) => {
   return await Book.findOne({ 
-    where,
-    include: [
-      {
-        model: Book_storage,
-        as: 'storages',
-      },
-    ],
+    where
   });
 }
 

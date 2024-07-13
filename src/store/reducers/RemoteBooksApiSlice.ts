@@ -2,7 +2,7 @@ import { apiSlice } from '../api/apiSlice';
 
 export const remoteBooksApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getBooks: builder.query({
+    getRemoteBooks: builder.query({
       query: ({ page, limit, query }) => ({
         url: `/search?query=${query}&page=${page}&limit=${limit}`,
       }),

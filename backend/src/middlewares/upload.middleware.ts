@@ -22,14 +22,16 @@ const filesStorage = multer.diskStorage({
 
 const booksStorage = multer.diskStorage({
   destination(req, file, callback) {
-    const id = req.params?.bookId;
-    const dir = `storage/books/${id}/`;
+    // const id = req.params?.bookId;
+    // const dir = `storage/books/${id}/`;
 
-    if (!fs.existsSync(dir)){
-      fs.mkdirSync(dir);
-    }
+    // if (!fs.existsSync(dir)){
+    //   fs.mkdirSync(dir);
+    // }
     
-    callback(null, dir);
+    // callback(null, dir);
+    
+    callback(null, 'storage/books/');
   },
   filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
@@ -128,6 +130,5 @@ export const uploadCoversMiddleware = multer({
 });
 export const uploadBooksMiddleware = multer({
   storage: booksStorage,
-  // fileFilter: booksFilter,
   limits: filesLimits,
 });

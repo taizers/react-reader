@@ -1,9 +1,13 @@
 import moment from 'moment';
 
 export default (sequelize, DataTypes) => {
-  const Library = sequelize.define(
-    'library',
+  const Genre = sequelize.define(
+    'genre',
     {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -16,14 +20,13 @@ export default (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
-      tableName: 'libraries',
     }
   );
 
-  Library.associate = (models) => {
-    Library.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
-    Library.belongsToMany(models.Book, { through: models.Library_book });
+  Genre.associate = (models) => {
+    Genre.belongsToMany(models.Book, { through: 'Book_Genre' });
+    Genre.belongsToMany(models.Seria, { through: 'Seria_Genre' });
   };
 
-  return Library;
+  return Genre;
 };

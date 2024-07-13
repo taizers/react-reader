@@ -45,6 +45,28 @@ export type BookType = {
   description: string;
 };
 
+export type LocalBookType = {
+  id: number;
+  title: string;
+  updated: string | null;
+  cover: string | null;
+  annotation: string | null;
+  categories: string | null;
+  author: string | null;
+  downloads: string | null;
+  link: string | null;
+  primory_link: string | null;
+  release_date: string | null;
+  seria: string | null;
+  seria_id: string | null;
+  source: string | null;
+  tags: string | null;
+  user_id: number;
+  updated_at: Date | null;
+  created_at: Date | null;
+  deleted_at: Date | null;
+};
+
 export type AuthorRType = {
   author: Array<AuthorType>;
   title: string;

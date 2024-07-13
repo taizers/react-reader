@@ -28,16 +28,6 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      tags: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-      },
-      categories: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-      }, 
       created_at: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -56,6 +46,8 @@ export default (sequelize, DataTypes) => {
 
   Seria.associate = (models) => {
     Seria.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
+    Seria.belongsToMany(models.Genre, { through: 'Seria_Genre' });
+    Seria.belongsToMany(models.Tag, { through: 'Seria_Tag' });
   };
 
   return Seria;

@@ -18,19 +18,6 @@ module.exports = {
         },
         type: Sequelize.DataTypes.INTEGER,
       },
-      book_id: {
-        allowNull: false,
-        references: {
-          model: 'books',
-          key: 'id',
-        },
-        type: Sequelize.DataTypes.INTEGER,
-      },
-      state: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
-      },
       created_at: {
         allowNull: false,
         type: Sequelize.DataTypes.DATE,

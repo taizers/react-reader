@@ -3,7 +3,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('series', {
+    return queryInterface.createTable('tags', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,26 +12,7 @@ module.exports = {
       },
       title: {
         allowNull: false,
-        type: Sequelize.DataTypes.STRING,
-      },
-      release_date: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.DATE,
-      },
-      cover: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
-      },
-      author: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
-      },
-      annotation: {
-        allowNull: true,
-        defaultValue: null,
+        unique: true,
         type: Sequelize.DataTypes.STRING,
       },
       created_at: {
@@ -51,6 +32,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.dropTable('series');
+    return queryInterface.dropTable('tags');
   },
 };

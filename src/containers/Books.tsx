@@ -27,7 +27,7 @@ const Books: FC = () => {
     data: books,
     error,
     isLoading,
-  } = remoteBooksApiSlice.useGetBooksQuery({
+  } = remoteBooksApiSlice.useGetRemoteBooksQuery({
     page,
     limit,
     query: debouncedValue,

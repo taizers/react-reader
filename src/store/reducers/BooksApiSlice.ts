@@ -17,8 +17,8 @@ export const booksApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Book'],
     }),
     getBooks: builder.query({
-      query: ({ page, limit }) => ({
-        url: `/books?page=${page}&limit=${limit}`,
+      query: ({ page, limit, query }) => ({
+        url: `/books?query=${query}&page=${page}&limit=${limit}`,
       }),
       providesTags: ['Book'],
     }),

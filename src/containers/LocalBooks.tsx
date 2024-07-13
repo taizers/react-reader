@@ -5,42 +5,44 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import FormControl from '@mui/material/FormControl';
-// import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import BookItem from '../components/BookItem/BookItem';
-import { BooksResponceType, BookType } from '../constants/tsSchemes';
+import { BookType, LocalBookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
-import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';
 import { useDebounce, useShowErrorToast } from '../hooks';
-import UploadFile from '../components/UploadFile';
-import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import UploadBookModal from './UploadBookModal';
+import { booksApiSlice } from '../store/reducers/BooksApiSlice';
+import LocalBookItem from '../components/LocalBookItem/LocalBookItem';
 
 const LocalBooks: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
-  const [name, setName] = useState<string>('');
   const debouncedValue = useDebounce(query);
 
-  // const [queryType, setQueryType] = useState('');
   const {
-    data: books,
+    data,
     error,
     isLoading,
-  } = remoteBooksApiSlice.useGetBooksQuery({
+  } = booksApiSlice.useGetBooksQuery({
     page,
     limit,
     query: debouncedValue,
   });
+  const [deleteBook, { data: deleteData, error: deleteError, isLoading: deleteIsLoading }] =
+  booksApiSlice.useDeleteBookMutation();
+  // const {
+  //   data: books,
+  //   error,
+  //   isLoading,
+  // } = booksApiSlice.useGetBookQuery(3);
+
+
 
   useShowErrorToast(error);
+  useShowErrorToast(deleteError);
 
-  const booksCount = books?.items?.length;
+  const booksCount = data?.books?.length;
 
   useEffect(() => {
     if (query) {
@@ -50,7 +52,7 @@ const LocalBooks: FC = () => {
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(query);
+
     if (query) {
       setPage(defaultStartPage);
     }
@@ -65,10 +67,6 @@ const LocalBooks: FC = () => {
     }
     setPage(value - 1);
   };
-
-  // const onSelectChange = (event: SelectChangeEvent) => {
-  //     setQueryType(event.target.value);
-  // };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -113,8 +111,8 @@ const LocalBooks: FC = () => {
               bgcolor: 'background.paper',
             }}
           >
-            {books.items.map((book: BookType, index: number) => (
-              <BookItem book={book} key={`book ${index}`} />
+            {data.books.map((book: LocalBookType, index: number) => (
+              <LocalBookItem book={book} key={`book ${index}`} deleteBook={deleteBook}/>
             ))}
           </List>
         )}
@@ -136,7 +134,7 @@ const LocalBooks: FC = () => {
         )}
         {booksCount && (
           <Pagination
-            count={books.totalPages}
+            count={data.totalPages}
             color="primary"
             defaultPage={1}
             boundaryCount={2}

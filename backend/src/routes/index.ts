@@ -31,6 +31,11 @@ router.use(
   verifyToken,
   express.static('storage/covers')
 );
+router.use(
+  '/storage/books',
+  verifyToken,
+  express.static('storage/books')
+);
 
 // Authorization
 

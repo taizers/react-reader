@@ -40,13 +40,13 @@ export class UnAuthorizedError extends ApplicationError {
 
 export class UnCreatedError extends ApplicationError {
   constructor(message: string) {
-    super(`Сущность ${message} не создана`, 401);
+    super(`Сущность ${message} не создана`, 404);
   }
 }
 
 export class BadCredentialsError extends ApplicationError {
   constructor(message: string) {
-    super(`Неверные данные ${message}`, 401);
+    super(`Неверные данные ${message}`, 404);
   }
 }
 

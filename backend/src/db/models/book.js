@@ -13,7 +13,7 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      releaseDate: {
+      release_date: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -24,16 +24,6 @@ export default (sequelize, DataTypes) => {
         defaultValue: null,
       },
       annotation: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-      },
-      tags: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: null,
-      },
-      categories: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -76,8 +66,9 @@ export default (sequelize, DataTypes) => {
   Book.associate = (models) => {
     Book.belongsTo(models.Seria, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
     Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id" });
-    Book.hasMany(models.Library, { onDelete: 'cascade', foreignKey: "book_id" });
-    Book.hasMany(models.Book_storage, { onDelete: 'cascade', foreignKey: "book_id", as: 'storages' });
+    Book.belongsToMany(models.Genre, { through: 'Book_Genre' });
+    Book.belongsToMany(models.Tag, { through: 'Book_Tag' });
+    Book.belongsToMany(models.Library, { through: models.Library_book });
   };
 
   return Book;

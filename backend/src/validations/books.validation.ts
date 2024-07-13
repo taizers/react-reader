@@ -6,7 +6,7 @@ export const createBookValidation = validate(
       author: Joi.string().max(512),
       tags: Joi.string().max(512),
       categories: Joi.string().max(512),
-      releaseDate: Joi.date(),
+      release_date: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
       link: Joi.string().max(512),
@@ -29,7 +29,7 @@ export const updateBookValidation = validate(
       author: Joi.string().max(512),
       tags: Joi.string().max(512),
       categories: Joi.string().max(512),
-      releaseDate: Joi.date(),
+      release_date: Joi.date(),
       cover: Joi.string(),
       annotation: Joi.string().max(1024),
       link: Joi.string().max(512),
@@ -54,7 +54,7 @@ export const getPaginatedBooksValidation = validate(
     query: Joi.object({
       page: Joi.number().required(),
       limit: Joi.number().required(),
-      query: Joi.string(),
+      query: Joi.string().allow(''),
     }),
   },
   {

@@ -1,14 +1,14 @@
 import moment from 'moment';
 
 export default (sequelize, DataTypes) => {
-  const Book_storage = sequelize.define(
-    'book_storage',
+  const Library_book = sequelize.define(
+    'library_book',
     {
-      link: {
+      state: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      type: {
+      last_page: {
         type: DataTypes.STRING,
         allowNull: true,
         defaultValue: null,
@@ -28,10 +28,5 @@ export default (sequelize, DataTypes) => {
     }
   );
 
-  Book_storage.associate = (models) => {
-    Book_storage.belongsTo(models.Book, { onDelete: 'cascade', foreignKey: "book_id", as: 'storages' });
-    Book_storage.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id" });
-  };
-
-  return Book_storage;
+  return Library_book;
 };
