@@ -6,7 +6,7 @@ import { UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
 
 export const createBookAction = async (
-  req: any,
+  req: CreateBookRequest,
   res: Response,
   next: NextFunction
 ) => {

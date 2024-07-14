@@ -1,9 +1,9 @@
 import { Joi, validate } from 'express-validation';
 
-export const deleteBookStorageValidation = validate(
+export const createTagValidation = validate(
   {
     body: Joi.object({
-      ids: Joi.array().items(Joi.string()),
+      title: Joi.string().max(512).required(),
     })
   },
   {

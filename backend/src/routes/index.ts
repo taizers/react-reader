@@ -20,7 +20,8 @@ import usersRouter from './users.routes';
 import booksRouter from './books.routes';
 import seriesRouter from './series.routes';
 import libraryRouter from './library.routes';
-import bookStorageRouter from './bookStorage.routes';
+import tagsRouter from './tags.routes';
+import genresRouter from './genres.routes';
 
 import verifyToken from '../middlewares/auth.middleware';
 
@@ -55,6 +56,7 @@ router.use('/users', verifyToken, usersRouter);
 router.use('/books', verifyToken, booksRouter);
 router.use('/series', verifyToken, seriesRouter);
 router.use('/library', verifyToken, libraryRouter);
-router.use('/book-storage', verifyToken, bookStorageRouter);
+router.use('/tags', verifyToken, tagsRouter);
+router.use('/genres', verifyToken, genresRouter);
 
 export default router;

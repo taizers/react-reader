@@ -13,3 +13,17 @@ export const paramsIdValidation = validate(
     stripUnknown: true,
   }
 );
+
+export const getByQueryValidation = validate(
+  {
+    query: Joi.object({
+      query: Joi.string().max(256).required(),
+    }),
+  },
+  {
+    context: true,
+  },
+  {
+    stripUnknown: true,
+  }
+);

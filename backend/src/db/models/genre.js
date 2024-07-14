@@ -24,8 +24,8 @@ export default (sequelize, DataTypes) => {
   );
 
   Genre.associate = (models) => {
-    Genre.belongsToMany(models.Book, { through: 'Book_Genre' });
-    Genre.belongsToMany(models.Seria, { through: 'Seria_Genre' });
+    Genre.belongsToMany(models.Book, { through: 'Book_Genre', onDelete: 'cascade', as: 'book_genres' });
+    Genre.belongsToMany(models.Seria, { through: 'Seria_Genre', onDelete: 'cascade', as: 'seria_genres' });
   };
 
   return Genre;

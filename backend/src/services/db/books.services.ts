@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book, Seria, Book_storage } = require('../../db/models/index');
+const { Book, Seria } = require('../../db/models/index');
 import { Op } from "sequelize";
 import fs from 'fs';
 import { UnCreatedError } from "../../helpers/error";
@@ -17,7 +17,7 @@ export const  getPaginatedBooks = async (page: number, limit: number, query: str
     where.title = {
       [Op.like]: `%${query}%`,
     };
-  };
+  }
 
   const offset = page * limit;
 

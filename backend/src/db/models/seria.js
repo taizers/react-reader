@@ -46,8 +46,8 @@ export default (sequelize, DataTypes) => {
 
   Seria.associate = (models) => {
     Seria.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "seria_id", as: 'seria' });
-    Seria.belongsToMany(models.Genre, { through: 'Seria_Genre' });
-    Seria.belongsToMany(models.Tag, { through: 'Seria_Tag' });
+    Seria.belongsToMany(models.Genre, { through: 'Seria_Genre', onDelete: 'cascade', as: 'seria_genres' });
+    Seria.belongsToMany(models.Tag, { through: 'Seria_Tag', onDelete: 'cascade', as: 'seria_tags' });
   };
 
   return Seria;
