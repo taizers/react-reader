@@ -1,4 +1,4 @@
-import React, { FC, useState, ReactNode } from 'react';
+import React, { FC, useState, ReactNode, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useNavigate } from 'react-router-dom';
 import { menuItems, subMenuItems } from '../../router';
 import { Sidebar as SidebarEnum } from '../../constants/enums';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector, useShowErrorToast } from '../../hooks';
 import { localLogout } from '../../store/reducers/AuthSlice';
 import { clearToken } from '../../utils';
 import { authApiSlice } from '../../store/reducers/AuthApiSlice';
@@ -86,6 +86,8 @@ const SideBar: FC<SideBartype> = ({ child }) => {
   const { token } = useAppSelector((state) => state.auth);
   const [logout, { data, isLoading, error }] = authApiSlice.useLogoutMutation();
 
+  useShowErrorToast(error);
+
   let history = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -96,11 +98,12 @@ const SideBar: FC<SideBartype> = ({ child }) => {
     setOpen(false);
   };
 
-  const localLogoutAction = () => {
-    dispatch(localLogout());
-    clearToken();
-    logout('');
-  };
+  useEffect(() => {
+    if (!!data) {
+      dispatch(localLogout());
+      clearToken();
+    }
+  }, [data]);
 
   const getAccess = (item: { access: string }) => {
     if (item.access === 'private' && token) {
@@ -184,7 +187,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
                   <ListItemButton
                     onClick={() => {
                       item.title === SidebarEnum.Logout
-                        ? localLogoutAction()
+                        ? logout('')
                         : history(item.path);
                     }}
                   >

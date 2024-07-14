@@ -10,7 +10,7 @@ import Pagination from '@mui/material/Pagination';
 // import FormControl from '@mui/material/FormControl';
 // import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-import BookItem from '../components/BookItem/BookItem';
+import BookItem from '../components/BookItem';
 import { BooksResponceType, BookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';

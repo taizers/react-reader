@@ -4,7 +4,7 @@ import { useShowErrorToast } from '../hooks';
 import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
 
 type UploadFileType = {
-  setFiles: (file?: ExtendedFileProps) => void;
+  setFiles: (file: ExtendedFileProps | null) => void;
   isMulti?: boolean;
 };
 

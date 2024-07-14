@@ -6,12 +6,12 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
-import { StyledListItemAvatar } from './styled';
-import Image from '../Image/Image';
-import { LocalBookType } from '../../constants/tsSchemes';
-import { baseUrl } from '../../constants';
-import TypographyComponent from '../TypographyComponent';
+import Image from './Image/Image';
+import { LocalBookType } from '../constants/tsSchemes';
+import { baseUrl } from '../constants';
+import TypographyComponent from './TypographyComponent';
 
 type LocalBookItemType = {
   book: LocalBookType;
@@ -19,8 +19,9 @@ type LocalBookItemType = {
 };
 
 const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
-  const { cover, title, author, categories, downloads, link, id, annotation, created_at, deleted_at, primory_link, release_date, seria, source, tags, updated_at } = book;
-
+  const { cover, title, author, genres, downloads, link, id, annotation, created_at, deleted_at, primory_link, release_date, seria, source, tags, updated_at } = book;
+  let history = useNavigate();
+  
   return (
     <ListItem
       sx={{ 
@@ -31,16 +32,18 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
         justifySelf: 'center'
       }}
     >
-      <StyledListItemAvatar>
-        <Image
-          src={
-            cover
-              ? `${baseUrl}/${cover}`
-              : `/static/images/no-image.png`
-          }
-          alt="Book cover"
-        />
-      </StyledListItemAvatar>
+      <Image
+        onClick={()=> {history(`${id}`)}}
+        src={
+          cover
+            ? `${baseUrl}/${cover}`
+            : `/static/images/no-image.png`
+        }
+        alt="Book cover"
+        height='300px'
+        width='200px'
+        styles={{m: 0}}
+      />
       <ListItemText
         sx={{ ml: 1, alignSelf: 'start' }}
         primary={title}
@@ -48,22 +51,26 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
           <>
             {annotation && <TypographyComponent title={'Аннотация:'} data={annotation} />}
             {author && <TypographyComponent title={'Авторы:'} data={author?.split(';')} />}
-            {categories && <TypographyComponent title={'Жанры:'} data={categories?.split(';')} />}
+            {genres?.length && <TypographyComponent title={'Жанры:'} data={genres?.map(item => item.title)} />}
             {release_date && <TypographyComponent title={'Дата выхода:'} data={moment(release_date).format("DD.MM.YYYY")} />}
             {seria && <TypographyComponent title={'Серия: '} data={seria} />}
             {source && <TypographyComponent title={'Ресурс: '} data={source} />}
-            {tags && <TypographyComponent title={'Тэги:'} data={tags?.split(';')} />}
+            {tags?.length && <TypographyComponent title={'Тэги:'} data={tags?.map(item => item.title)} />}
             <Typography
               sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}
               component="span"
               variant="body2"
             >
               <Button
+                variant="contained"
+                sx={{ m: 1 }}
                 href={`${baseUrl}/${link}`}
               >
                 <DownloadIcon />
               </Button>
               <Button
+                variant="contained"
+                sx={{ m: 1 }}
                 onClick={() => {deleteBook(id)}}
               >
                 <DeleteIcon />

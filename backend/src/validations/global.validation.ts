@@ -17,7 +17,7 @@ export const paramsIdValidation = validate(
 export const getByQueryValidation = validate(
   {
     query: Joi.object({
-      query: Joi.string().max(256).required(),
+      query: Joi.string().max(256).allow(''),
     }),
   },
   {

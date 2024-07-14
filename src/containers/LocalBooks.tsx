@@ -5,19 +5,30 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
+import AddIcon from '@mui/icons-material/Add';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import BookItem from '../components/BookItem/BookItem';
 import { BookType, LocalBookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { useDebounce, useShowErrorToast } from '../hooks';
 import UploadBookModal from './UploadBookModal';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import LocalBookItem from '../components/LocalBookItem/LocalBookItem';
+import LocalBookItem from '../components/LocalBookItem';
+import CreateTagModal from './CreateTagModal';
+import CreateGenreModal from './CreateGenreModal';
+import DeleteModal from './DeleteModal';
 
 const LocalBooks: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
+  const [isCreateTagModalOpen, setCreateTagModalOpen] = useState<boolean>(false);
+  const [isCreateGenreModalOpen, setCreateGenreModalOpen] = useState<boolean>(false);
+  const [isUploadBookModalOpen, setUploadBookModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
   const debouncedValue = useDebounce(query);
 
   const {
@@ -29,15 +40,9 @@ const LocalBooks: FC = () => {
     limit,
     query: debouncedValue,
   });
+
   const [deleteBook, { data: deleteData, error: deleteError, isLoading: deleteIsLoading }] =
   booksApiSlice.useDeleteBookMutation();
-  // const {
-  //   data: books,
-  //   error,
-  //   isLoading,
-  // } = booksApiSlice.useGetBookQuery(3);
-
-
 
   useShowErrorToast(error);
   useShowErrorToast(deleteError);
@@ -49,6 +54,12 @@ const LocalBooks: FC = () => {
       setPage(defaultStartPage);
     }
   }, [query]);
+
+  useEffect(() => {
+    if (!!deleteData) {
+      setDeleteModalOpen(false);
+    }
+  }, [deleteData]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,6 +77,15 @@ const LocalBooks: FC = () => {
       window.scrollTo(0, 0);
     }
     setPage(value - 1);
+  };
+
+  const onDeleteBook = (id: number) => {
+    setDeleteId(id);
+    setDeleteModalOpen(true);
+  };
+
+  const onDelete = () => {
+    deleteBook(deleteId);
   };
 
   return (
@@ -95,7 +115,27 @@ const LocalBooks: FC = () => {
         >
           Найти
         </Button>
-        <UploadBookModal/>
+        <Button
+          variant="contained"
+          sx={{ m: 2 }}
+          onClick={()=> setUploadBookModalOpen(true)}
+        >
+          <CloudUploadIcon />
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ m: 2 }}
+          onClick={()=> setCreateTagModalOpen(true)}
+        >
+          <AddIcon/>
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ m: 2 }}
+          onClick={()=> setCreateGenreModalOpen(true)}
+        >
+          <AddCircleIcon/>
+        </Button>
       </Box>
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
@@ -112,7 +152,7 @@ const LocalBooks: FC = () => {
             }}
           >
             {data.books.map((book: LocalBookType, index: number) => (
-              <LocalBookItem book={book} key={`book ${index}`} deleteBook={deleteBook}/>
+              <LocalBookItem book={book} key={`book ${index}`} deleteBook={onDeleteBook}/>
             ))}
           </List>
         )}
@@ -143,6 +183,10 @@ const LocalBooks: FC = () => {
           />
         )}
       </Box>
+      <UploadBookModal isModalOpen={isUploadBookModalOpen} setModalOpen={setUploadBookModalOpen} />
+      <CreateTagModal isModalOpen={isCreateTagModalOpen} setModalOpen={setCreateTagModalOpen} />
+      <CreateGenreModal isModalOpen={isCreateGenreModalOpen} setModalOpen={setCreateGenreModalOpen} />
+      <DeleteModal deleteFunction={onDelete} deleteLabel='Книгу' isModalOpen={isDeleteModalOpen} setModalOpen={setDeleteModalOpen} />
     </Box>
   );
 };

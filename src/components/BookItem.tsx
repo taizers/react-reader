@@ -6,9 +6,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-import { StyledListItemAvatar } from './styled';
-import Image from '../Image/Image';
-import { BookType } from '../../constants/tsSchemes';
+import Image from './Image/Image';
+import { BookType } from '../constants/tsSchemes';
 
 type BookItemType = {
   book: BookType;
@@ -27,16 +26,17 @@ const BookItem: FC<BookItemType> = ({ book }) => {
         justifySelf: 'center'
       }}
     >
-      <StyledListItemAvatar>
-        <Image
-          src={
-            cover
-              ? `http://flibusta.site/${cover}`
-              : `/static/images/no-image.png`
-          }
-          alt="Book cover"
-        />
-      </StyledListItemAvatar>
+      <Image
+        src={
+          cover
+            ? `http://flibusta.site/${cover}`
+            : `/static/images/no-image.png`
+        }
+        alt="Book cover"
+        height='300px'
+        width='200px'
+        styles={{m: 0}}
+      />
       <ListItemText
         sx={{ ml: 1 }}
         primary={title}

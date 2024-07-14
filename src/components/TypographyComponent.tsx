@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 type TypographyType = {
     title: string;
@@ -33,7 +33,7 @@ const getTypography = (data: string | string[]) => {
 
 const TypographyComponent: FC<TypographyType> = ({title, data}) => {
   return (
-    <Box>
+    <>
         <Typography
             sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}
             component="span"
@@ -44,7 +44,7 @@ const TypographyComponent: FC<TypographyType> = ({title, data}) => {
             {title}
         </Typography>
         {getTypography(data)}
-    </Box>
+    </>
   );
 };
 

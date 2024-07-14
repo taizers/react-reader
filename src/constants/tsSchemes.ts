@@ -51,7 +51,6 @@ export type LocalBookType = {
   updated: string | null;
   cover: string | null;
   annotation: string | null;
-  categories: string | null;
   author: string | null;
   downloads: string | null;
   link: string | null;
@@ -60,7 +59,8 @@ export type LocalBookType = {
   seria: string | null;
   seria_id: string | null;
   source: string | null;
-  tags: string | null;
+  tags: Array<{id: number, title: string}> | null;
+  genres: Array<{id: number, title: string}> | null;
   user_id: number;
   updated_at: Date | null;
   created_at: Date | null;

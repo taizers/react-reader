@@ -3,37 +3,28 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('library_books', {
+    return queryInterface.createTable('seria_genres', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      library_id: {
+      seria_id: {
         allowNull: false,
         references: {
-          model: 'libraries',
+          model: 'series',
           key: 'id',
         },
         type: Sequelize.DataTypes.INTEGER,
       },
-      book_id: {
+      genre_id: {
         allowNull: false,
         references: {
-          model: 'books',
+          model: 'genres',
           key: 'id',
         },
         type: Sequelize.DataTypes.INTEGER,
-      },
-      state: {
-        allowNull: false,
-        type: Sequelize.DataTypes.STRING,
-      },
-      last_page: {
-        allowNull: true,
-        defaultValue: null,
-        type: Sequelize.DataTypes.STRING,
       },
       created_at: {
         allowNull: false,
@@ -52,6 +43,6 @@ module.exports = {
   },
 
   down: (queryInterface) => {
-    return queryInterface.dropTable('library_books');
+    return queryInterface.dropTable('seria_genres');
   },
 };

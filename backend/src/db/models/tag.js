@@ -24,8 +24,8 @@ export default (sequelize, DataTypes) => {
   );
 
   Tag.associate = (models) => {
-    Tag.belongsToMany(models.Book, { through: 'Book_Tag', onDelete: 'cascade', as: 'book_tags' });
-    Tag.belongsToMany(models.Seria, { through: 'Seria_Tag', onDelete: 'cascade', as: 'seria_tags' });
+    Tag.belongsToMany(models.Book, { through: 'book_tags', onDelete: 'cascade' });
+    Tag.belongsToMany(models.Seria, { through: 'seria_tags', onDelete: 'cascade' });
   };
 
   return Tag;

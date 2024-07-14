@@ -48,8 +48,6 @@ router.get('/profile', verifyToken, getProfileAction);
 
 router.get('/search', getBooksAction);
 
-
-
 //Routes
 
 router.use('/users', verifyToken, usersRouter);

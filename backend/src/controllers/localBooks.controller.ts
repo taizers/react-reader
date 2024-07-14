@@ -21,7 +21,9 @@ export const createBookAction = async (
   logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
 
   try {
-    const book = await createBook(payload);
+    const {genres, tags, ...data} = payload;
+
+    const book = await createBook(data, genres.split(';'), tags.split(';'));
     
     res.status(200).json(book);
   } catch (error) {
@@ -98,7 +100,9 @@ export const updateBookAction = async (
   logger.info(`Update Book Action: { id: ${id}, payload: ${JSON.stringify(payload)} }`);
 
   try {
-    const book = await updateBook({ id }, payload);
+    const {genres, tags, ...data} = payload;
+
+    const book = await updateBook({ id }, data, genres.split(';'), tags.split(';'));
     
     res.status(200).json(book);
   } catch (error) {
