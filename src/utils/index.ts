@@ -1,19 +1,19 @@
 const TOKEN_KEY = 'access_token';
 
-const isToken = () => {
-  return !!localStorage.getItem(TOKEN_KEY);
+const isToken = (tokenName: string = TOKEN_KEY) => {
+  return !!localStorage.getItem(tokenName);
 };
 
-const setToken = (token: string) => {
-  localStorage.setItem(TOKEN_KEY, token);
+const setToken = (token: string, tokenName: string = TOKEN_KEY) => {
+  localStorage.setItem(tokenName, token);
 };
 
-const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+const getToken = (tokenName: string = TOKEN_KEY) => {
+  return localStorage.getItem(tokenName);
 };
 
-const clearToken = () => {
-  return localStorage.removeItem(TOKEN_KEY);
+const clearToken = (tokenName: string = TOKEN_KEY) => {
+  return localStorage.removeItem(tokenName);
 };
 
 export { isToken, getToken, setToken, clearToken };

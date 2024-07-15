@@ -1,9 +1,9 @@
 import { NextFunction, Response, Request } from 'express';
 import { getAllBooks, getBook, updateBook, deleteBook, createBook, getPaginatedBooks } from '../services/db/books.services';
 import logger from '../helpers/logger';
-import { getBookText } from '../utils/book2Json';
 import { UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
+import { getJsonBook } from '../utils/booktojson';
 
 export const createBookAction = async (
   req: CreateBookRequest,
@@ -79,10 +79,11 @@ export const getBookAction = async (
 
   try {
     const book = await getBook({id});
+    const text = await getJsonBook(book.link);
 
-    // const text = getBookText(book.primory_link);
+    // const translatedChapter = await getTranslatedChapter(text.content[4])
 
-    res.status(200).json(book);
+    res.status(200).json({book, text});
   } catch (error) {
     logger.error('Get Book Action - Cannot get book', error);
     next(error);

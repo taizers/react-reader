@@ -49,12 +49,10 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
         primary={title}
         secondary={
           <>
-            {annotation && <TypographyComponent title={'Аннотация:'} data={annotation} />}
             {author && <TypographyComponent title={'Авторы:'} data={author?.split(';')} />}
             {genres?.length && <TypographyComponent title={'Жанры:'} data={genres?.map(item => item.title)} />}
             {release_date && <TypographyComponent title={'Дата выхода:'} data={moment(release_date).format("DD.MM.YYYY")} />}
             {seria && <TypographyComponent title={'Серия: '} data={seria} />}
-            {source && <TypographyComponent title={'Ресурс: '} data={source} />}
             {tags?.length && <TypographyComponent title={'Тэги:'} data={tags?.map(item => item.title)} />}
             <Typography
               sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}

@@ -27,6 +27,7 @@
     "@types/node": "^20.3.2",
     "@types/sequelize": "^4.28.15",
     "@types/uuid": "^9.0.2",
+    "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "eslint": "^8.43.0",
@@ -38,13 +39,16 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.0",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "epub": "^1.2.1",
     "express": "^4.17.1",
     "express-validation": "^4.1.0",
     "flibusta": "^0.4.4",
+    "http-proxy-agent": "^7.0.2",
     "iconv-lite": "^0.6.3",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
@@ -54,6 +58,7 @@
     "prettier": "^2.8.8",
     "sequelize": "^6.32.1",
     "uuid": "^9.0.0",
-    "winston": "^3.9.0"
+    "winston": "^3.9.0",
+    "xml2js": "^0.6.2"
   }
 }
