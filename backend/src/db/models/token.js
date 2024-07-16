@@ -24,7 +24,10 @@ export default (sequelize, DataTypes) => {
   );
 
   Token.associate = (models) => {
-    Token.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
+    Token.belongsTo(models.User, {
+      onDelete: 'cascade',
+      foreignKey: 'user_id',
+    });
   };
 
   return Token;

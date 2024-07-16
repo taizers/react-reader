@@ -9,17 +9,22 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
 type AutoCompleteComponentType = {
-  options: Array<{id: number, title: string}>;
+  options: Array<{ id: number; title: string }>;
   label: string;
   placeholder: string;
-  setValues: (values: Array<{id: number, title: string}> | null) => void;
-}
+  setValues: (values: Array<{ id: number; title: string }> | null) => void;
+};
 
-const AutoCompleteComponent: React.FC<AutoCompleteComponentType> = ({options, label, placeholder, setValues}) => {
+const AutoCompleteComponent: React.FC<AutoCompleteComponentType> = ({
+  options,
+  label,
+  placeholder,
+  setValues,
+}) => {
   return (
     <Autocomplete
       multiple
-      sx={{mb: 1, mt: 1}}
+      sx={{ mb: 1, mt: 1 }}
       id="checkboxes-tags"
       options={options}
       fullWidth
@@ -48,6 +53,6 @@ const AutoCompleteComponent: React.FC<AutoCompleteComponentType> = ({options, la
       )}
     />
   );
-}
+};
 
 export default AutoCompleteComponent;

@@ -39,9 +39,12 @@ export default (sequelize, DataTypes) => {
   );
 
   User.associate = (models) => {
-    User.hasOne(models.Token, { onDelete: 'cascade', foreignKey: "user_id" });
-    User.hasMany(models.Library, { onDelete: 'cascade', foreignKey: "user_id" });
-    User.hasMany(models.Book, { onDelete: 'cascade', foreignKey: "user_id" });
+    User.hasOne(models.Token, { onDelete: 'cascade', foreignKey: 'user_id' });
+    User.hasMany(models.Library, {
+      onDelete: 'cascade',
+      foreignKey: 'user_id',
+    });
+    User.hasMany(models.Book, { onDelete: 'cascade', foreignKey: 'user_id' });
   };
 
   return User;

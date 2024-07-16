@@ -13,13 +13,16 @@ type CreateTagModalModalType = {
   setModalOpen: (value: boolean) => void;
 };
 
-const CreateTagModal: FC<CreateTagModalModalType> = ({ isModalOpen, setModalOpen }) => {
+const CreateTagModal: FC<CreateTagModalModalType> = ({
+  isModalOpen,
+  setModalOpen,
+}) => {
   const [tag, setTag] = useState<string>('');
   const [fieldsError, setFieldsError] = useState<string>();
 
   const [createTag, { data, error, isLoading }] =
     tagsApiSlice.useCreateTagMutation();
-  
+
   const {
     data: tagsData,
     error: tagsError,
@@ -48,28 +51,34 @@ const CreateTagModal: FC<CreateTagModalModalType> = ({ isModalOpen, setModalOpen
   const onSubmitForm = () => {
     if (!tag) {
       return setFieldsError('Не введено имя тэга');
-    };
+    }
 
-    const equal = tagsData.find((item: { title: string }) => item.title === tag);
+    const equal = tagsData.find(
+      (item: { title: string }) => item.title === tag
+    );
 
     if (equal) {
       return setFieldsError('Такой тэг уже существует');
-    };
+    }
 
-    createTag({title: tag});
+    createTag({ title: tag });
   };
 
   return (
-      <Dialog open={isModalOpen} onClose={handleClose}>
-        <DialogContent>
-          <DialogTitle>{'Добавить тэг'}</DialogTitle>
-          <TextFieldComponent id={'tag'} label={'Тэг'} onChangeFunction={setTag} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={onSubmitForm}>Сохранить</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog open={isModalOpen} onClose={handleClose}>
+      <DialogContent>
+        <DialogTitle>{'Добавить тэг'}</DialogTitle>
+        <TextFieldComponent
+          id={'tag'}
+          label={'Тэг'}
+          onChangeFunction={setTag}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Отмена</Button>
+        <Button onClick={onSubmitForm}>Сохранить</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

@@ -18,12 +18,12 @@ const BookItem: FC<BookItemType> = ({ book }) => {
 
   return (
     <ListItem
-      sx={{ 
+      sx={{
         flexGrow: 1,
         flexBasis: 500,
         bgcolor: '#cad2de',
         display: 'flex',
-        justifySelf: 'center'
+        justifySelf: 'center',
       }}
     >
       <Image
@@ -33,9 +33,9 @@ const BookItem: FC<BookItemType> = ({ book }) => {
             : `/static/images/no-image.png`
         }
         alt="Book cover"
-        height='300px'
-        width='200px'
-        styles={{m: 0}}
+        height="300px"
+        width="200px"
+        styles={{ m: 0 }}
       />
       <ListItemText
         sx={{ ml: 1 }}
@@ -97,13 +97,15 @@ const BookItem: FC<BookItemType> = ({ book }) => {
                   {item.type.replace('application/', '')}
                 </Button>
               ))}
-                {!!downloads?.length && <Button
+              {!!downloads?.length && (
+                <Button
                   key={`save button`}
                   variant="outlined"
                   endIcon={<ArrowUpwardIcon />}
                 >
                   {'Сохранить'}
-                </Button>}
+                </Button>
+              )}
             </Typography>
           </>
         }

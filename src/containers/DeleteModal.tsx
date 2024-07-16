@@ -12,7 +12,12 @@ type DeleteModalType = {
   deleteLabel: string;
 };
 
-const DeleteModal: FC<DeleteModalType> = ({ isModalOpen, setModalOpen, deleteFunction, deleteLabel }) => {
+const DeleteModal: FC<DeleteModalType> = ({
+  isModalOpen,
+  setModalOpen,
+  deleteFunction,
+  deleteLabel,
+}) => {
   const handleClose = () => {
     setModalOpen(false);
   };
@@ -22,15 +27,15 @@ const DeleteModal: FC<DeleteModalType> = ({ isModalOpen, setModalOpen, deleteFun
   };
 
   return (
-      <Dialog open={isModalOpen} onClose={handleClose}>
-        <DialogContent>
-          <DialogTitle>{`Вы действительно хотите удалить ${deleteLabel}?`}</DialogTitle>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={onSubmitForm}>Удалить</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog open={isModalOpen} onClose={handleClose}>
+      <DialogContent>
+        <DialogTitle>{`Вы действительно хотите удалить ${deleteLabel}?`}</DialogTitle>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Отмена</Button>
+        <Button onClick={onSubmitForm}>Удалить</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

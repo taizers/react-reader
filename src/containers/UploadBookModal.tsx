@@ -20,16 +20,26 @@ type UploadBookModalType = {
   setModalOpen: (value: boolean) => void;
 };
 
-const UploadBookModal: FC<UploadBookModalType> = ({ isModalOpen, setModalOpen }) => {
+const UploadBookModal: FC<UploadBookModalType> = ({
+  isModalOpen,
+  setModalOpen,
+}) => {
   const [name, setName] = useState<string>('');
   const [annotation, setAnnotation] = useState<string>('');
   const [author, setAuthor] = useState<string>('');
-  const [release_date, setReleaseDate] = useState<Date | null | Dayjs>(dayjs(Date.now()));
+  const [release_date, setReleaseDate] = useState<Date | null | Dayjs>(
+    dayjs(Date.now())
+  );
   const [source, setSource] = useState<string>('');
   const [fieldsError, setFieldsError] = useState<string>();
   const [book, setBook] = useState<ExtendedFileProps | null>(null);
-  const [genres, setGenres] = useState<Array<{id: number, title: string}> | null>(null);
-  const [tags, setTags] = useState<Array<{id: number, title: string}> | null>(null);
+  const [genres, setGenres] = useState<Array<{
+    id: number;
+    title: string;
+  }> | null>(null);
+  const [tags, setTags] = useState<Array<{ id: number; title: string }> | null>(
+    null
+  );
 
   const [createBook, { data, error, isLoading }] =
     booksApiSlice.useCreateBookMutation();
@@ -54,7 +64,7 @@ const UploadBookModal: FC<UploadBookModalType> = ({ isModalOpen, setModalOpen })
       setModalOpen(false);
     }
   }, [data]);
-  
+
   useEffect(() => {
     if (!!fieldsError) {
       setFieldsError(undefined);
@@ -73,12 +83,12 @@ const UploadBookModal: FC<UploadBookModalType> = ({ isModalOpen, setModalOpen })
     const formData = new FormData();
 
     if (genres) {
-      const gnrs = genres.map(item=> item.id).join(';');
+      const gnrs = genres.map((item) => item.id).join(';');
       formData.append('genres', gnrs);
     }
 
     if (tags) {
-      const tgs = tags.map(item=> item.id).join(';');
+      const tgs = tags.map((item) => item.id).join(';');
       formData.append('tags', tgs);
     }
 
@@ -93,23 +103,57 @@ const UploadBookModal: FC<UploadBookModalType> = ({ isModalOpen, setModalOpen })
   };
 
   return (
-      <Dialog open={isModalOpen} onClose={handleClose}>
-        <DialogContent>
-          <DialogTitle>Загрузить книгу</DialogTitle>
-          <TextFieldComponent id={'name'} label={'Имя'} onChangeFunction={setName} />
-          <TextFieldComponent id={'annotation'} label={'Аннотация'} onChangeFunction={setAnnotation} />
-          <TextFieldComponent id={'author'} label={'Автор'} onChangeFunction={setAuthor} />
-          <DatePickerComponent label={'Дата выпуска'} setValue={setReleaseDate} value={release_date} />
-          <TextFieldComponent id={'source'} label={'Ресурс'} onChangeFunction={setSource} />
-          {genresData && <AutoCompleteComponent  options={genresData} label={'Жанры'} placeholder={'Искать'} setValues={setGenres} />}
-          {tagsData && <AutoCompleteComponent  options={tagsData} label={'Тэги'} placeholder={'Искать'} setValues={setTags} />}
-          <UploadFile setFiles={setBook} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={onSubmitForm}>Сохранить</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog open={isModalOpen} onClose={handleClose}>
+      <DialogContent>
+        <DialogTitle>Загрузить книгу</DialogTitle>
+        <TextFieldComponent
+          id={'name'}
+          label={'Имя'}
+          onChangeFunction={setName}
+        />
+        <TextFieldComponent
+          id={'annotation'}
+          label={'Аннотация'}
+          onChangeFunction={setAnnotation}
+        />
+        <TextFieldComponent
+          id={'author'}
+          label={'Автор'}
+          onChangeFunction={setAuthor}
+        />
+        <DatePickerComponent
+          label={'Дата выпуска'}
+          setValue={setReleaseDate}
+          value={release_date}
+        />
+        <TextFieldComponent
+          id={'source'}
+          label={'Ресурс'}
+          onChangeFunction={setSource}
+        />
+        {genresData && (
+          <AutoCompleteComponent
+            options={genresData}
+            label={'Жанры'}
+            placeholder={'Искать'}
+            setValues={setGenres}
+          />
+        )}
+        {tagsData && (
+          <AutoCompleteComponent
+            options={tagsData}
+            label={'Тэги'}
+            placeholder={'Искать'}
+            setValues={setTags}
+          />
+        )}
+        <UploadFile setFiles={setBook} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Отмена</Button>
+        <Button onClick={onSubmitForm}>Сохранить</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

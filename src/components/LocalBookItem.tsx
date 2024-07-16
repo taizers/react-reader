@@ -19,41 +19,76 @@ type LocalBookItemType = {
 };
 
 const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
-  const { cover, title, author, genres, downloads, link, id, annotation, created_at, deleted_at, primory_link, release_date, seria, source, tags, updated_at } = book;
+  const {
+    cover,
+    title,
+    author,
+    genres,
+    downloads,
+    link,
+    id,
+    annotation,
+    created_at,
+    deleted_at,
+    primory_link,
+    release_date,
+    seria,
+    source,
+    tags,
+    updated_at,
+  } = book;
   let history = useNavigate();
-  
+
   return (
     <ListItem
-      sx={{ 
+      sx={{
         flexGrow: 1,
         flexBasis: 500,
         bgcolor: '#f1f4f862',
         display: 'flex',
-        justifySelf: 'center'
+        justifySelf: 'center',
       }}
     >
       <Image
-        onClick={()=> {history(`${id}`)}}
-        src={
-          cover
-            ? `${baseUrl}/${cover}`
-            : `/static/images/no-image.png`
-        }
+        onClick={() => {
+          history(`${id}`);
+        }}
+        src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
-        height='300px'
-        width='200px'
-        styles={{m: 0}}
+        height="300px"
+        width="200px"
+        styles={{ m: 0 }}
       />
       <ListItemText
         sx={{ ml: 1, alignSelf: 'start' }}
         primary={title}
         secondary={
           <>
-            {author && <TypographyComponent title={'Авторы:'} data={author?.split(';')} />}
-            {genres?.length && <TypographyComponent title={'Жанры:'} data={genres?.map(item => item.title)} />}
-            {release_date && <TypographyComponent title={'Дата выхода:'} data={moment(release_date).format("DD.MM.YYYY")} />}
+            {author && (
+              <TypographyComponent
+                title={'Авторы:'}
+                data={author?.split(';')}
+              />
+            )}
+            {genres?.length && (
+              <TypographyComponent
+                title={'Жанры:'}
+                data={genres?.map((item) => item.title)}
+              />
+            )}
+            {release_date && (
+              <TypographyComponent
+                title={'Дата выхода:'}
+                data={moment(release_date).format('DD.MM.YYYY')}
+              />
+            )}
             {seria && <TypographyComponent title={'Серия: '} data={seria} />}
-            {tags?.length && <TypographyComponent title={'Тэги:'} data={tags?.map(item => item.title)} />}
+            {tags?.length && (
+              <TypographyComponent
+                title={'Тэги:'}
+                data={tags?.map((item) => item.title)}
+              />
+            )}
             <Typography
               sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}
               component="span"
@@ -69,7 +104,9 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook }) => {
               <Button
                 variant="contained"
                 sx={{ m: 1 }}
-                onClick={() => {deleteBook(id)}}
+                onClick={() => {
+                  deleteBook(id);
+                }}
               >
                 <DeleteIcon />
               </Button>

@@ -23,26 +23,27 @@ const LocalBooks: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
-  const [isCreateTagModalOpen, setCreateTagModalOpen] = useState<boolean>(false);
-  const [isCreateGenreModalOpen, setCreateGenreModalOpen] = useState<boolean>(false);
-  const [isUploadBookModalOpen, setUploadBookModalOpen] = useState<boolean>(false);
+  const [isCreateTagModalOpen, setCreateTagModalOpen] =
+    useState<boolean>(false);
+  const [isCreateGenreModalOpen, setCreateGenreModalOpen] =
+    useState<boolean>(false);
+  const [isUploadBookModalOpen, setUploadBookModalOpen] =
+    useState<boolean>(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const debouncedValue = useDebounce(query);
 
-  const {
-    data,
-    error,
-    isLoading,
-  } = booksApiSlice.useGetBooksQuery({
+  const { data, error, isLoading } = booksApiSlice.useGetBooksQuery({
     page,
     limit,
     query: debouncedValue,
   });
 
-  const [deleteBook, { data: deleteData, error: deleteError, isLoading: deleteIsLoading }] =
-  booksApiSlice.useDeleteBookMutation();
+  const [
+    deleteBook,
+    { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
+  ] = booksApiSlice.useDeleteBookMutation();
 
   useShowErrorToast(error);
   useShowErrorToast(deleteError);
@@ -118,23 +119,23 @@ const LocalBooks: FC = () => {
         <Button
           variant="contained"
           sx={{ m: 2 }}
-          onClick={()=> setUploadBookModalOpen(true)}
+          onClick={() => setUploadBookModalOpen(true)}
         >
           <CloudUploadIcon />
         </Button>
         <Button
           variant="contained"
           sx={{ m: 2 }}
-          onClick={()=> setCreateTagModalOpen(true)}
+          onClick={() => setCreateTagModalOpen(true)}
         >
-          <AddIcon/>
+          <AddIcon />
         </Button>
         <Button
           variant="contained"
           sx={{ m: 2 }}
-          onClick={()=> setCreateGenreModalOpen(true)}
+          onClick={() => setCreateGenreModalOpen(true)}
         >
-          <AddCircleIcon/>
+          <AddCircleIcon />
         </Button>
       </Box>
       <Box
@@ -152,7 +153,11 @@ const LocalBooks: FC = () => {
             }}
           >
             {data.books.map((book: LocalBookType, index: number) => (
-              <LocalBookItem book={book} key={`book ${index}`} deleteBook={onDeleteBook}/>
+              <LocalBookItem
+                book={book}
+                key={`book ${index}`}
+                deleteBook={onDeleteBook}
+              />
             ))}
           </List>
         )}
@@ -183,10 +188,24 @@ const LocalBooks: FC = () => {
           />
         )}
       </Box>
-      <UploadBookModal isModalOpen={isUploadBookModalOpen} setModalOpen={setUploadBookModalOpen} />
-      <CreateTagModal isModalOpen={isCreateTagModalOpen} setModalOpen={setCreateTagModalOpen} />
-      <CreateGenreModal isModalOpen={isCreateGenreModalOpen} setModalOpen={setCreateGenreModalOpen} />
-      <DeleteModal deleteFunction={onDelete} deleteLabel='Книгу' isModalOpen={isDeleteModalOpen} setModalOpen={setDeleteModalOpen} />
+      <UploadBookModal
+        isModalOpen={isUploadBookModalOpen}
+        setModalOpen={setUploadBookModalOpen}
+      />
+      <CreateTagModal
+        isModalOpen={isCreateTagModalOpen}
+        setModalOpen={setCreateTagModalOpen}
+      />
+      <CreateGenreModal
+        isModalOpen={isCreateGenreModalOpen}
+        setModalOpen={setCreateGenreModalOpen}
+      />
+      <DeleteModal
+        deleteFunction={onDelete}
+        deleteLabel="Книгу"
+        isModalOpen={isDeleteModalOpen}
+        setModalOpen={setDeleteModalOpen}
+      />
     </Box>
   );
 };

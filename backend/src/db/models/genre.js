@@ -24,8 +24,14 @@ export default (sequelize, DataTypes) => {
   );
 
   Genre.associate = (models) => {
-    Genre.belongsToMany(models.Book, { through: 'book_genres', onDelete: 'cascade'  });
-    Genre.belongsToMany(models.Seria, { through: 'seria_genres', onDelete: 'cascade' });
+    Genre.belongsToMany(models.Book, {
+      through: 'book_genres',
+      onDelete: 'cascade',
+    });
+    Genre.belongsToMany(models.Seria, {
+      through: 'seria_genres',
+      onDelete: 'cascade',
+    });
   };
 
   return Genre;

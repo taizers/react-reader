@@ -13,13 +13,16 @@ type CreateGenreModalModalType = {
   setModalOpen: (value: boolean) => void;
 };
 
-const CreateGenreModal: FC<CreateGenreModalModalType> = ({ isModalOpen, setModalOpen }) => {
+const CreateGenreModal: FC<CreateGenreModalModalType> = ({
+  isModalOpen,
+  setModalOpen,
+}) => {
   const [genre, setGenre] = useState<string>('');
   const [fieldsError, setFieldsError] = useState<string>();
 
   const [createGenre, { data, error, isLoading }] =
     genresApiSlice.useCreateGenreMutation();
-  
+
   const {
     data: genresData,
     error: genresError,
@@ -48,28 +51,34 @@ const CreateGenreModal: FC<CreateGenreModalModalType> = ({ isModalOpen, setModal
   const onSubmitForm = () => {
     if (!genre) {
       return setFieldsError('Не введено имя тэга');
-    };
+    }
 
-    const equal = genresData.find((item: { title: string }) => item.title === genre);
+    const equal = genresData.find(
+      (item: { title: string }) => item.title === genre
+    );
 
     if (equal) {
       return setFieldsError('Такой тэг уже существует');
-    };
+    }
 
-    createGenre({title: genre});
+    createGenre({ title: genre });
   };
 
   return (
-      <Dialog open={isModalOpen} onClose={handleClose}>
-        <DialogContent>
-          <DialogTitle>{'Добавить жанр'}</DialogTitle>
-          <TextFieldComponent id={'genre'} label={'Жанр'} onChangeFunction={setGenre} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={onSubmitForm}>Сохранить</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog open={isModalOpen} onClose={handleClose}>
+      <DialogContent>
+        <DialogTitle>{'Добавить жанр'}</DialogTitle>
+        <TextFieldComponent
+          id={'genre'}
+          label={'Жанр'}
+          onChangeFunction={setGenre}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Отмена</Button>
+        <Button onClick={onSubmitForm}>Сохранить</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

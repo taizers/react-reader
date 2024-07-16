@@ -21,7 +21,10 @@ export default (sequelize, DataTypes) => {
   );
 
   Library.associate = (models) => {
-    Library.belongsTo(models.User, { onDelete: 'cascade', foreignKey: "user_id",});
+    Library.belongsTo(models.User, {
+      onDelete: 'cascade',
+      foreignKey: 'user_id',
+    });
     Library.belongsToMany(models.Book, { through: models.Library_book });
   };
 

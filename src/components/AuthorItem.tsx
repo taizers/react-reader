@@ -27,9 +27,9 @@ const AuthorItem: FC<AuthorItemType> = ({ authors }) => {
               : `/static/images/NoCover.jpg`
           }
           alt="Book cover"
-          height='300px'
-          width='200px'
-          styles={{m: 0}}
+          height="300px"
+          width="200px"
+          styles={{ m: 0 }}
         />
       </ListItemAvatar>
       <ListItemText
