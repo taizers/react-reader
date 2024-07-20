@@ -45,6 +45,36 @@ export type BookType = {
   description: string;
 };
 
+type SeriaType = {
+  annotation: string;
+  author: string;
+  cover:string |null;
+  id : number;
+  release_date:string |null;
+  title: string;
+  updated_at: Date | null;
+  created_at: Date | null;
+  deleted_at: Date | null;
+};
+
+type LibraryBookType = {
+  book_id: number;
+  user_id: number;
+  last_open: Date | null;
+  last_page: number;
+  progress: number | null,
+  state: 'not' | 'read' | 'later' | 'reading' | null,
+  updated_at: Date | null;
+  created_at: Date | null;
+  deleted_at: Date | null;
+}
+
+type UsersBooksType = {
+  id: number;
+  name: string;
+  library_book: LibraryBookType;
+}
+
 export type LocalBookType = {
   id: number;
   title: string;
@@ -56,12 +86,13 @@ export type LocalBookType = {
   link: string | null;
   primory_link: string | null;
   release_date: string | null;
-  seria: string | null;
+  seria: SeriaType | null;
   seria_id: string | null;
   source: string | null;
   tags: Array<{ id: number; title: string }> | null;
   genres: Array<{ id: number; title: string }> | null;
   user_id: number;
+  UsersBooks: Array<UsersBooksType>;
   updated_at: Date | null;
   created_at: Date | null;
   deleted_at: Date | null;

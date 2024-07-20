@@ -40,11 +40,13 @@ export default (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasOne(models.Token, { onDelete: 'cascade', foreignKey: 'user_id' });
-    User.hasMany(models.Library, {
+    User.hasMany(models.Book, { onDelete: 'cascade', foreignKey: 'user_id' });
+    User.belongsToMany(models.Book, {
+      through: models.Library_book,
       onDelete: 'cascade',
       foreignKey: 'user_id',
+      as: 'LibraryBooks'
     });
-    User.hasMany(models.Book, { onDelete: 'cascade', foreignKey: 'user_id' });
   };
 
   return User;

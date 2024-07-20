@@ -12,17 +12,13 @@ import Image from './Image/Image';
 import { LocalBookType } from '../constants/tsSchemes';
 import { baseUrl } from '../constants';
 import TypographyComponent from './TypographyComponent';
-import LibraryBookStatusComponent from './LibraryBookStatusComponent';
-import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
-import { useAppSelector } from '../hooks';
 
-type LocalBookItemType = {
+type LibraryBookItemType = {
   book: LocalBookType;
   deleteBook: (id: number) => void;
-  updateBook: (data: {ids: object, payload: object}) => void;
 };
 
-const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) => {
+const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
   const {
     cover,
     title,
@@ -35,7 +31,6 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
     created_at,
     deleted_at,
     primory_link,
-    UsersBooks,
     release_date,
     seria,
     source,
@@ -43,31 +38,6 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
     updated_at,
   } = book;
   let history = useNavigate();
-
-  const { user } = useAppSelector((state) => state.auth);
-
-  const onDeleteBookFromLibrary = () => {
-    const ids = {
-      user_id: user?.id,
-      book_id: id,
-    };
-
-    updateBook({ids, payload: {state: null}});
-  }
-
-  const onUpdateBookStatusAtLibrary = (state: unknown) => {
-    console.log(state)
-    const ids = {
-      user_id: user?.id,
-      book_id: id,
-    };
-
-    const payload = {
-      state,
-    };
-
-    updateBook({ids, payload});
-  }
 
   return (
     <ListItem
@@ -140,7 +110,6 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
               >
                 <DeleteIcon />
               </Button>
-              <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} />
             </Typography>
           </>
         }
@@ -149,4 +118,4 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
   );
 };
 
-export default LocalBookItem;
+export default LibraryBookItem;

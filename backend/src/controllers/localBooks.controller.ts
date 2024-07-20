@@ -50,16 +50,17 @@ export const getAllBooksAction = async (
 };
 
 export const getPaginatedBooksAction = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   const { page, limit, query } = req.query;
+  const user_id = req.user?.id;
 
   logger.info(`Get Paginated Books Action: { page: ${page}, limit: ${limit}, query: ${query} }`);
 
   try {
-    const books = await getPaginatedBooks(+page, +limit, query?.toString());
+    const books = await getPaginatedBooks(+page, +limit, user_id.toString(), query?.toString());
     
     res.status(200).json(books);
   } catch (error) {

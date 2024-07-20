@@ -6,7 +6,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import dayjs, { Dayjs } from 'dayjs';
 import { useShowErrorToast } from '../hooks';
-import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
 import UploadFile from '../components/UploadFile';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import TextFieldComponent from '../components/TextFieldComponent';
@@ -15,14 +14,15 @@ import AutoCompleteComponent from '../components/AutoCompleteComponent';
 import { genresApiSlice } from '../store/reducers/GenresApiSlice';
 import { tagsApiSlice } from '../store/reducers/TagsApiSlice';
 import { seriesApiSlice } from '../store/reducers/SeriesApiSlice';
-import AutoCompleteSignleField from '../components/AutoCompleteSignleField';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import { ExtendedFileProps } from 'react-mui-fileuploader/dist/types/index.types';
 
-type UploadBookModalType = {
+type CreateSeriaModalType = {
   isModalOpen: boolean;
   setModalOpen: (value: boolean) => void;
 };
 
-const UploadBookModal: FC<UploadBookModalType> = ({
+const CreateSeriaModal: FC<CreateSeriaModalType> = ({
   isModalOpen,
   setModalOpen,
 }) => {
@@ -32,9 +32,8 @@ const UploadBookModal: FC<UploadBookModalType> = ({
   const [release_date, setReleaseDate] = useState<Date | null | Dayjs>(
     dayjs(Date.now())
   );
-  const [source, setSource] = useState<string>('');
   const [fieldsError, setFieldsError] = useState<string>();
-  const [book, setBook] = useState<ExtendedFileProps | null>(null);
+  const [cover, setCover] = useState<ExtendedFileProps | null>(null);
   const [genres, setGenres] = useState<Array<{
     id: number;
     title: string;
@@ -42,10 +41,10 @@ const UploadBookModal: FC<UploadBookModalType> = ({
   const [tags, setTags] = useState<Array<{ id: number; title: string }> | null>(
     null
   );
-  const [seria, setSeria] = useState<number | null>(null);
 
-  const [createBook, { data, error, isLoading }] =
-    booksApiSlice.useCreateBookMutation();
+  const [createSeria, { data, error, isLoading }] =
+    seriesApiSlice.useCreateSeriaMutation();
+
   const {
     data: genresData,
     error: genresError,
@@ -56,17 +55,11 @@ const UploadBookModal: FC<UploadBookModalType> = ({
     error: tagsError,
     isLoading: tagsIsLoading,
   } = tagsApiSlice.useGetTagsByQueryQuery('');
-  const {
-    data: seriesData,
-    error: seriesError,
-    isLoading: seriesIsLoading,
-  } = seriesApiSlice.useGetSeriesListQuery('');
 
   useShowErrorToast(error);
   useShowErrorToast(fieldsError);
   useShowErrorToast(genresError);
   useShowErrorToast(tagsError);
-  useShowErrorToast(seriesError);
 
   useEffect(() => {
     if (!!data) {
@@ -85,8 +78,8 @@ const UploadBookModal: FC<UploadBookModalType> = ({
   };
 
   const onSubmitForm = () => {
-    if (!name && !genres && !book) {
-      return setFieldsError('Some fields are Empty');
+    if (!name) {
+      return setFieldsError('Поле Название не заполнено');
     }
 
     const formData = new FormData();
@@ -105,20 +98,18 @@ const UploadBookModal: FC<UploadBookModalType> = ({
     formData.append('annotation', annotation);
     formData.append('author', author);
     release_date && formData.append('release_date', release_date.toString());
-    formData.append('source', source);
-    seria && formData.append('seria_id', seria.toString());
-    book && formData.append('book', book);
+    cover && formData.append('cover', cover);
 
-    createBook(formData);
+    createSeria(formData);
   };
 
   return (
     <Dialog open={isModalOpen} onClose={handleClose}>
       <DialogContent>
-        <DialogTitle>Загрузить книгу</DialogTitle>
+        <DialogTitle>{'Создать Серию'}</DialogTitle>
         <TextFieldComponent
           id={'name'}
-          label={'Имя'}
+          label={'Название'}
           onChangeFunction={setName}
         />
         <TextFieldComponent
@@ -136,11 +127,6 @@ const UploadBookModal: FC<UploadBookModalType> = ({
           setValue={setReleaseDate}
           value={release_date}
         />
-        <TextFieldComponent
-          id={'source'}
-          label={'Ресурс'}
-          onChangeFunction={setSource}
-        />
         {genresData && (
           <AutoCompleteComponent
             options={genresData}
@@ -157,14 +143,7 @@ const UploadBookModal: FC<UploadBookModalType> = ({
             setValues={setTags}
           />
         )}
-        {seriesData && (
-          <AutoCompleteSignleField
-            options={seriesData.map((item: {id: number, title: string}) => ({id: item.id, label: item.title}))}
-            label={'Серия'}
-            setValue={setSeria}
-          />
-        )}
-        <UploadFile setFiles={setBook} />
+        <UploadFile setFiles={setCover} />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Отмена</Button>
@@ -174,4 +153,4 @@ const UploadBookModal: FC<UploadBookModalType> = ({
   );
 };
 
-export default UploadBookModal;
+export default CreateSeriaModal;

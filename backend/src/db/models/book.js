@@ -78,7 +78,12 @@ export default (sequelize, DataTypes) => {
       through: 'book_tags',
       onDelete: 'cascade',
     });
-    Book.belongsToMany(models.Library, { through: models.Library_book });
+    Book.belongsToMany(models.User, {
+      through: models.Library_book,
+      onDelete: 'cascade',
+      foreignKey: 'book_id',
+      as: 'UsersBooks'
+    });
   };
 
   return Book;

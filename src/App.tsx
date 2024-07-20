@@ -19,6 +19,8 @@ import { useAppDispatch } from './hooks';
 import NotFound from './components/NotFound';
 import LocalBooks from './containers/LocalBooks';
 import LocalBook from './containers/LocalBook';
+import Library from './containers/Library';
+import LibraryBookStatusComponent from './components/LibraryBookStatusComponent';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -44,11 +46,7 @@ const App: FC = () => {
         {/* public routes */}
         <Route
           index
-          element={
-            <>
-              <Link to={'profile'}>PROFILE</Link>
-            </>
-          }
+          element={<>Main page</>}
         />
         <Route element={<PublicRoute />}>
           <Route path={'login'} element={<Login />} />
@@ -62,6 +60,8 @@ const App: FC = () => {
           <Route path={'books/:id'} element={<Book />} />
           <Route path={'/local-books'} element={<LocalBooks />} />
           <Route path={'/local-books/:id'} element={<LocalBook />} />
+          <Route path={'/library'} element={<Library />} />
+          {/* <Route path={'/local-books/:id'} element={<LocalBook />} /> */}
           <Route path={'users'} element={<Users />} />
           <Route path={'users/:id'} element={<User />} />
         </Route>

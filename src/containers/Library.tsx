@@ -4,26 +4,23 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Pagination from '@mui/material/Pagination';
 import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
 import { BookType, LocalBookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
-import { useDebounce, useShowErrorToast } from '../hooks';
+import { useAppSelector, useDebounce, useShowErrorToast } from '../hooks';
 import UploadBookModal from './UploadBookModal';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import LocalBookItem from '../components/LocalBookItem';
 import CreateTagModal from './CreateTagModal';
 import CreateGenreModal from './CreateGenreModal';
 import DeleteModal from './DeleteModal';
-import CreateSeriaModal from './CreateSeriaModal';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
+import LibraryBookItem from '../components/LibraryBookItem';
+import CreateSeriaModal from './CreateSeriaModal';
 
-
-const LocalBooks: FC = () => {
+const Library: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
@@ -33,33 +30,30 @@ const LocalBooks: FC = () => {
     useState<boolean>(false);
   const [isUploadBookModalOpen, setUploadBookModalOpen] =
     useState<boolean>(false);
-  const [isCreateSeriaModalOpen, setCreateSeriaModalOpen] =
-    useState<boolean>(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const debouncedValue = useDebounce(query);
 
-  const { data, error, isLoading } = booksApiSlice.useGetBooksQuery({
+  const { user } = useAppSelector((state) => state.auth);
+
+
+  const { data, error, isLoading: libraryIsLoading } = libraryBooksApiSlice.useGetUserLibraryBooksQuery({
     page,
     limit,
     query: debouncedValue,
+    id: user?.id,
   });
 
   const [
     deleteBook,
     { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
   ] = booksApiSlice.useDeleteBookMutation();
-  const [
-    updateLibraryBook,
-    { data: updateLibraryBookData, error: updateLibraryBookError, isLoading: updateLibraryBookIsLoading },
-  ] = libraryBooksApiSlice.useUpdateLibraryBookMutation();
 
   useShowErrorToast(error);
   useShowErrorToast(deleteError);
-  useShowErrorToast(updateLibraryBookError);
 
-  const booksCount = data?.books?.length;
+  const booksCount = data?.LibraryBooks?.length;
 
   useEffect(() => {
     if (query) {
@@ -148,13 +142,6 @@ const LocalBooks: FC = () => {
         >
           <AddCircleIcon />
         </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateSeriaModalOpen(true)}
-        >
-          <BookmarksIcon />
-        </Button>
       </Box>
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
@@ -170,9 +157,8 @@ const LocalBooks: FC = () => {
               bgcolor: 'background.paper',
             }}
           >
-            {data.books.map((book: LocalBookType, index: number) => (
-              <LocalBookItem
-                updateBook={updateLibraryBook}
+            {data.LibraryBooks.map((book: LocalBookType, index: number) => (
+              <LibraryBookItem
                 book={book}
                 key={`book ${index}`}
                 deleteBook={onDeleteBook}
@@ -196,28 +182,10 @@ const LocalBooks: FC = () => {
             {'Нет данных'}
           </Typography>
         )}
-        {booksCount && (
-          <Pagination
-            count={data.totalPages}
-            color="primary"
-            defaultPage={1}
-            boundaryCount={2}
-            page={page + 1}
-            onChange={onPaginationChange}
-          />
-        )}
       </Box>
-      <UploadBookModal
+      <CreateSeriaModal
         isModalOpen={isUploadBookModalOpen}
         setModalOpen={setUploadBookModalOpen}
-      />
-      <CreateTagModal
-        isModalOpen={isCreateTagModalOpen}
-        setModalOpen={setCreateTagModalOpen}
-      />
-      <CreateGenreModal
-        isModalOpen={isCreateGenreModalOpen}
-        setModalOpen={setCreateGenreModalOpen}
       />
       <DeleteModal
         deleteFunction={onDelete}
@@ -225,12 +193,8 @@ const LocalBooks: FC = () => {
         isModalOpen={isDeleteModalOpen}
         setModalOpen={setDeleteModalOpen}
       />
-      <CreateSeriaModal
-        isModalOpen={isCreateSeriaModalOpen}
-        setModalOpen={setCreateSeriaModalOpen}
-      />
     </Box>
   );
 };
 
-export default LocalBooks;
+export default Library;

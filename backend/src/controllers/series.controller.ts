@@ -1,6 +1,7 @@
 import { NextFunction, Response, Request } from 'express';
-import { getPaginatedSeries, createSeria, deleteSeria, getSeria, updateSeria } from '../services/db/series.services';
+import { getPaginatedSeries, createSeria, deleteSeria, getSeria, updateSeria, getSeriesList } from '../services/db/series.services';
 import logger from '../helpers/logger';
+import { UnProcessableEntityError } from '../helpers/error';
 
 export const getPaginatedSeriesAction = async (
   req: Request,
@@ -21,16 +22,37 @@ export const getPaginatedSeriesAction = async (
   }
 };
 
-export const createSeriaAction = async (
+export const getSeriesListAction = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const payload = req.body;
+  const { query } = req.query;
 
-  logger.info(`Create Seria Action: { payload: ${payload} }`);
+  logger.info(`Get Series List Action: { query: ${query} }`);
 
   try {
+    const series = await getSeriesList(query.toString());
+    
+    res.status(200).json(series);
+  } catch (error) {
+    logger.error('Get Series List Action - Cannot get series list', error);
+    next(error);
+  }
+};
+
+export const createSeriaAction = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const cover = req.file ? `${req.file?.destination}${req.file?.filename}` : null;
+
+    const payload = {...req?.body, cover};
+  
+    logger.info(`Create Seria Action: { payload: ${payload} }`);
+
     const seria = await createSeria(payload);
     
     res.status(200).json(seria);

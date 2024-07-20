@@ -10,10 +10,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.DataTypes.INTEGER,
       },
-      library_id: {
+      user_id: {
         allowNull: false,
         references: {
-          model: 'libraries',
+          model: 'users',
           key: 'id',
         },
         type: Sequelize.DataTypes.INTEGER,
@@ -27,13 +27,24 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
       },
       state: {
-        allowNull: false,
+        allowNull: true,
+        defaultValue: null,
         type: Sequelize.DataTypes.STRING,
       },
       last_page: {
         allowNull: true,
         defaultValue: null,
         type: Sequelize.DataTypes.STRING,
+      },
+      last_open: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DataTypes.DATE,
+      },
+      progress: {
+        allowNull: true,
+        defaultValue: null,
+        type: Sequelize.DataTypes.INTEGER,
       },
       created_at: {
         allowNull: false,

@@ -1,47 +1,59 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book, Library } = require('../../db/models/index');
+const { Book, Library_book, User } = require('../../db/models/index');
+import { Op } from "sequelize";
 
-export const  getPaginatedLibrary = async (page: number, limit: number, userId: number) => {
-  const { count, rows } = await Library.findAndCountAll({
-    offset: page * limit,
-    limit,
-    where: { user_id: userId },    
+export const  getPaginatedLibraryBook = async (page: number, limit: number, userId: number, query: string, state: string | null = null) => {
+  let where = {} as any;
+  if (state === 'not' || state === 'read' || state === 'later' || state === 'reading') {
+    where = {
+      '$LibraryBooks->library_book.state$': state
+    }
+  } else {
+    where = {
+      '$LibraryBooks->library_book.state$': {
+        [Op.not]: null
+      }
+    }
+  }
+
+  if (query) {
+    where.title = {
+      [Op.like]: `%${query}%`,
+    };
+  }
+
+  const user = await User.findOne({
+    where: { id: userId },
+    attributes: {exclude: ['password', 'created_at', 'email', 'updated_at', 'deleted_at']},
     include: [
       {
         model: Book,
-        as: 'book',
+        as: 'LibraryBooks',
+        where,
       },
     ],
     order: [['created_at', 'DESC']],
   });
 
-  if (!rows.length) {
-    return {};
-  }
-
-  const totalPages = !count ? 1 : Math.ceil(count / limit);
-
-  return {
-    totalPages,
-    page: page + 1,
-    books: rows,
-  };
+  return user;
 }
 
-export const createLibrary = async (payload: object) => {
+export const createLibraryBook = async (payload: object) => {
   try {
-    return await Library.create(payload);  
+    return await Library_book.create(payload);  
   } catch (error) {
     throw new error('Серия не создана');
   }
 };
 
 export const  getLibraryBook = async (where: object) => {
-  return await Library.findOne({ where });
+  return await Library_book.findOne({ 
+    where,
+   });
 }
 
 export const  updateLibraryBook = async (where: object, payload: object) => {
-  return await Library.update(
+  return await Library_book.update(
     payload,
     { 
       where,
@@ -52,5 +64,5 @@ export const  updateLibraryBook = async (where: object, payload: object) => {
 }
 
 export const deleteLibraryBook = async (id: string) => {
-  await Library.destroy({ where: { id } });
+  await Library_book.destroy({ where: { id } });
 }

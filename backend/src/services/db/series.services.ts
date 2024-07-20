@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Book, Seria } = require('../../db/models/index');
+import { Op } from "sequelize";
 
 export const  getPaginatedSeries = async (page: number, limit: number, query: string) => {
   const { count, rows } = await Seria.findAndCountAll({
@@ -26,7 +27,25 @@ export const  getPaginatedSeries = async (page: number, limit: number, query: st
     page: page + 1,
     series: rows,
   };
-}
+};
+
+export const  getSeriesList = async (query: string) => {
+  const where = {} as {title: object};
+
+  if (query) {
+    where.title = {
+      [Op.like]: `%${query}%`,
+    };
+  }
+
+  const series = await Seria.findAll({
+    where,
+    attributes: { include: ['id', 'title',] },
+    order: [['created_at', 'DESC']],
+  });
+
+  return series;
+};
 
 export const createSeria = async (payload: object) => {
   try {

@@ -175,7 +175,7 @@ const LocalBook: FC<LocalBookType> = ({}) => {
           alt="Book cover"
           height="300px"
           width="200px"
-          styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)'}}
+          styles={{ m: 0 }}
         />
         <Box sx={{ flexGrow: 1 }}>
           {!!title && <TypographyComponent title={'Название:'} data={title} />}
@@ -197,7 +197,7 @@ const LocalBook: FC<LocalBookType> = ({}) => {
               data={moment(release_date).format('DD.MM.YYYY')}
             />
           )}
-          {!!seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
+          {!!seria?.title && <TypographyComponent title={'Серия: '} data={seria.title} />}
           {!!source && <TypographyComponent title={'Ресурс: '} data={source} />}
           {!!tags?.length && (
             <TypographyComponent

@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book, Seria, Tag, Genre } = require('../../db/models/index');
+const { Book, Seria, Tag, Genre, User, Library_book } = require('../../db/models/index');
 import { Op } from "sequelize";
 import { sequelize } from '../../db/models';
 import fs from 'fs';
 import { UnCreatedError } from "../../helpers/error";
+import { group } from "console";
 
 export const  getAllBooks = async () => {
   const books = await Book.findAll();
@@ -11,7 +12,7 @@ export const  getAllBooks = async () => {
   return books;
 }
 
-export const  getPaginatedBooks = async (page: number, limit: number, query: string) => {
+export const  getPaginatedBooks = async (page: number, limit: number, id: string, query: string) => {
   const where = {} as {title: object};
 
   if (query) {
@@ -30,21 +31,28 @@ export const  getPaginatedBooks = async (page: number, limit: number, query: str
       {
         model: Seria,
         as: 'seria',
-        attributes: { include: ['id', 'title',] },
+        attributes: ['id', 'title',] ,
+      },
+      {
+        model: User,
+        as: 'UsersBooks',
+        required: false,
+        where:  { id },
+        attributes: ['id', 'name',],
       },
       {
         model: Tag,
-        attributes: { include: ['id', 'title',] },
+        attributes: ['id', 'title',] ,
       },
       {
         model: Genre,
-        attributes: { include: ['id', 'title',] },
+        attributes: ['id', 'title',] ,
       },
     ],
     order: [['created_at', 'DESC']],
   });
 
-  if (!rows.length) {
+  if (!rows?.length) {
     return {};
   }
 

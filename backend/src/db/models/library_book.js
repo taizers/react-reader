@@ -6,10 +6,21 @@ export default (sequelize, DataTypes) => {
     {
       state: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: null,
       },
       last_page: {
         type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null,
+      },
+      last_open: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
+      },
+      progress: {
+        type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: null,
       },

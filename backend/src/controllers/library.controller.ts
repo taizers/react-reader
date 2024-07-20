@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { createLibrary, deleteLibraryBook, getLibraryBook, getPaginatedLibrary, updateLibraryBook } from '../services/db/library.services';
+import { createLibraryBook, deleteLibraryBook, getLibraryBook, getPaginatedLibraryBook, updateLibraryBook } from '../services/db/library.services';
 import logger from '../helpers/logger';
 
 export const getPaginatedLibraryAction = async (
@@ -7,13 +7,13 @@ export const getPaginatedLibraryAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { page, limit } = req.query;
+  const { page, limit, query, state } = req.query;
   const { id } = req.params;
 
-  logger.info(`Get Paginated Library Action: { page: ${page}, limit: ${limit}, user id: ${id} }`);
+  logger.info(`Get Paginated Library Action: { page: ${page}, limit: ${limit}, state: ${state} query: ${query}, user_id: ${id} }`);
 
   try {
-    const library = await getPaginatedLibrary(+page-1, +limit, +id);
+    const library = await getPaginatedLibraryBook(+page-1, +limit, +id, query?.toString(), state?.toString());
     
     res.status(200).json(library);
   } catch (error) {
@@ -22,7 +22,7 @@ export const getPaginatedLibraryAction = async (
   }
 };
 
-export const createLibraryAction = async (
+export const createLibraryBookAction = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -32,7 +32,12 @@ export const createLibraryAction = async (
   logger.info(`Create Library Action: { payload: ${payload} }`);
 
   try {
-    const library = await createLibrary(payload);
+    const state = payload?.state;
+    if (state !== 'not' || state !== 'read' || state !== 'later' || state !== 'reading' || state !== null){
+      throw new Error('state isn`t "not | read | later | reading | null"!')
+    }
+
+    const library = await createLibraryBook(payload);
     
     res.status(200).json(library);
   } catch (error) {
@@ -65,13 +70,21 @@ export const updateLibraryBookAction = async (
   res: Response,
   next: NextFunction
 ) => {
-  const id = req.params.id;
-  const payload = req.body;
+  const payload = req.body.payload;
+  const ids = req.body.ids;
 
-  logger.info(`Update Library Book Action: { id: ${id}, payload: ${payload} }`);
+  logger.info(`Update Library Book Action: { payload: ${JSON.stringify(payload)} }`);
 
   try {
-    const libraryBook = await updateLibraryBook({ id }, payload);
+    let libraryBook = {};
+    
+    const lbBook = await getLibraryBook({...ids});
+
+    if (lbBook) {
+      libraryBook = await updateLibraryBook({ ...ids }, payload);
+    } else {
+      libraryBook = await createLibraryBook({...payload, ...ids});
+    }
     
     res.status(200).json(libraryBook);
   } catch (error) {
