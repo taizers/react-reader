@@ -21,6 +21,8 @@ import LocalBooks from './containers/LocalBooks';
 import LocalBook from './containers/LocalBook';
 import Library from './containers/Library';
 import LibraryBookStatusComponent from './components/LibraryBookStatusComponent';
+import Loader from './components/Loader';
+import BookSkeleton from './skeletons/BookSkeleton';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -46,7 +48,7 @@ const App: FC = () => {
         {/* public routes */}
         <Route
           index
-          element={<>Main page</>}
+          element={<><BookSkeleton /></>}
         />
         <Route element={<PublicRoute />}>
           <Route path={'login'} element={<Login />} />
@@ -59,9 +61,8 @@ const App: FC = () => {
           <Route path={'books'} element={<Books />} />
           <Route path={'books/:id'} element={<Book />} />
           <Route path={'/local-books'} element={<LocalBooks />} />
-          <Route path={'/local-books/:id'} element={<LocalBook />} />
+          <Route path={'/read/:id'} element={<LocalBook />} />
           <Route path={'/library'} element={<Library />} />
-          {/* <Route path={'/local-books/:id'} element={<LocalBook />} /> */}
           <Route path={'users'} element={<Users />} />
           <Route path={'users/:id'} element={<User />} />
         </Route>

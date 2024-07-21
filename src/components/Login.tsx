@@ -19,6 +19,7 @@ import { useAppDispatch, useShowErrorToast } from '../hooks';
 import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
 import { setToken } from '../utils';
 import { createToast } from '../utils/toasts';
+import Loader from './Loader';
 
 const Copyright = (props: any) => {
   return (
@@ -147,6 +148,7 @@ const Login: FC = () => {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        {!!isLoading && <Loader />}
       </Container>
     </ThemeProvider>
   );

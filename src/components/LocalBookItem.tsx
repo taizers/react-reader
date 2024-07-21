@@ -13,16 +13,16 @@ import { LocalBookType } from '../constants/tsSchemes';
 import { baseUrl } from '../constants';
 import TypographyComponent from './TypographyComponent';
 import LibraryBookStatusComponent from './LibraryBookStatusComponent';
-import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import { useAppSelector } from '../hooks';
+import { libraryBookStatuses } from '../constants/constants';
 
 type LocalBookItemType = {
   book: LocalBookType;
   deleteBook: (id: number) => void;
-  updateBook: (data: {ids: object, payload: object}) => void;
+  updateLibraryBook: (data: {ids: object, payload: object}) => void;
 };
 
-const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) => {
+const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateLibraryBook }) => {
   const {
     cover,
     title,
@@ -52,8 +52,8 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
       book_id: id,
     };
 
-    updateBook({ids, payload: {state: null}});
-  }
+    updateLibraryBook({ids, payload: {state: null}});
+  };
 
   const onUpdateBookStatusAtLibrary = (state: unknown) => {
     console.log(state)
@@ -66,8 +66,8 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
       state,
     };
 
-    updateBook({ids, payload});
-  }
+    updateLibraryBook({ids, payload});
+  };
 
   return (
     <ListItem
@@ -81,7 +81,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
     >
       <Image
         onClick={() => {
-          history(`${id}`);
+          history(`/read/${id}`);
         }}
         src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
@@ -140,7 +140,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateBook }) 
               >
                 <DeleteIcon />
               </Button>
-              <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} />
+              {UsersBooks !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} statuses={libraryBookStatuses} />}
             </Typography>
           </>
         }

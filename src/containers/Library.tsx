@@ -4,68 +4,57 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AddIcon from '@mui/icons-material/Add';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-import { BookType, LocalBookType } from '../constants/tsSchemes';
-import { defaultLimit, defaultStartPage } from '../constants/constants';
+import { ExternalStatus, LocalBookType } from '../constants/tsSchemes';
+import { defaultLimit, defaultStartPage, libraryBookStatusesForSearch } from '../constants/constants';
 import { useAppSelector, useDebounce, useShowErrorToast } from '../hooks';
-import UploadBookModal from './UploadBookModal';
-import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import CreateTagModal from './CreateTagModal';
-import CreateGenreModal from './CreateGenreModal';
-import DeleteModal from './DeleteModal';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import LibraryBookItem from '../components/LibraryBookItem';
-import CreateSeriaModal from './CreateSeriaModal';
+import LibraryBookStatusComponent from '../components/LibraryBookStatusComponent';
+import BookSkeleton from '../skeletons/BookSkeleton';
+import BooksSkeleton from '../skeletons/BooksSkeleton';
 
 const Library: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
-  const [isCreateTagModalOpen, setCreateTagModalOpen] =
-    useState<boolean>(false);
-  const [isCreateGenreModalOpen, setCreateGenreModalOpen] =
-    useState<boolean>(false);
-  const [isUploadBookModalOpen, setUploadBookModalOpen] =
-    useState<boolean>(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [state, setState] = useState<ExternalStatus>(null);
 
   const debouncedValue = useDebounce(query);
 
   const { user } = useAppSelector((state) => state.auth);
-
 
   const { data, error, isLoading: libraryIsLoading } = libraryBooksApiSlice.useGetUserLibraryBooksQuery({
     page,
     limit,
     query: debouncedValue,
     id: user?.id,
+    state
   });
 
   const [
-    deleteBook,
-    { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
-  ] = booksApiSlice.useDeleteBookMutation();
+    updateLibraryBook,
+    { data: updateLibraryBookData, error: updateLibraryBookError, isLoading: updateLibraryBookIsLoading },
+  ] = libraryBooksApiSlice.useUpdateLibraryBookMutation();
 
   useShowErrorToast(error);
-  useShowErrorToast(deleteError);
+  useShowErrorToast(updateLibraryBookError);
 
   const booksCount = data?.LibraryBooks?.length;
+
+  const onDeleteBookFromLibrary = () => {
+    setState(null);
+  };
+
+  const onUpdateBookStatusAtLibrary = (state: ExternalStatus) => {
+    setState(state);
+  };
 
   useEffect(() => {
     if (query) {
       setPage(defaultStartPage);
     }
   }, [query]);
-
-  useEffect(() => {
-    if (!!deleteData) {
-      setDeleteModalOpen(false);
-    }
-  }, [deleteData]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,15 +72,6 @@ const Library: FC = () => {
       window.scrollTo(0, 0);
     }
     setPage(value - 1);
-  };
-
-  const onDeleteBook = (id: number) => {
-    setDeleteId(id);
-    setDeleteModalOpen(true);
-  };
-
-  const onDelete = () => {
-    deleteBook(deleteId);
   };
 
   return (
@@ -121,27 +101,7 @@ const Library: FC = () => {
         >
           Найти
         </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setUploadBookModalOpen(true)}
-        >
-          <CloudUploadIcon />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateTagModalOpen(true)}
-        >
-          <AddIcon />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateGenreModalOpen(true)}
-        >
-          <AddCircleIcon />
-        </Button>
+        <LibraryBookStatusComponent styles={{alignSelf: 'center', ml: 2, width: 'auto'}} onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={state} statuses={libraryBookStatusesForSearch} />
       </Box>
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
@@ -159,14 +119,14 @@ const Library: FC = () => {
           >
             {data.LibraryBooks.map((book: LocalBookType, index: number) => (
               <LibraryBookItem
+                updateLibraryBook={updateLibraryBook}
                 book={book}
                 key={`book ${index}`}
-                deleteBook={onDeleteBook}
               />
             ))}
           </List>
         )}
-        {!booksCount && (
+        {!booksCount && !libraryIsLoading && (
           <Typography
             sx={{
               display: 'flex',
@@ -182,17 +142,8 @@ const Library: FC = () => {
             {'Нет данных'}
           </Typography>
         )}
+        {!!libraryIsLoading && <BooksSkeleton />}
       </Box>
-      <CreateSeriaModal
-        isModalOpen={isUploadBookModalOpen}
-        setModalOpen={setUploadBookModalOpen}
-      />
-      <DeleteModal
-        deleteFunction={onDelete}
-        deleteLabel="Книгу"
-        isModalOpen={isDeleteModalOpen}
-        setModalOpen={setDeleteModalOpen}
-      />
     </Box>
   );
 };

@@ -1,54 +1,16 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button } from '@mui/material';
-import QueryBuilderIcon from '@mui/icons-material/QueryBuilder';
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
-
-type Statusestypes = 'not' | 'read' | 'later' | 'reading' | 'add' | 'delete';
-
-const statuses = {
-  'reading': {
-    labelR: 'Читаю',
-    LabelEn: 'Reading',
-    icon: <AutoStoriesIcon />,
-  },
-  'later': {
-    labelR: 'Прочту позже',
-    LabelEn: 'Read it later',
-    icon: <QueryBuilderIcon />,
-  },
-  'read': {
-    labelR: 'Прочитал',
-    LabelEn: 'Read',
-    icon: <DoneAllIcon />,
-  },
-  'not': {
-    labelR: 'Не интересно',
-    LabelEn: 'Not interested',
-    icon: <VisibilityOffIcon />,
-  },
-  'delete': {
-    labelR: 'Удалить',
-    LabelEn: 'Delete',
-    icon: <DeleteIcon />,
-  },
-  'add': {
-    labelR: 'Добавить',
-    LabelEn: 'Add',
-    icon: <AddIcon />,
-  }
-};
+import { ExternalStatus, statusesObjectType, Statusestypes } from '../constants/tsSchemes';
 
 type LibraryBookStatusComponentType = {
     onDeleteFunction: () => void;
-    onUpdateStatusFunction: (status: Statusestypes) => void;
-    state: 'not' | 'read' | 'later' | 'reading' | null;
-}
+    onUpdateStatusFunction: (status: ExternalStatus) => void;
+    state: ExternalStatus;
+    statuses: statusesObjectType;
+    styles?: object;
+};
 
-const LibraryBookStatusComponent: FC<LibraryBookStatusComponentType> = ({onDeleteFunction, onUpdateStatusFunction, state}) => {
+const LibraryBookStatusComponent: FC<LibraryBookStatusComponentType> = ({onDeleteFunction, onUpdateStatusFunction, state, statuses, styles}) => {
   const [status, setStatus] = useState<Statusestypes>('add');
   const [isOpen, setOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -111,7 +73,7 @@ const LibraryBookStatusComponent: FC<LibraryBookStatusComponentType> = ({onDelet
     const arr = [];
 
     for (const key in statuses) {
-      if (key === 'not' || key === 'read' || key === 'later' || key === 'reading' || key === 'delete') {
+      if ((key === 'not' || key === 'read' || key === 'later' || key === 'reading' || key === 'delete') && !(key === 'delete' && status === 'add')) {
         arr.push(getStatusItem(key as Statusestypes, onSubButtonClick));
       }
     }
@@ -120,7 +82,7 @@ const LibraryBookStatusComponent: FC<LibraryBookStatusComponentType> = ({onDelet
   };
 
   return (
-    <Box sx={{ position: 'relative', width: '100%' }} ref={menuRef}>
+    <Box sx={{ position: 'relative', width: '100%', ...styles }} ref={menuRef}>
       <Box sx={{ width: '200px' }}>{getStatusItem(status, onOpenButtonClick, true)}</Box>
       {isOpen && (
         <Box sx={{ width: '200px', display: 'flex', gap: '2px', flexDirection: 'column', position: 'absolute',bgcolor:'white', zIndex: 2, }}>

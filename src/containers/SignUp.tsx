@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { authApiSlice } from '../store/reducers/AuthApiSlice';
 import { useShowErrorToast } from '../hooks';
 import { createToast } from '../utils/toasts';
+import Loader from '../components/Loader';
 
 const Copyright = (props: any) => {
   return (
@@ -26,7 +27,7 @@ const Copyright = (props: any) => {
     >
       {'Copyright © '}
       <Link color="inherit" href="#">
-        Your Website
+        React Reader
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -151,6 +152,7 @@ const SignUp: FC = () => {
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
+        {!!isLoading && <Loader />}
       </Container>
     </ThemeProvider>
   );

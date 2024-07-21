@@ -23,9 +23,10 @@ export const libraryBooksApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Library'],
     }),
     getUserLibraryBooks: builder.query({
-      query: ({ page, limit, id, query }) => ({
-        url: `/library/user/${id}?page=${page}&limit=${limit}&query=${query}&state=${null}`,
+      query: ({ page, limit, id, query, state }) => ({
+        url: `/library/user/${id}?page=${page}&limit=${limit}&query=${query}&state=${state}`,
       }),
+      providesTags: ['Book'],
     }),
     updateLibraryBook: builder.mutation({
       query: (data) => ({

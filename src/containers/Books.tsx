@@ -15,6 +15,8 @@ import { BooksResponceType, BookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';
 import { useDebounce, useShowErrorToast } from '../hooks';
+import BookSkeleton from '../skeletons/BookSkeleton';
+import BooksSkeleton from '../skeletons/BooksSkeleton';
 
 const Books: FC = () => {
   const [query, setQuery] = useState<string>('');
@@ -129,7 +131,7 @@ const Books: FC = () => {
             ))}
           </List>
         )}
-        {!booksCount && (
+        {!booksCount && !isLoading && (
           <Typography
             sx={{
               display: 'flex',
@@ -155,6 +157,7 @@ const Books: FC = () => {
             onChange={onPaginationChange}
           />
         )}
+        {!!isLoading && <BooksSkeleton />}
       </Box>
     </Box>
   );

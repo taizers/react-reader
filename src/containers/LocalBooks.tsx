@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useRef } from 'react';
 import List from '@mui/material/List';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -10,7 +10,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
-import { BookType, LocalBookType } from '../constants/tsSchemes';
+import { LocalBookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { useDebounce, useShowErrorToast } from '../hooks';
 import UploadBookModal from './UploadBookModal';
@@ -21,6 +21,7 @@ import CreateGenreModal from './CreateGenreModal';
 import DeleteModal from './DeleteModal';
 import CreateSeriaModal from './CreateSeriaModal';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
+import BooksSkeleton from '../skeletons/BooksSkeleton';
 
 
 const LocalBooks: FC = () => {
@@ -101,7 +102,7 @@ const LocalBooks: FC = () => {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%' }} >
       <Box
         component="form"
         onSubmit={onSubmit}
@@ -157,7 +158,7 @@ const LocalBooks: FC = () => {
         </Button>
       </Box>
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: '100%' }}
       >
         {booksCount && (
           <List
@@ -172,7 +173,7 @@ const LocalBooks: FC = () => {
           >
             {data.books.map((book: LocalBookType, index: number) => (
               <LocalBookItem
-                updateBook={updateLibraryBook}
+                updateLibraryBook={updateLibraryBook}
                 book={book}
                 key={`book ${index}`}
                 deleteBook={onDeleteBook}
@@ -180,7 +181,7 @@ const LocalBooks: FC = () => {
             ))}
           </List>
         )}
-        {!booksCount && (
+        {!booksCount && !isLoading && (
           <Typography
             sx={{
               display: 'flex',
@@ -206,6 +207,7 @@ const LocalBooks: FC = () => {
             onChange={onPaginationChange}
           />
         )}
+        {!!isLoading && <BooksSkeleton />}
       </Box>
       <UploadBookModal
         isModalOpen={isUploadBookModalOpen}

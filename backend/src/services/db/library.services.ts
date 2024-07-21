@@ -30,9 +30,10 @@ export const  getPaginatedLibraryBook = async (page: number, limit: number, user
         model: Book,
         as: 'LibraryBooks',
         where,
+        order: [['$LibraryBooks->library_book.updated_at$', 'DESC']],
       },
     ],
-    order: [['created_at', 'DESC']],
+    
   });
 
   return user;

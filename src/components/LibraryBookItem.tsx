@@ -4,7 +4,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,13 +11,16 @@ import Image from './Image/Image';
 import { LocalBookType } from '../constants/tsSchemes';
 import { baseUrl } from '../constants';
 import TypographyComponent from './TypographyComponent';
+import LibraryBookStatusComponent from './LibraryBookStatusComponent';
+import { useAppSelector } from '../hooks';
+import { libraryBookStatuses } from '../constants/constants';
 
 type LibraryBookItemType = {
   book: LocalBookType;
-  deleteBook: (id: number) => void;
+  updateLibraryBook: (data: {ids: object, payload: object}) => void;
 };
 
-const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
+const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) => {
   const {
     cover,
     title,
@@ -27,6 +29,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
     downloads,
     link,
     id,
+    library_book,
     annotation,
     created_at,
     deleted_at,
@@ -37,7 +40,32 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
     tags,
     updated_at,
   } = book;
+
   let history = useNavigate();
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const onDeleteBookFromLibrary = () => {
+    const ids = {
+      user_id: user?.id,
+      book_id: id,
+    };
+
+    updateLibraryBook({ids, payload: {state: null}});
+  };
+
+  const onUpdateBookStatusAtLibrary = (state: unknown) => {
+    const ids = {
+      user_id: user?.id,
+      book_id: id,
+    };
+
+    const payload = {
+      state,
+    };
+
+    updateLibraryBook({ids, payload});
+  };
 
   return (
     <ListItem
@@ -51,7 +79,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
     >
       <Image
         onClick={() => {
-          history(`${id}`);
+          history(`/read/${id}`);
         }}
         src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
@@ -101,15 +129,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, deleteBook }) => {
               >
                 <DownloadIcon />
               </Button>
-              <Button
-                variant="contained"
-                sx={{ m: 1 }}
-                onClick={() => {
-                  deleteBook(id);
-                }}
-              >
-                <DeleteIcon />
-              </Button>
+              {library_book !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={library_book?.state} statuses={libraryBookStatuses} />}
             </Typography>
           </>
         }

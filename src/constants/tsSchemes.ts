@@ -92,7 +92,8 @@ export type LocalBookType = {
   tags: Array<{ id: number; title: string }> | null;
   genres: Array<{ id: number; title: string }> | null;
   user_id: number;
-  UsersBooks: Array<UsersBooksType>;
+  UsersBooks?: Array<UsersBooksType>;
+  library_book?: LibraryBookType;
   updated_at: Date | null;
   created_at: Date | null;
   deleted_at: Date | null;
@@ -139,3 +140,22 @@ export type UsersResponceType = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 };
+
+export type Statusestypes = 'not' | 'read' | 'later' | 'reading' | 'add' | 'delete';
+
+type statusObjectType = {
+  labelR: string;
+  LabelEn: string;
+  icon: JSX.Element;
+};
+
+export type statusesObjectType = {
+  reading: statusObjectType;
+  later: statusObjectType;
+  read: statusObjectType;
+  not: statusObjectType;
+  delete: statusObjectType;
+  add: statusObjectType;
+};
+
+export type ExternalStatus = 'not' | 'read' | 'later' | 'reading' | null;
