@@ -1,6 +1,7 @@
 import multer from 'multer';
 import moment from 'moment';
 import fs from 'fs';
+import { Request } from 'express';
 
 const filesStorage = multer.diskStorage({
   destination(req, file, callback) {
@@ -74,7 +75,7 @@ const newsCoverStorage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
+const fileFilter = (req: Request, file: Express.Multer.File, callback: (val1: null, val2: boolean) => void) => {
   if (
     file.mimetype === 'image/jpg' ||
     file.mimetype === 'image/jpeg' ||
@@ -86,7 +87,7 @@ const fileFilter = (req: any, file: Express.Multer.File, callback: any) => {
   }
 };
 
-const booksFilter = (req: any, file: Express.Multer.File, callback: any) => {
+const booksFilter = (req: Request, file: Express.Multer.File, callback: (val1: null, val2: boolean) => void) => {
   if (
     file.mimetype === 'image/jpg' ||
     file.mimetype === 'image/jpeg' ||

@@ -4,8 +4,6 @@ export interface IUser {
   email: string;
 }
 
-export interface IUserUpdatingData {
-  id: string;
-  name: string;
+export interface IUserUpdatingData extends Omit<IUser, 'email'> {
   password: string;
 }

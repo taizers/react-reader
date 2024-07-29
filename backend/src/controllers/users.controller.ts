@@ -58,7 +58,7 @@ export const updateUserAction = async (
   try {
     const user = await getUser({id});
 
-    const updateData = {} as any;
+    const updateData = {} as { password: string, name: string };
 
     if (newPassword && oldPassword) {
       const isPasswordEquals = await bcrypt.compare(
@@ -79,11 +79,7 @@ export const updateUserAction = async (
       updateData.name = name;
     }
 
-    const resultUser = await updateUser(id, {
-      name,
-      newPassword,
-      oldPassword,
-    });
+    const resultUser = await updateUser(id, {...updateData});
     
     const userDto = new UserDto(resultUser);
     

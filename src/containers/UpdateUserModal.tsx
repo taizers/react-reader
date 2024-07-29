@@ -6,12 +6,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { UserType, UpdateUserType } from '../constants/tsSchemes';
+import { IUser, UpdateUserType } from '../constants/tsSchemes';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
 import { useShowErrorToast } from '../hooks';
 
 type UpdateUserModalType = {
-  user: UserType;
+  user: IUser;
 };
 
 const UpdateUserModal: FC<UpdateUserModalType> = ({ user }) => {

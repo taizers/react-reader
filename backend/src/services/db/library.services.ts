@@ -3,7 +3,7 @@ const { Book, Library_book, User } = require('../../db/models/index');
 import { Op } from "sequelize";
 
 export const  getPaginatedLibraryBook = async (page: number, limit: number, userId: number, query: string, state: string | null = null) => {
-  let where = {} as any;
+  let where = {} as { title?: object, '$LibraryBooks->library_book.state$'?: string | null | object};
   if (state === 'not' || state === 'read' || state === 'later' || state === 'reading') {
     where = {
       '$LibraryBooks->library_book.state$': state
@@ -18,7 +18,7 @@ export const  getPaginatedLibraryBook = async (page: number, limit: number, user
 
   if (query) {
     where.title = {
-      [Op.like]: `%${query}%`,
+      [Op.iLike]: `%${query}%`,
     };
   }
 

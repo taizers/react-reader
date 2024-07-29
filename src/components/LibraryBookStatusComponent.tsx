@@ -1,11 +1,11 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button } from '@mui/material';
-import { ExternalStatus, statusesObjectType, Statusestypes } from '../constants/tsSchemes';
+import { stateValuesType, statusesObjectType, Statusestypes } from '../constants/tsSchemes';
 
 type LibraryBookStatusComponentType = {
     onDeleteFunction: () => void;
-    onUpdateStatusFunction: (status: ExternalStatus) => void;
-    state: ExternalStatus;
+    onUpdateStatusFunction: (status: stateValuesType) => void;
+    state: stateValuesType;
     statuses: statusesObjectType;
     styles?: object;
 };

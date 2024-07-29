@@ -5,10 +5,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Typography from '@mui/material/Typography';
 
 import Image from './Image/Image';
-import { AuthorRType } from '../constants/tsSchemes';
+import { AuthorType } from '../constants/tsSchemes';
 
 type AuthorItemType = {
-  authors: AuthorRType;
+  authors: AuthorType;
 };
 
 const AuthorItem: FC<AuthorItemType> = ({ authors }) => {

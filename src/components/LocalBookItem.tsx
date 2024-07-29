@@ -9,15 +9,16 @@ import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 
 import Image from './Image/Image';
-import { LocalBookType } from '../constants/tsSchemes';
+import { ILocalBook } from '../constants/tsSchemes';
 import { baseUrl } from '../constants';
 import TypographyComponent from './TypographyComponent';
 import LibraryBookStatusComponent from './LibraryBookStatusComponent';
 import { useAppSelector } from '../hooks';
 import { libraryBookStatuses } from '../constants/constants';
+import { Box } from '@mui/material';
 
 type LocalBookItemType = {
-  book: LocalBookType;
+  book: ILocalBook;
   deleteBook: (id: number) => void;
   updateLibraryBook: (data: {ids: object, payload: object}) => void;
 };
@@ -89,62 +90,61 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, deleteBook, updateLibraryB
         width="200px"
         styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)' }}
       />
-      <ListItemText
-        sx={{ ml: 1, alignSelf: 'start' }}
-        primary={title}
-        secondary={
-          <>
-            {author && (
-              <TypographyComponent
-                title={'Авторы:'}
-                data={author?.split(';')}
-              />
-            )}
-            {genres?.length && (
-              <TypographyComponent
-                title={'Жанры:'}
-                data={genres?.map((item) => item.title)}
-              />
-            )}
-            {release_date && (
-              <TypographyComponent
-                title={'Дата выхода:'}
-                data={moment(release_date).format('DD.MM.YYYY')}
-              />
-            )}
-            {seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
-            {tags?.length && (
-              <TypographyComponent
-                title={'Тэги:'}
-                data={tags?.map((item) => item.title)}
-              />
-            )}
-            <Typography
-              sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}
-              component="span"
-              variant="body2"
-            >
-              <Button
-                variant="contained"
-                sx={{ m: 1 }}
-                href={`${baseUrl}/${link}`}
-              >
-                <DownloadIcon />
-              </Button>
-              <Button
-                variant="contained"
-                sx={{ m: 1 }}
-                onClick={() => {
-                  deleteBook(id);
-                }}
-              >
-                <DeleteIcon />
-              </Button>
-              {UsersBooks !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} statuses={libraryBookStatuses} />}
-            </Typography>
-          </>
-        }
-      />
+      <Box sx={{ ml: 1, alignSelf: 'start' }}>
+        <Box>
+          <Typography
+            component="h3"
+            variant="h6"
+            color="text.primary"
+          >
+            {title}
+          </Typography>
+          {author && (
+            <TypographyComponent
+              title={'Авторы:'}
+              data={author?.split(';')}
+            />
+          )}
+          {genres?.length && (
+            <TypographyComponent
+              title={'Жанры:'}
+              data={genres?.map((item) => item.title)}
+            />
+          )}
+          {release_date && (
+            <TypographyComponent
+              title={'Дата выхода:'}
+              data={moment(release_date).format('DD.MM.YYYY')}
+            />
+          )}
+          {seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
+          {tags?.length && (
+            <TypographyComponent
+              title={'Тэги:'}
+              data={tags?.map((item) => item.title)}
+            />
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}>
+          <Button
+            variant="contained"
+            sx={{ m: 1 }}
+            href={`${baseUrl}/${link}`}
+          >
+            <DownloadIcon />
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ m: 1 }}
+            onClick={() => {
+              deleteBook(id);
+            }}
+          >
+            <DeleteIcon />
+          </Button>
+          {UsersBooks !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} statuses={libraryBookStatuses} />}
+        </Box>
+      </Box>
     </ListItem>
   );
 };

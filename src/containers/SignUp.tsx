@@ -17,13 +17,13 @@ import { useShowErrorToast } from '../hooks';
 import { createToast } from '../utils/toasts';
 import Loader from '../components/Loader';
 
-const Copyright = (props: any) => {
+const Copyright = () => {
   return (
     <Typography
       variant="body2"
       color="text.secondary"
       align="center"
-      {...props}
+      sx={{ mt: 8, mb: 4 }}
     >
       {'Copyright © '}
       <Link color="inherit" href="#">
@@ -151,7 +151,7 @@ const SignUp: FC = () => {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright />
         {!!isLoading && <Loader />}
       </Container>
     </ThemeProvider>

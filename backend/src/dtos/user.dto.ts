@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { UserType } from '../types/entities/global.entities.type';
+import { IUser } from '../types/entities/global.entities.type';
 import { editPath } from '../utils/path';
 
 export default class UserDto {
@@ -14,7 +14,7 @@ export default class UserDto {
   updated_at;
   deleted_at;
 
-  constructor(model: UserType) {
+  constructor(model: IUser) {
     this.id = model.id;
     this.email = model.email;
     this.role = model.role;

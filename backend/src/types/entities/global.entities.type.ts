@@ -18,11 +18,12 @@ export type TaskAttachmentType = {
   deleted_at: Date | null;
 };
 
-export type UserType = {
+export type IUser = {
   id: number;
   email: string;
   name: string | null;
   role: string;
+  password?: string;
   avatar: string | null;
   created_at: Date;
   updated_at: Date;
@@ -38,7 +39,7 @@ export type TaskType = {
   assigned_to: number | null;
   project_id: number;
   is_completed: boolean;
-  members: Array<UserType>;
+  members: Array<IUser>;
   attachments: Array<TaskAttachmentType>;
   created_at: Date;
   updated_at: Date;
@@ -46,7 +47,7 @@ export type TaskType = {
 };
 
 export type TaskFromDBType = {
-  members: Array<UserType>;
+  members: Array<IUser>;
   attachments: Array<TaskAttachmentType>;
   dataValues: object;
 };

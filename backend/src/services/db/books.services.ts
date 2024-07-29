@@ -17,7 +17,7 @@ export const  getPaginatedBooks = async (page: number, limit: number, id: string
 
   if (query) {
     where.title = {
-      [Op.like]: `%${query}%`,
+      [Op.iLike]: `%${query}%`,
     };
   }
 

@@ -1,9 +1,15 @@
 import { UnAuthorizedError } from '../helpers/error';
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import { validateAccessToken } from '../services/db/token.services';
 import logger from '../helpers/logger';
 
-const verifyToken = (req: any, res: Response, next: NextFunction) => {
+interface VerifyRequest extends Request {
+  user: {
+    id: number;
+  }
+}
+
+const verifyToken = (req: VerifyRequest, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.headers.authorization;
     

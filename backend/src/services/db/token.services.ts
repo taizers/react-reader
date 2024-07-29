@@ -1,5 +1,6 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { EntityNotFoundError } from '../../helpers/error';
+import { JwtUserType } from '../../types/requests/global.request.type';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { Token } = require('../../db/models/index');
 
@@ -29,23 +30,23 @@ export const generateTokens = (userData: object) => {
 
 export const validateAccessToken = (token: string) => {
   try {
-    const user: any = jwt.verify(token, String(process.env.JWT_ACCESS_KEY));
+    const user = jwt.verify(token, String(process.env.JWT_ACCESS_KEY)) as JwtUserType;
     return user;
   } catch (error) {
     return null;
   }
 };
 
-export const validateRefreshToken = (token: string) => {
+export const validateRefreshToken = (token: string)  => {
   try {
-    const user: any = jwt.verify(token, String(process.env.JWT_REFRESH_KEY));
+    const user = jwt.verify(token, String(process.env.JWT_REFRESH_KEY)) as JwtUserType;
     return user;
   } catch (error) {
     return null;
   }
 };
 
-export const saveToken = async (user_id: string, refresh_token: string) => {
+export const saveToken = async (user_id: number, refresh_token: string) => {
   const token = await Token.findOne({ where: { user_id } });
 
   if (token) {

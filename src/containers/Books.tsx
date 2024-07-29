@@ -11,11 +11,10 @@ import Pagination from '@mui/material/Pagination';
 // import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import BookItem from '../components/BookItem';
-import { BooksResponceType, BookType } from '../constants/tsSchemes';
+import { BookType } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { remoteBooksApiSlice } from '../store/reducers/RemoteBooksApiSlice';
 import { useDebounce, useShowErrorToast } from '../hooks';
-import BookSkeleton from '../skeletons/BookSkeleton';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 
 const Books: FC = () => {
@@ -63,10 +62,6 @@ const Books: FC = () => {
     setPage(value - 1);
   };
 
-  // const onSelectChange = (event: SelectChangeEvent) => {
-  //     setQueryType(event.target.value);
-  // };
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box
@@ -84,25 +79,8 @@ const Books: FC = () => {
           name="query"
           autoComplete="text"
           autoFocus
-          onChange={(e: any) => setQuery(e.currentTarget.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
         />
-        {/* <FormControl sx={{minWidth: '20%', ml: 1}} margin="normal">
-                    <InputLabel id="select-type-query-label">Тип</InputLabel>
-                    <Select
-                    required
-                    labelId="select-type-query-label"
-                    id="demo-simple-select-autowidth"
-                    value={queryType}
-                    onChange={onSelectChange}
-                    autoWidth
-                    label="Тип"
-                    >
-                        <MenuItem value={'books'}>Книги</MenuItem>
-                        <MenuItem value={'authors'}>Авторы</MenuItem>
-                        <MenuItem value={'series'}>Серии</MenuItem>
-                        <MenuItem value={'genres'}>Жанры</MenuItem>
-                    </Select>
-                </FormControl> */}
         <Button
           type="submit"
           fullWidth

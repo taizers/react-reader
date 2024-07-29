@@ -1,10 +1,17 @@
-export type UserType = {
+interface IDateValues {
+  updated_at: Date | null;
+  created_at: Date | null;
+  deleted_at: Date | null;
+}
+
+export type stateValuesType = 'not' | 'read' | 'later' | 'reading' | null;
+export type Statusestypes = 'not' | 'read' | 'later' | 'reading' | 'add' | 'delete';
+
+export interface IUser extends IDateValues {
   id: string;
   role: string | null;
   name: string | null;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
+  email?: string;
 };
 
 export type LoginUserType = {
@@ -25,7 +32,7 @@ export type UpdateUserType = {
   oldPassword?: string;
 };
 
-export type AuthorType = {
+export type AuthorItemType = {
   name: string;
   uri: string;
 };
@@ -36,7 +43,7 @@ export type DownloadsType = {
 };
 
 export type BookType = {
-  author: Array<AuthorType>;
+  author: Array<AuthorItemType>;
   title: string;
   updated: string;
   cover?: string;
@@ -45,37 +52,31 @@ export type BookType = {
   description: string;
 };
 
-type SeriaType = {
+interface ISeria extends IDateValues {
   annotation: string;
   author: string;
   cover:string |null;
   id : number;
   release_date:string |null;
   title: string;
-  updated_at: Date | null;
-  created_at: Date | null;
-  deleted_at: Date | null;
 };
 
-type LibraryBookType = {
+interface ILibraryBook extends IDateValues {
   book_id: number;
   user_id: number;
   last_open: Date | null;
   last_page: number;
   progress: number | null,
-  state: 'not' | 'read' | 'later' | 'reading' | null,
-  updated_at: Date | null;
-  created_at: Date | null;
-  deleted_at: Date | null;
+  state: stateValuesType,
 }
 
 type UsersBooksType = {
   id: number;
   name: string;
-  library_book: LibraryBookType;
+  library_book: ILibraryBook;
 }
 
-export type LocalBookType = {
+export interface ILocalBook extends IDateValues {
   id: number;
   title: string;
   updated: string | null;
@@ -86,21 +87,18 @@ export type LocalBookType = {
   link: string | null;
   primory_link: string | null;
   release_date: string | null;
-  seria: SeriaType | null;
+  seria: ISeria | null;
   seria_id: string | null;
   source: string | null;
   tags: Array<{ id: number; title: string }> | null;
   genres: Array<{ id: number; title: string }> | null;
   user_id: number;
   UsersBooks?: Array<UsersBooksType>;
-  library_book?: LibraryBookType;
-  updated_at: Date | null;
-  created_at: Date | null;
-  deleted_at: Date | null;
+  library_book?: ILibraryBook;
 };
 
-export type AuthorRType = {
-  author: Array<AuthorType>;
+export type AuthorType = {
+  author: Array<AuthorItemType>;
   title: string;
   updated: string;
   cover?: string;
@@ -122,8 +120,10 @@ export type BookFileType = {
   filePath?: string;
 };
 
-export type UsersType = Array<UserType>;
+export type UsersType = Array<IUser>;
+
 export type BooksType = Array<BookType>;
+
 export type BooksResponceType = {
   items: Array<BookType>;
   currentPage: number;
@@ -132,6 +132,7 @@ export type BooksResponceType = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
 };
+
 export type UsersResponceType = {
   items: Array<BookType>;
   currentPage: number;
@@ -141,7 +142,7 @@ export type UsersResponceType = {
   hasPreviousPage: boolean;
 };
 
-export type Statusestypes = 'not' | 'read' | 'later' | 'reading' | 'add' | 'delete';
+
 
 type statusObjectType = {
   labelR: string;
@@ -157,5 +158,3 @@ export type statusesObjectType = {
   delete: statusObjectType;
   add: statusObjectType;
 };
-
-export type ExternalStatus = 'not' | 'read' | 'later' | 'reading' | null;

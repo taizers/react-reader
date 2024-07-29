@@ -107,9 +107,9 @@ async function parseFb2(filePath: string): Promise<EbookData> {
                     genre: description.genre || null,
                     language: description.lang[0] || null,
                     annotation: description.annotation?.[0]?.p || '',
-                    content: body.section?.map((section: any) => ({
+                    content: body.section?.map((section: {p: string[], title: {p: string[]}[]}) => ({
                         title: section.title?.[0]?.p?.[0] || '',
-                        content: section.p?.map((p: any) => p || '').join('\n') || ''
+                        content: section.p?.map(p => p || '').join('\n') || ''
                     })) || []
                 };
 

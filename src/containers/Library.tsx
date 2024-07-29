@@ -1,30 +1,35 @@
 import React, { FC, useState, useEffect } from 'react';
-import List from '@mui/material/List';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 
-import { ExternalStatus, LocalBookType } from '../constants/tsSchemes';
+import { stateValuesType, ILocalBook, } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage, libraryBookStatusesForSearch } from '../constants/constants';
 import { useAppSelector, useDebounce, useShowErrorToast } from '../hooks';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import LibraryBookItem from '../components/LibraryBookItem';
 import LibraryBookStatusComponent from '../components/LibraryBookStatusComponent';
-import BookSkeleton from '../skeletons/BookSkeleton';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
+import BookList from '../components/BooksList';
+import NoDataText from '../components/NoDataText';
+import { useGetQueryResponce } from '../models/requests';
+
+interface LibraryBooksData {
+  LibraryBooks: ILocalBook[];
+  totalPages: number;
+}
 
 const Library: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
-  const [state, setState] = useState<ExternalStatus>(null);
+  const [state, setState] = useState<stateValuesType>(null);
 
   const debouncedValue = useDebounce(query);
 
   const { user } = useAppSelector((state) => state.auth);
 
-  const { data, error, isLoading: libraryIsLoading } = libraryBooksApiSlice.useGetUserLibraryBooksQuery({
+  const { data, error, isLoading: libraryIsLoading } = libraryBooksApiSlice.useGetUserLibraryBooksQuery<useGetQueryResponce<LibraryBooksData>>({
     page,
     limit,
     query: debouncedValue,
@@ -46,7 +51,7 @@ const Library: FC = () => {
     setState(null);
   };
 
-  const onUpdateBookStatusAtLibrary = (state: ExternalStatus) => {
+  const onUpdateBookStatusAtLibrary = (state: stateValuesType) => {
     setState(state);
   };
 
@@ -91,7 +96,7 @@ const Library: FC = () => {
           name="query"
           autoComplete="text"
           autoFocus
-          onChange={(e: any) => setQuery(e.currentTarget.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
         />
         <Button
           type="submit"
@@ -106,42 +111,8 @@ const Library: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        {booksCount && (
-          <List
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-around',
-              flexWrap: 'wrap',
-              gap: 2,
-              width: '100%',
-              bgcolor: 'background.paper',
-            }}
-          >
-            {data.LibraryBooks.map((book: LocalBookType, index: number) => (
-              <LibraryBookItem
-                updateLibraryBook={updateLibraryBook}
-                book={book}
-                key={`book ${index}`}
-              />
-            ))}
-          </List>
-        )}
-        {!booksCount && !libraryIsLoading && (
-          <Typography
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              mt: 10,
-              fontSize: 22,
-            }}
-            component="span"
-            variant="body2"
-            color="text.primary"
-          >
-            {'Нет данных'}
-          </Typography>
-        )}
+        {booksCount && <BookList items={data.LibraryBooks} renderItem={(book) => <LibraryBookItem updateLibraryBook={updateLibraryBook} book={book} key={`book ${book.id}`} />} />}
+        {!booksCount && !libraryIsLoading && <NoDataText />}
         {!!libraryIsLoading && <BooksSkeleton />}
       </Box>
     </Box>

@@ -11,17 +11,13 @@ import Image from './Image/Image';
 import { ILocalBook } from '../constants/tsSchemes';
 import { baseUrl } from '../constants';
 import TypographyComponent from './TypographyComponent';
-import LibraryBookStatusComponent from './LibraryBookStatusComponent';
-import { useAppSelector } from '../hooks';
-import { libraryBookStatuses } from '../constants/constants';
-import { Box } from '@mui/material';
 
-type LibraryBookItemType = {
+type SeriaItemType = {
   book: ILocalBook;
-  updateLibraryBook: (data: {ids: object, payload: object}) => void;
+  updateSeria: (data: {ids: object, payload: object}) => void;
 };
 
-const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) => {
+const SeriaItem: FC<SeriaItemType> = ({ book, updateSeria }) => {
   const {
     cover,
     title,
@@ -44,30 +40,6 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
 
   let history = useNavigate();
 
-  const { user } = useAppSelector((state) => state.auth);
-
-  const onDeleteBookFromLibrary = () => {
-    const ids = {
-      user_id: user?.id,
-      book_id: id,
-    };
-
-    updateLibraryBook({ids, payload: {state: null}});
-  };
-
-  const onUpdateBookStatusAtLibrary = (state: unknown) => {
-    const ids = {
-      user_id: user?.id,
-      book_id: id,
-    };
-
-    const payload = {
-      state,
-    };
-
-    updateLibraryBook({ids, payload});
-  };
-
   return (
     <ListItem
       sx={{
@@ -80,7 +52,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
     >
       <Image
         onClick={() => {
-          history(`/read/${id}`);
+          history(`/seria/${id}`);
         }}
         src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
@@ -88,15 +60,11 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
         width="200px"
         styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)' }}
       />
-      <Box sx={{ ml: 1, alignSelf: 'start' }}>
-        <Box>
-          <Typography
-            component="h3"
-            variant="h6"
-            color="text.primary"
-          >
-            {title}
-          </Typography>
+      <ListItemText
+        sx={{ ml: 1, alignSelf: 'start' }}
+        primary={title}
+        secondary={
+          <>
             {author && (
               <TypographyComponent
                 title={'Авторы:'}
@@ -122,20 +90,11 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
                 data={tags?.map((item) => item.title)}
               />
             )}
-            </Box>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}>
-              <Button
-                variant="contained"
-                sx={{ m: 1 }}
-                href={`${baseUrl}/${link}`}
-              >
-                <DownloadIcon />
-              </Button>
-              {library_book !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={library_book?.state} statuses={libraryBookStatuses} />}
-            </Box>
-          </Box>
+          </>
+        }
+      />
     </ListItem>
   );
 };
 
-export default LibraryBookItem;
+export default SeriaItem;

@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { useParams } from 'react-router-dom';
 
-import { UserType } from '../constants/tsSchemes';
+import { IUser } from '../constants/tsSchemes';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
 import { useShowErrorToast } from '../hooks';
 

@@ -9,17 +9,6 @@ export interface IAuthDataResponce {
   name: string;
 }
 
-export interface ISignUpData {
-  email: string;
+export interface ISignUpData extends Omit<IAuthDataResponce, 'id'> {
   password: string;
-  name: string;
-}
-
-export interface ITableCoin {
-  id: string;
-  name: string;
-  symbol: string;
-  marketCapUsd: number;
-  priceUsd: number;
-  changePercent24Hr: number;
 }

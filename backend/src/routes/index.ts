@@ -34,7 +34,6 @@ router.use(
 );
 router.use(
   '/storage/books',
-  verifyToken,
   express.static('storage/books')
 );
 

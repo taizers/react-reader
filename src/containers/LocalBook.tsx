@@ -11,7 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { getToken, setToken } from '../utils';
 
-type LocalBookType = {
+type ILocalBook = {
   // book: any;
   // getBook: (id: string) => void;
 };
@@ -100,7 +100,7 @@ const getChangeChapterButtons = (
   );
 };
 
-const LocalBook: FC<LocalBookType> = ({}) => {
+const LocalBook: FC<ILocalBook> = ({}) => {
   const { id } = useParams();
   const [currentChapter, setCurrentChapter] = useState<number>();
   const [scrollPosition, setScrollPosition] = useState<number>();

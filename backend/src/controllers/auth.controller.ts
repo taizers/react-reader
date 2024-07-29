@@ -7,13 +7,13 @@ import {
   loginRequest,
   requestWithCookiesToken,
 } from '../types/requests/auth.request.type';
-import { UserSessionType } from '../types/entities/global.entities.type';
+import { UserSessionType, IUser } from '../types/entities/global.entities.type';
 import logger from '../helpers/logger';
 import { ResourceNotFoundError, BadCredentialsError, ApplicationError, UnAuthorizedError } from '../helpers/error';
 import UserDto from '../dtos/user.dto';
 import { generateTokens, saveToken, validateRefreshToken, findToken, removeToken } from '../services/db/token.services';
 
-const getUserSession = async (userData: {id: string, role?: string}) => {
+const getUserSession = async (userData: {id: number, role?: string}) => {
   console.log(userData);
   const session = generateTokens(userData);
 
@@ -124,7 +124,7 @@ export const refreshAction = async (
     ) {
       throw new ApplicationError('Неправильный refresh токен.', 401);
     }
-    const user:any = await getUser({ id: userFormToken.id });
+    const user:IUser = await getUser({ id: userFormToken.id });
 
     if (!user?.id) {
       throw new UnAuthorizedError();

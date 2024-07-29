@@ -12,10 +12,16 @@ import Pagination from '@mui/material/Pagination';
 import { useNavigate } from 'react-router-dom';
 
 import DotMenu from '../components/DotMenu/index';
-import { UsersType } from '../constants/tsSchemes';
+import { IUser } from '../constants/tsSchemes';
 import { defaultStartPage, defaultLimit } from '../constants/constants';
 import { usersApiSlice } from '../store/reducers/UsersApiSlice';
 import { useAppSelector, useShowErrorToast } from '../hooks';
+import { useGetQueryResponce } from '../models/requests';
+
+interface UsersData {
+  users: IUser[];
+  totalPages: number;
+}
 
 const Users: FC = () => {
   const history = useNavigate();
@@ -26,7 +32,7 @@ const Users: FC = () => {
     data,
     error: getUsersError,
     isLoading: getUsersIsLoading,
-  } = usersApiSlice.useGetUsersQuery({ page, limit });
+  } = usersApiSlice.useGetUsersQuery<useGetQueryResponce<UsersData>>({ page, limit });
   const [deleteUser, { data: deleted, error, isLoading }] =
     usersApiSlice.useDeleteUserMutation();
   const { user: currentUser } = useAppSelector((state) => state.auth);
@@ -68,7 +74,7 @@ const Users: FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data?.users?.map((user: any) => (
+                {data?.users?.map((user) => (
                   <TableRow
                     key={user.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
