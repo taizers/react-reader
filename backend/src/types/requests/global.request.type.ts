@@ -21,7 +21,7 @@ export interface UploadedFileType {
 }
 
 export interface JwtUserType {
-  id: string,
+  id: number,
 }
 
 export interface getWithQueryRequest extends Request {

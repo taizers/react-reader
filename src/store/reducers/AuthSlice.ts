@@ -6,9 +6,9 @@ type IPortfolioState = {
     email: string;
     role: string | null;
     name: string | null;
-    created_at: string;
-    updated_at: string;
-    deleted_at: string | null;
+    created_at: Date;
+    updated_at: Date | null;
+    deleted_at: Date | null;
   } | null;
   token: string | null;
 };
