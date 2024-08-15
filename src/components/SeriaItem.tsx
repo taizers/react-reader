@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Image from './Image/Image';
 import { ILocalBook } from '../constants/tsSchemes';
-import { baseUrl } from '../constants';
+import { baseUrl } from '../constants/constants';
 import TypographyComponent from './TypographyComponent';
 
 type SeriaItemType = {

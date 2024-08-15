@@ -16,6 +16,7 @@ import { genresApiSlice } from '../store/reducers/GenresApiSlice';
 import { tagsApiSlice } from '../store/reducers/TagsApiSlice';
 import { seriesApiSlice } from '../store/reducers/SeriesApiSlice';
 import AutoCompleteSignleField from '../components/AutoCompleteSignleField';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 type UploadBookModalType = {
   isModalOpen: boolean;
@@ -34,6 +35,7 @@ const UploadBookModal: FC<UploadBookModalType> = ({
   );
   const [source, setSource] = useState<string>('');
   const [fieldsError, setFieldsError] = useState<string>();
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [book, setBook] = useState<ExtendedFileProps | null>(null);
   const [genres, setGenres] = useState<Array<{
     id: number;
@@ -104,6 +106,7 @@ const UploadBookModal: FC<UploadBookModalType> = ({
     formData.append('title', name);
     formData.append('annotation', annotation);
     formData.append('author', author);
+    formData.append('privat', isPrivate.toString());
     release_date && formData.append('release_date', release_date.toString());
     formData.append('source', source);
     seria && formData.append('seria_id', seria.toString());
@@ -164,6 +167,7 @@ const UploadBookModal: FC<UploadBookModalType> = ({
             setValue={setSeria}
           />
         )}
+        <FormControlLabel sx={{m:1}} control={<Checkbox   checked={isPrivate} onChange={()=> setIsPrivate(!isPrivate)} />} label={'Сделать книгу приватной?'} />
         <UploadFile setFiles={setBook} />
       </DialogContent>
       <DialogActions>

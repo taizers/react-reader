@@ -34,7 +34,7 @@ export class EntityNotFoundError extends ApplicationError {
 
 export class UnAuthorizedError extends ApplicationError {
   constructor() {
-    super(`Ошибка авторизации.`, 403);
+    super(`Ошибка авторизации.`, 401);
   }
 }
 

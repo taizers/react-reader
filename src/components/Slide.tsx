@@ -25,7 +25,7 @@ const Slide: FC<SlideItemType> = ({ data }) => {
         {data.content?.split('\n').map((item: string, index: number) => {
           return (
             <Typography
-              sx={{ textIndent: '30px', fontSize: '1.4vw' }}
+              sx={{ textIndent: '30px', fontSize: '1.8vw', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
               component="p"
               color="text.primary"
               key={index}

@@ -13,6 +13,11 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
+      privat: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: null,
+      },
       release_date: {
         type: DataTypes.STRING,
         allowNull: true,

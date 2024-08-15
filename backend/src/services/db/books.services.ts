@@ -1,19 +1,29 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { Book, Seria, Tag, Genre, User, Library_book } = require('../../db/models/index');
+const { Book, Seria, Tag, Genre, User } = require('../../db/models/index');
 import { Op } from "sequelize";
 import { sequelize } from '../../db/models';
 import fs from 'fs';
 import { UnCreatedError } from "../../helpers/error";
-import { group } from "console";
 
+export const  getBookFields = async (where: object, fields: string[]) => {
+  const book = await Book.findOne({
+    where,
+    attributes: [...fields],
+    row: true,
+  });
+
+  return book;
+}
 export const  getAllBooks = async () => {
   const books = await Book.findAll();
 
   return books;
 }
 
-export const  getPaginatedBooks = async (page: number, limit: number, id: string, query: string) => {
-  const where = {} as {title: object};
+export const  getPaginatedBooks = async (page: number, limit: number, id: number, query: string) => {
+  const where = {
+    [Op.or]: [{privat: false}, {[Op.and]: [{privat: true}, {user_id: id}]}]
+  } as any;
 
   if (query) {
     where.title = {
@@ -70,9 +80,14 @@ export const createBook = async (payload: object, genres: Array<string>, tags: A
     const transaction = await sequelize.transaction();
 
     const book = await Book.create(payload); 
+  
+    if (genres?.length) {
+      await book?.addGenre(genres, { transaction });
 
-    genres.length && await book?.addGenre(genres, { transaction });
-    tags.length && await book?.addTag(tags, { transaction });
+    }
+    if (tags?.length) {
+      await book?.addTag(tags, { transaction });
+    }
 
     await transaction.commit();
 
@@ -82,9 +97,15 @@ export const createBook = async (payload: object, genres: Array<string>, tags: A
   }
 };
 
-export const  getBook = async (where: object) => {
+export const  getBook = async (where: object, user_id?: number) => {
+  let locWhere = {};
+
+  if (user_id) {
+    locWhere = {[Op.or]: [{privat: false}, {[Op.and]: [{privat: true}, {user_id}]}]}
+  }
+
   return await Book.findOne({ 
-    where,
+    where: {...where, ...locWhere},
     include: [
       {
         model: Seria,
@@ -104,34 +125,30 @@ export const  getBook = async (where: object) => {
 }
 
 export const  updateBook = async (where: object, payload: object, genres: Array<string>, tags: Array<string>) => {
-  try {
-    const updatedBook = await Book.update(payload, {where});
+  const updatedBook = await Book.update(payload, {where});
 
-    if (!genres.length && !tags.length) {
-      return updatedBook;
-    }
-
-    const book = await Book.findOne({
-      where,
-      row: true,
-    });
-  
-    if (genres?.length) {
-      const bookGenres = await book?.getGenres();
-      await book?.removeGenres(bookGenres);
-      await book?.addGenres(genres);
-    }
-
-    if (tags?.length) {
-      const bookTags = await book?.getTags();
-      await book?.removeTags(bookTags);
-      await book?.addTags(tags);
-    }
-    
-    return book;
-  } catch (error) {
-    throw new Error('Could not update Book');
+  if (!genres.length && !tags.length) {
+    return updatedBook;
   }
+
+  const book = await Book.findOne({
+    where,
+    row: true,
+  });
+
+  if (genres?.length) {
+    const bookGenres = await book?.getGenres();
+    await book?.removeGenres(bookGenres);
+    await book?.addGenres(genres);
+  }
+
+  if (tags?.length) {
+    const bookTags = await book?.getTags();
+    await book?.removeTags(bookTags);
+    await book?.addTags(tags);
+  }
+  
+  return book;
 }
 
 export const deleteBook = async (id: string) => {

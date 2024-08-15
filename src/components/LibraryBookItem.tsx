@@ -6,10 +6,11 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import ShieldIcon from '@mui/icons-material/Shield';
 
 import Image from './Image/Image';
 import { ILocalBook } from '../constants/tsSchemes';
-import { baseUrl } from '../constants';
+import { baseUrl } from '../constants/constants';
 import TypographyComponent from './TypographyComponent';
 import LibraryBookStatusComponent from './LibraryBookStatusComponent';
 import { useAppSelector } from '../hooks';
@@ -39,7 +40,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
     seria,
     source,
     tags,
-    updated_at,
+    privat,
   } = book;
 
   let history = useNavigate();
@@ -103,7 +104,7 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
                 data={author?.split(';')}
               />
             )}
-            {genres?.length && (
+            {!!genres?.length && (
               <TypographyComponent
                 title={'Жанры:'}
                 data={genres?.map((item) => item.title)}
@@ -116,12 +117,13 @@ const LibraryBookItem: FC<LibraryBookItemType> = ({ book, updateLibraryBook }) =
               />
             )}
             {seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
-            {tags?.length && (
+            {!!tags?.length && (
               <TypographyComponent
                 title={'Тэги:'}
                 data={tags?.map((item) => item.title)}
               />
             )}
+            {!!privat && <ShieldIcon />}
             </Box>
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}>
               <Button

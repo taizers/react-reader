@@ -31,6 +31,10 @@ const booksStorage = multer.diskStorage({
     // }
     
     // callback(null, dir);
+
+    // TODO добавить создание папки для книги 
+    // TODO добавить перевод и его сохранение json в файл
+
     
     callback(null, 'storage/books/');
   },

@@ -19,7 +19,7 @@ import { useAppDispatch, useShowErrorToast } from '../hooks';
 import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
 import { setToken } from '../utils';
 import { createToast } from '../utils/toasts';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 
 const Copyright = (props: any) => {
   return (

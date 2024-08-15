@@ -81,6 +81,7 @@ export interface ILocalBook extends IDateValues {
   title: string;
   updated: string | null;
   cover: string | null;
+  privat: boolean;
   annotation: string | null;
   author: string | null;
   downloads: string | null;

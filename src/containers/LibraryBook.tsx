@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { Box, Button } from '@mui/material';
 import Image from '../components/Image/Image';
-import { baseUrl } from '../constants';
+import { baseUrl } from '../constants/constants';
 import TypographyComponent from '../components/TypographyComponent';
 import moment from 'moment';
 import Slide from '../components/Slide';

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { Box, Button } from '@mui/material';
 import Image from '../components/Image/Image';
-import { baseUrl } from '../constants';
+import { baseUrl } from '../constants/constants';
 import TypographyComponent from '../components/TypographyComponent';
 import moment from 'moment';
 import Slide from '../components/Slide';
@@ -11,7 +11,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { getToken, setToken } from '../utils';
 
-type ILocalBook = {
+type IReadBook = {
   // book: any;
   // getBook: (id: string) => void;
 };
@@ -100,7 +100,7 @@ const getChangeChapterButtons = (
   );
 };
 
-const LocalBook: FC<ILocalBook> = ({}) => {
+const ReadBook: FC<IReadBook> = ({}) => {
   const { id } = useParams();
   const [currentChapter, setCurrentChapter] = useState<number>();
   const [scrollPosition, setScrollPosition] = useState<number>();
@@ -164,7 +164,7 @@ const LocalBook: FC<ILocalBook> = ({}) => {
         }, 200)
     }
   }, [defaultLastScrollPosition]);
-
+  //TODO добавить синхронизацию последней страницы с бэкендом
   return (
     <Box>
       <Box
@@ -173,9 +173,9 @@ const LocalBook: FC<ILocalBook> = ({}) => {
         <Image
           src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
           alt="Book cover"
-          height="300px"
-          width="200px"
-          styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)'}}
+          height="160px"
+          width="100px"
+          styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)', '@media(min-width: 780px)' : {width:"200px", height:"320px"}}}
         />
         <Box sx={{ flexGrow: 1 }}>
           {!!title && <TypographyComponent title={'Название:'} data={title} />}
@@ -219,12 +219,12 @@ const LocalBook: FC<ILocalBook> = ({}) => {
           }}
         >
           <Box
-            sx={{ textIndent: '30px', fontSize: '2vw', alignSelf: 'center' }}
+            sx={{ textIndent: '30px', fontSize: '2vw', alignSelf: 'center', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
           >
             {data?.text?.title}
           </Box>
           <Box
-            sx={{ textIndent: '30px', alignSelf: 'center' }}
+            sx={{ textIndent: '30px', fontSize: '2vw', alignSelf: 'center', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
           >{`Автор: ${getAuthor(data?.text?.author)}`}</Box>
           <Box>
             {data?.text?.annotation?.map((item: string, index: number) => {
@@ -268,4 +268,4 @@ const LocalBook: FC<ILocalBook> = ({}) => {
   );
 };
 
-export default LocalBook;
+export default ReadBook;

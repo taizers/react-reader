@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { getBooks } from '../services/books.services';
+import { getBooks } from '../services/flibustaBooks.services';
 import { getBooksRequest } from '../types/requests/books.request.type';
 import logger from '../helpers/logger';
 
@@ -21,16 +21,3 @@ export const getBooksAction = async (
     next(error);
   }
 }
-
-
-  // async getBooksByAuthor(req, res, next) {
-  //   try {
-  //     const {id, page, limit} = req.query;
-
-  //     const books = await booksService.getBooks(id, page, limit);
-      
-  //     res.status(200).json(books);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }

@@ -31,6 +31,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DataTypes.STRING,
       },
+      privat: {
+        allowNull: false,
+        type: Sequelize.DataTypes.BOOLEAN,
+      },
       release_date: {
         allowNull: true,
         defaultValue: null,

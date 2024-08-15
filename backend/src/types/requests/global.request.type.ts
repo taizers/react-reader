@@ -22,6 +22,7 @@ export interface UploadedFileType {
 
 export interface JwtUserType {
   id: number,
+  name: string,
 }
 
 export interface getWithQueryRequest extends Request {
@@ -29,3 +30,12 @@ export interface getWithQueryRequest extends Request {
     query: string;
   };
 }
+
+export interface IRequestWithUser extends Request {
+  user: JwtUserType;
+}
+export interface IRequestWithFile extends Request {
+  file?: UploadedFileType;
+}
+
+export interface IReauestWithFileAndUser extends IRequestWithFile, IRequestWithUser {}

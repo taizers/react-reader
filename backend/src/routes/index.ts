@@ -14,7 +14,7 @@ import {
   cookiesValidation,
 } from '../validations/auth.validation';
 
-import { getBooksAction } from '../controllers/books.controller';
+import { getBooksAction } from '../controllers/flibustaBooks.controller';
 
 import usersRouter from './users.routes';
 import booksRouter from './books.routes';

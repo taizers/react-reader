@@ -2,7 +2,7 @@ import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { createToast } from './utils/toasts';
 import type { RootState, AppDispatch } from './store';
-import { defaultDelay } from './constants';
+import { defaultDelay } from './constants/constants';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { SerializedError } from '@reduxjs/toolkit';
 
