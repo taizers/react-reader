@@ -127,7 +127,7 @@ export const  getBook = async (where: object, user_id?: number) => {
 export const  updateBook = async (where: object, payload: object, genres: Array<string>, tags: Array<string>) => {
   const updatedBook = await Book.update(payload, {where});
 
-  if (!genres.length && !tags.length) {
+  if (!genres?.length && !tags?.length) {
     return updatedBook;
   }
 

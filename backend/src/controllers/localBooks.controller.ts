@@ -110,7 +110,7 @@ export const updateBookAction = async (
     const prevBook = await getBookFields({ id }, ['user_id']);
 
     if (prevBook.user_id === user_id) {
-      const book = await updateBook({ id }, data, genres.split(';'), tags.split(';'));
+      const book = await updateBook({ id }, data, genres?.split(';'), tags?.split(';'));
       
       res.status(200).json(book);
     } else {

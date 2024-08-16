@@ -18,7 +18,6 @@ import CreateTagModal from '../containers/CreateTagModal';
 import CreateGenreModal from '../containers/CreateGenreModal';
 import DeleteModal from '../containers/DeleteModal';
 import CreateSeriaModal from '../containers/CreateSeriaModal';
-import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 import BookList from '../components/BooksList';
 import NoDataText from '../components/NoDataText';
@@ -52,18 +51,7 @@ const LocalBooks: FC = () => {
     query: debouncedValue,
   });
 
-  const [
-    deleteBook,
-    { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
-  ] = booksApiSlice.useDeleteBookMutation();
-  const [
-    updateLibraryBook,
-    { data: updateLibraryBookData, error: updateLibraryBookError, isLoading: updateLibraryBookIsLoading },
-  ] = libraryBooksApiSlice.useUpdateLibraryBookMutation();
-
   useShowErrorToast(error);
-  useShowErrorToast(deleteError);
-  useShowErrorToast(updateLibraryBookError);
 
   const booksCount = data?.books?.length;
 
@@ -73,11 +61,11 @@ const LocalBooks: FC = () => {
     }
   }, [query]);
 
-  useEffect(() => {
-    if (!!deleteData) {
-      setDeleteModalOpen(false);
-    }
-  }, [deleteData]);
+  // useEffect(() => {
+  //   if (!!deleteData) {
+  //     setDeleteModalOpen(false);
+  //   }
+  // }, [deleteData]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,14 +85,14 @@ const LocalBooks: FC = () => {
     setPage(value - 1);
   };
 
-  const onDeleteBook = (id: number) => {
-    setDeleteId(id);
-    setDeleteModalOpen(true);
-  };
+  // const onDeleteBook = (id: number) => {
+  //   setDeleteId(id);
+  //   setDeleteModalOpen(true);
+  // };
 
-  const onDelete = () => {
-    deleteBook(deleteId);
-  };
+  // const onDelete = () => {
+  //   deleteBook(deleteId);
+  // };
 
   return (
     <Box sx={{ width: '100%' }} >
@@ -165,7 +153,7 @@ const LocalBooks: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: '100%' }}
       >
-        {booksCount && <BookList items={data.books} renderItem={(book) => <LocalBookItem updateLibraryBook={updateLibraryBook} book={book} key={`book ${book.id}`} deleteBook={onDeleteBook} />} />}
+        {booksCount && <BookList items={data.books} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} />} />}
         {!booksCount && !isLoading && <NoDataText />}
         {booksCount && (
           <Pagination
@@ -191,12 +179,12 @@ const LocalBooks: FC = () => {
         isModalOpen={isCreateGenreModalOpen}
         setModalOpen={setCreateGenreModalOpen}
       />
-      <DeleteModal
+      {/* <DeleteModal
         deleteFunction={onDelete}
         deleteLabel="Книгу"
         isModalOpen={isDeleteModalOpen}
         setModalOpen={setDeleteModalOpen}
-      />
+      /> */}
       <CreateSeriaModal
         isModalOpen={isCreateSeriaModalOpen}
         setModalOpen={setCreateSeriaModalOpen}

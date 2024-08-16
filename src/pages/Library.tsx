@@ -7,12 +7,12 @@ import { stateValuesType, ILocalBook, } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage, libraryBookStatusesForSearch } from '../constants/constants';
 import { useAppSelector, useDebounce, useShowErrorToast } from '../hooks';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
-import LibraryBookItem from '../components/LibraryBookItem';
 import LibraryBookStatusComponent from '../components/LibraryBookStatusComponent';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 import BookList from '../components/BooksList';
 import NoDataText from '../components/NoDataText';
 import { useGetQueryResponce } from '../models/requests';
+import LocalBookItem from '../components/LocalBookItem';
 
 interface LibraryBooksData {
   LibraryBooks: ILocalBook[];
@@ -37,13 +37,7 @@ const Library: FC = () => {
     state
   });
 
-  const [
-    updateLibraryBook,
-    { data: updateLibraryBookData, error: updateLibraryBookError, isLoading: updateLibraryBookIsLoading },
-  ] = libraryBooksApiSlice.useUpdateLibraryBookMutation();
-
   useShowErrorToast(error);
-  useShowErrorToast(updateLibraryBookError);
 
   const booksCount = data?.LibraryBooks?.length;
 
@@ -111,7 +105,7 @@ const Library: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        {booksCount && <BookList items={data.LibraryBooks} renderItem={(book) => <LibraryBookItem updateLibraryBook={updateLibraryBook} book={book} key={`book ${book.id}`} />} />}
+        {booksCount && <BookList items={data.LibraryBooks} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} type="library" />} />}
         {!booksCount && !libraryIsLoading && <NoDataText />}
         {!!libraryIsLoading && <BooksSkeleton />}
       </Box>
