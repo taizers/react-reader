@@ -16,7 +16,6 @@ import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import LocalBookItem from '../components/LocalBookItem';
 import CreateTagModal from '../containers/CreateTagModal';
 import CreateGenreModal from '../containers/CreateGenreModal';
-import DeleteModal from '../containers/DeleteModal';
 import CreateSeriaModal from '../containers/CreateSeriaModal';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 import CardsList from '../components/CardsList';

@@ -13,7 +13,7 @@ import LocalBookItem from '../components/LocalBookItem';
 import { useShowErrorToast } from '../hooks';
 import NoDataText from '../components/NoDataText';
 
-const Seria: FC = ({}) => {
+const Seria: FC = () => {
   const { id } = useParams();
 
   const { data, error, isLoading } = seriesApiSlice.useGetSeriaQuery<useGetQueryResponce<IOneSeria>>(id);

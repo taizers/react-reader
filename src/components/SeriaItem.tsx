@@ -1,26 +1,17 @@
 import React, { FC, useEffect, useState } from 'react';
 import ListItem from '@mui/material/ListItem';
 import Typography from '@mui/material/Typography';
-import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
-import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
-import GppBadIcon from '@mui/icons-material/GppBad';
 import { useNavigate } from 'react-router-dom';
 
 import Image from './Image/Image';
-import { ISeria, stateValuesType } from '../constants/tsSchemes';
+import { ISeria } from '../constants/tsSchemes';
 import { baseUrl } from '../constants/constants';
 import TypographyComponent from './TypographyComponent';
-import LibraryBookStatusComponent from './LibraryBookStatusComponent';
 import { useAppSelector, useShowErrorToast } from '../hooks';
-import { libraryBookStatuses } from '../constants/constants';
-import { Box, Tooltip } from '@mui/material';
-import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
+import { Box } from '@mui/material';
 import DeleteModal from '../containers/DeleteModal';
 import { seriesApiSlice } from '../store/reducers/SeriesApiSlice';
 
