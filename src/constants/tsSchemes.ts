@@ -52,13 +52,21 @@ export type BookType = {
   description: string;
 };
 
-interface ISeria extends IDateValues {
+export interface ISeria extends IDateValues {
   annotation: string;
   author: string;
-  cover:string |null;
+  cover: string |null;
   id : number;
-  release_date:string |null;
+  release_date: Date | null;
   title: string;
+  user_id: number;
+  booksCount: string;
+  tags: Array<{ id: number; title: string }> | null;
+  genres: Array<{ id: number; title: string }> | null;
+};
+
+export interface IOneSeria extends ISeria {
+  seriabooks?: ILocalBook[];
 };
 
 interface ILibraryBook extends IDateValues {
@@ -76,6 +84,10 @@ type UsersBooksType = {
   library_book: ILibraryBook;
 }
 
+interface IShortSeria {
+  id: number,
+  title: string
+}
 export interface ILocalBook extends IDateValues {
   id: number;
   title: string;
@@ -88,7 +100,7 @@ export interface ILocalBook extends IDateValues {
   link: string | null;
   primory_link: string | null;
   release_date: string | null;
-  seria: ISeria | null;
+  seriabooks: IShortSeria;
   seria_id: string | null;
   source: string | null;
   tags: Array<{ id: number; title: string }> | null;
@@ -159,3 +171,16 @@ export type statusesObjectType = {
   delete: statusObjectType;
   add: statusObjectType;
 };
+
+interface BookContent {
+  title: string;
+  content: string;
+}
+export interface BookText {
+  author: string;
+  title: string;
+  language: string;
+  content: BookContent[];
+  annotation?: string[];
+  genre?: string[];
+}

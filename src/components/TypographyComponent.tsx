@@ -1,9 +1,13 @@
 import { FC } from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 type TypographyType = {
-  title: string;
+  title?: string;
+  sx?: object;
   data: string | string[];
+  type?: 'line' | 'column';
+  link?: string,
 };
 
 const getTypography = (data: string | string[]) => {
@@ -33,20 +37,53 @@ const getTypography = (data: string | string[]) => {
   ));
 };
 
-const TypographyComponent: FC<TypographyType> = ({ title, data }) => {
+const TypographyComponent: FC<TypographyType> = ({ title, data, sx, type='column', link }) => {
+  let styles = {...sx, mt: 1,} as object;
+
+  if (type === 'column') {
+    styles = {...styles, display: 'flex', flexDirection: 'column',};
+  }
+  if (type === 'line') {
+    styles = {...styles, display: 'flex', gap: '5px'};
+  }
+
+  if (link) {
+    return (
+      <Box sx={styles}>
+        {!!title && <Typography
+          component="span"
+          variant="body2"
+          color="text.primary"
+          key={'title'}
+        >
+          {title}
+        </Typography>}
+        <Link to={link}>
+          <Typography
+            sx={{ color: 'blue' }}
+            component="span"
+            variant="body2"
+            color="text.primary"
+          >
+            {data}
+          </Typography>
+        </Link>
+      </Box>
+    );
+  }
+
   return (
-    <>
-      <Typography
-        sx={{ display: 'flex', flexDirection: 'column', mt: 1 }}
+    <Box sx={styles}>
+      {!!title && <Typography
         component="span"
         variant="body2"
         color="text.primary"
-        key={'author title'}
+        key={'title'}
       >
         {title}
-      </Typography>
+      </Typography>}
       {getTypography(data)}
-    </>
+    </Box>
   );
 };
 

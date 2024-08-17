@@ -8,11 +8,17 @@ export const booksApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: book,
       }),
-      invalidatesTags: ['Book'],
+      invalidatesTags: ['Book','Seria'],
     }),
     getBook: builder.query({
       query: (id) => ({
         url: `/books/${id}`,
+      }),
+      providesTags: ['Book'],
+    }),
+    getBooksText: builder.query({
+      query: (id) => ({
+        url: `/books/${id}/text`,
       }),
       providesTags: ['Book'],
     }),
@@ -33,7 +39,7 @@ export const booksApiSlice = apiSlice.injectEndpoints({
         method: 'PUT',
         body: { ...book },
       }),
-      invalidatesTags: ['Book'],
+      invalidatesTags: ['Book','Seria'],
     }),
     deleteBook: builder.mutation({
       query: (id) => ({

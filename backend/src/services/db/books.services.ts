@@ -5,19 +5,20 @@ import { sequelize } from '../../db/models';
 import fs from 'fs';
 import { UnCreatedError } from "../../helpers/error";
 
-export const  getBookFields = async (where: object, fields: string[]) => {
+export const  getBookFields = async (where: object, fields: string[], user_id?: number) => {
+  let locWhere = {};
+
+  if (user_id) {
+    locWhere = {[Op.or]: [{privat: false}, {[Op.and]: [{privat: true}, {user_id}]}]}
+  }
+
   const book = await Book.findOne({
-    where,
+    where: {...where, ...locWhere},
     attributes: [...fields],
     row: true,
   });
 
   return book;
-}
-export const  getAllBooks = async () => {
-  const books = await Book.findAll();
-
-  return books;
 }
 
 export const  getPaginatedBooks = async (page: number, limit: number, id: number, query: string) => {
@@ -40,7 +41,7 @@ export const  getPaginatedBooks = async (page: number, limit: number, id: number
     include: [
       {
         model: Seria,
-        as: 'seria',
+        as: 'seriabooks',
         attributes: ['id', 'title',] ,
       },
       {
@@ -109,7 +110,7 @@ export const  getBook = async (where: object, user_id?: number) => {
     include: [
       {
         model: Seria,
-        as: 'seria',
+        as: 'seriabooks',
         attributes: { include: ['id', 'title',] },
       },
       {
@@ -124,7 +125,7 @@ export const  getBook = async (where: object, user_id?: number) => {
   });
 }
 
-export const  updateBook = async (where: object, payload: object, genres: Array<string>, tags: Array<string>) => {
+export const  updateBook = async (where: object, payload: object, genres?: Array<string>, tags?: Array<string>) => {
   const updatedBook = await Book.update(payload, {where});
 
   if (!genres?.length && !tags?.length) {

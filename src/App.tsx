@@ -23,6 +23,9 @@ import Library from './pages/Library';
 import LibraryBookStatusComponent from './components/LibraryBookStatusComponent';
 import Loader from './components/Loader';
 import BookSkeleton from './skeletons/BookSkeleton';
+import Series from './pages/Series';
+import Seria from './pages/Seria';
+import LocalBook from './pages/LocalBook';
 
 const App: FC = () => {
   const dispatch = useAppDispatch();
@@ -61,10 +64,13 @@ const App: FC = () => {
           <Route path={'books'} element={<Books />} />
           <Route path={'books/:id'} element={<Book />} />
           <Route path={'/local-books'} element={<LocalBooks />} />
-          <Route path={'/read/:id'} element={<ReadBook />} />
+          <Route path={'/local-books/:id'} element={<LocalBook />} />
+          <Route path={'/local-books/:id/read'} element={<ReadBook />} />
           <Route path={'/library'} element={<Library />} />
           <Route path={'users'} element={<Users />} />
           <Route path={'users/:id'} element={<User />} />
+          <Route path={'series'} element={<Series />} />
+          <Route path={'series/:id'} element={<Seria />} />
         </Route>
 
         {/* Not Found route */}

@@ -22,10 +22,11 @@ import { Box, Tooltip } from '@mui/material';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import DeleteModal from '../containers/DeleteModal';
+import { Link } from 'react-router-dom';
 
 type LocalBookItemType = {
   book: ILocalBook;
-  type?: 'local' | 'library';
+  type?: 'local' | 'library' | 'seria';
 };
 
 const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
@@ -37,12 +38,9 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
     user_id,
     link,
     id,
-    annotation,
-    primory_link,
     UsersBooks,
     release_date,
-    seria,
-    source,
+    seriabooks,
     tags,
     privat,
   } = book;
@@ -70,17 +68,13 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
   useShowErrorToast(deleteError);
 
   useEffect(() => {
-    if (!!deleteData) {
+    if (!!deleteData || !!updateBookData) {
       setDeleteModalOpen(false);
     }
-  }, [deleteData]);
+  }, [deleteData, updateBookData]);
 
   const onDeleteBook = () => {
     setDeleteModalOpen(true);
-  };
-
-  const onDelete = () => {
-    deleteBook(id);
   };
 
   const onDeleteBookFromLibrary = () => {
@@ -119,10 +113,18 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
     }
   }
 
+  const onDelete = () => {
+    if (type === 'local') {
+      deleteBook(id);
+    }
+    if (type === 'seria') {
+      updateBook({id, book: {seria_id: null}});
+    }
+  }
+
   // TODO добавить поиск/страницу показывающий только приватные книги(свои)
   // TODO добавить кликабельность тэгов
   // TODO добавить кликабельность жанров
-  // TODO добавить кликабельность серий
   return (
     <ListItem
       sx={{
@@ -135,7 +137,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
     >
       <Image
         onClick={() => {
-          history(`/read/${id}`);
+          history(`/local-books/${id}`);
         }}
         src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
@@ -167,10 +169,11 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
           {release_date && (
             <TypographyComponent
               title={'Дата выхода:'}
+              type={'line'}
               data={moment(release_date).format('DD.MM.YYYY')}
             />
           )}
-          {seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
+          {seriabooks?.title && <TypographyComponent link={`/series/${seriabooks.id}`} type={'line'} title={'Серия: '} data={seriabooks?.title} />}
           {!!tags?.length && (
             <TypographyComponent
               title={'Тэги:'}
@@ -189,7 +192,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
           >
             <DownloadIcon />
           </Button>
-          {user?.id.toString() === user_id.toString() && type === 'local' && <Button
+          {user?.id.toString() === user_id.toString() && (type === 'local' || type === 'seria') && <Button
             variant="contained"
             sx={{ m: 1 }}
             onClick={() => {

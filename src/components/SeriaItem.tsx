@@ -1,44 +1,72 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import RemoveModeratorIcon from '@mui/icons-material/RemoveModerator';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
+import GppBadIcon from '@mui/icons-material/GppBad';
 import { useNavigate } from 'react-router-dom';
 
 import Image from './Image/Image';
-import { ILocalBook } from '../constants/tsSchemes';
+import { ISeria, stateValuesType } from '../constants/tsSchemes';
 import { baseUrl } from '../constants/constants';
 import TypographyComponent from './TypographyComponent';
+import LibraryBookStatusComponent from './LibraryBookStatusComponent';
+import { useAppSelector, useShowErrorToast } from '../hooks';
+import { libraryBookStatuses } from '../constants/constants';
+import { Box, Tooltip } from '@mui/material';
+import { booksApiSlice } from '../store/reducers/BooksApiSlice';
+import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
+import DeleteModal from '../containers/DeleteModal';
+import { seriesApiSlice } from '../store/reducers/SeriesApiSlice';
 
 type SeriaItemType = {
-  book: ILocalBook;
-  updateSeria: (data: {ids: object, payload: object}) => void;
+  seria: ISeria;
 };
 
-const SeriaItem: FC<SeriaItemType> = ({ book, updateSeria }) => {
+const SeriaItem: FC<SeriaItemType> = ({ seria }) => {
   const {
-    cover,
-    title,
-    author,
-    genres,
-    downloads,
-    link,
-    id,
-    library_book,
     annotation,
-    created_at,
-    deleted_at,
-    primory_link,
+    author,
+    cover,
+    id,
     release_date,
-    seria,
-    source,
+    booksCount,
+    title,
+    genres,
     tags,
-    updated_at,
-  } = book;
-
+    user_id
+  } = seria;
   let history = useNavigate();
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+
+  const { user } = useAppSelector((state) => state.auth);
+
+  const [
+    deleteSeria,
+    { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
+  ] = seriesApiSlice.useDeleteSeriaMutation();
+
+  useShowErrorToast(deleteError);
+
+  useEffect(() => {
+    if (!!deleteData) {
+      setDeleteModalOpen(false);
+    }
+  }, [deleteData]);
+
+  const onDeleteSeria = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const onDelete = () => {
+    deleteSeria(id);
+  };
+
 
   return (
     <ListItem
@@ -52,7 +80,7 @@ const SeriaItem: FC<SeriaItemType> = ({ book, updateSeria }) => {
     >
       <Image
         onClick={() => {
-          history(`/seria/${id}`);
+          history(`/series/${id}`);
         }}
         src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
         alt="Book cover"
@@ -60,39 +88,60 @@ const SeriaItem: FC<SeriaItemType> = ({ book, updateSeria }) => {
         width="200px"
         styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)' }}
       />
-      <ListItemText
-        sx={{ ml: 1, alignSelf: 'start' }}
-        primary={title}
-        secondary={
-          <>
-            {author && (
-              <TypographyComponent
-                title={'Авторы:'}
-                data={author?.split(';')}
-              />
-            )}
-            {genres?.length && (
-              <TypographyComponent
-                title={'Жанры:'}
-                data={genres?.map((item) => item.title)}
-              />
-            )}
-            {release_date && (
-              <TypographyComponent
-                title={'Дата выхода:'}
-                data={moment(release_date).format('DD.MM.YYYY')}
-              />
-            )}
-            {seria && <TypographyComponent title={'Серия: '} data={seria.title} />}
-            {tags?.length && (
-              <TypographyComponent
-                title={'Тэги:'}
-                data={tags?.map((item) => item.title)}
-              />
-            )}
-          </>
-        }
-      />
+      <Box sx={{ ml: 1, alignSelf: 'start' }}>
+        <Box>
+          <Typography
+            component="h3"
+            variant="h6"
+            color="text.primary"
+          >
+            {title}
+          </Typography>
+          {author && (
+            <TypographyComponent
+              title={'Авторы:'}
+              data={author?.split(';')}
+            />
+          )}
+          {!!genres?.length && (
+            <TypographyComponent
+              title={'Жанры:'}
+              data={genres?.map((item) => item.title)}
+            />
+          )}
+          {release_date && (
+            <TypographyComponent
+              title={'Дата выхода:'}
+              type={'line'}
+              data={moment(release_date).format('DD.MM.YYYY')}
+            />
+          )}
+          {booksCount && <TypographyComponent type={'line'} title={'Книг в серии: '} data={booksCount} />}
+          {!!tags?.length && (
+            <TypographyComponent
+              title={'Тэги:'}
+              data={tags?.map((item) => item.title)}
+            />
+          )}
+        </Box>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}>
+          {user?.id.toString() === user_id.toString() && <Button
+            variant="contained"
+            sx={{ m: 1 }}
+            onClick={() => {
+              onDeleteSeria();
+            }}
+          >
+            <DeleteIcon />
+          </Button>}
+        </Box>
+        <DeleteModal
+          deleteFunction={onDelete}
+          deleteLabel="Книгу"
+          isModalOpen={isDeleteModalOpen}
+          setModalOpen={setDeleteModalOpen}
+        />
+      </Box>
     </ListItem>
   );
 };

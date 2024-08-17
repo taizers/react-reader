@@ -1,12 +1,12 @@
 import React from 'react';
 import { List } from '@mui/material';
 
-interface BookListProps<T> {
+interface CardsListProps<T> {
     items: T[];
     renderItem: (item: T) => React.ReactNode;
 }
 
-export default function BookList<T> (props: BookListProps<T>) {
+export default function CardsList<T> (props: CardsListProps<T>) {
     return (
         <List
             sx={{
@@ -18,7 +18,7 @@ export default function BookList<T> (props: BookListProps<T>) {
             bgcolor: 'background.paper',
             }}
         >
-            {props.items.map(props.renderItem)}
+            {props.items?.map(props.renderItem)}
         </List>
     )
 };

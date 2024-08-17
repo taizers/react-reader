@@ -6,5 +6,6 @@ export enum Sidebar {
   Login = 'Войти',
   Profile = 'Профиль',
   Books = 'Книги',
+  Series = 'Серии',
   Logout = 'Выйти',
 }

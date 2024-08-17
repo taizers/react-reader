@@ -9,7 +9,7 @@ import { useAppSelector, useDebounce, useShowErrorToast } from '../hooks';
 import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import LibraryBookStatusComponent from '../components/LibraryBookStatusComponent';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
-import BookList from '../components/BooksList';
+import CardsList from '../components/CardsList';
 import NoDataText from '../components/NoDataText';
 import { useGetQueryResponce } from '../models/requests';
 import LocalBookItem from '../components/LocalBookItem';
@@ -105,7 +105,7 @@ const Library: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        {booksCount && <BookList items={data.LibraryBooks} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} type="library" />} />}
+        {booksCount && <CardsList items={data.LibraryBooks} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} type="library" />} />}
         {!booksCount && !libraryIsLoading && <NoDataText />}
         {!!libraryIsLoading && <BooksSkeleton />}
       </Box>

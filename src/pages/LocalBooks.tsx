@@ -19,7 +19,7 @@ import CreateGenreModal from '../containers/CreateGenreModal';
 import DeleteModal from '../containers/DeleteModal';
 import CreateSeriaModal from '../containers/CreateSeriaModal';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
-import BookList from '../components/BooksList';
+import CardsList from '../components/CardsList';
 import NoDataText from '../components/NoDataText';
 import { useGetQueryResponce } from '../models/requests';
 
@@ -61,12 +61,6 @@ const LocalBooks: FC = () => {
     }
   }, [query]);
 
-  // useEffect(() => {
-  //   if (!!deleteData) {
-  //     setDeleteModalOpen(false);
-  //   }
-  // }, [deleteData]);
-
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -84,15 +78,6 @@ const LocalBooks: FC = () => {
     }
     setPage(value - 1);
   };
-
-  // const onDeleteBook = (id: number) => {
-  //   setDeleteId(id);
-  //   setDeleteModalOpen(true);
-  // };
-
-  // const onDelete = () => {
-  //   deleteBook(deleteId);
-  // };
 
   return (
     <Box sx={{ width: '100%' }} >
@@ -153,7 +138,7 @@ const LocalBooks: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: '100%' }}
       >
-        {booksCount && <BookList items={data.books} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} />} />}
+        {booksCount && <CardsList items={data.books} renderItem={(book) => <LocalBookItem book={book} key={`book ${book.id}`} />} />}
         {!booksCount && !isLoading && <NoDataText />}
         {booksCount && (
           <Pagination
@@ -179,12 +164,6 @@ const LocalBooks: FC = () => {
         isModalOpen={isCreateGenreModalOpen}
         setModalOpen={setCreateGenreModalOpen}
       />
-      {/* <DeleteModal
-        deleteFunction={onDelete}
-        deleteLabel="Книгу"
-        isModalOpen={isDeleteModalOpen}
-        setModalOpen={setDeleteModalOpen}
-      /> */}
       <CreateSeriaModal
         isModalOpen={isCreateSeriaModalOpen}
         setModalOpen={setCreateSeriaModalOpen}

@@ -41,7 +41,7 @@ export const seriesApiSlice = apiSlice.injectEndpoints({
         url: `/series/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Seria'],
+      invalidatesTags: ['Seria', 'Book'],
     }),
   }),
 });

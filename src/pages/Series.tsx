@@ -1,29 +1,26 @@
-import React, { FC, useState, useEffect, useRef } from 'react';
-import List from '@mui/material/List';
+import React, { FC, useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
-import AddIcon from '@mui/icons-material/Add';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
-import { ILocalBook } from '../constants/tsSchemes';
+import { ISeria } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
 import { useDebounce, useShowErrorToast } from '../hooks';
-import UploadBookModal from '../containers/UploadBookModal';
-import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import LocalBookItem from '../components/LocalBookItem';
-import CreateTagModal from '../containers/CreateTagModal';
-import CreateGenreModal from '../containers/CreateGenreModal';
-import DeleteModal from '../containers/DeleteModal';
 import CreateSeriaModal from '../containers/CreateSeriaModal';
-import { libraryBooksApiSlice } from '../store/reducers/LibraryBooksApiSlice';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 import { seriesApiSlice } from '../store/reducers/SeriesApiSlice';
 import { useGetQueryResponce } from '../models/requests';
+import CardsList from '../components/CardsList';
+import SeriaItem from '../components/SeriaItem';
+
+interface SeriesData {
+  series: ISeria[];
+  totalPages: number;
+  page: number
+}
 
 
 const Series: FC = () => {
@@ -34,47 +31,32 @@ const Series: FC = () => {
     useState<boolean>(false);
   const [isCreateGenreModalOpen, setCreateGenreModalOpen] =
     useState<boolean>(false);
-  const [isUploadBookModalOpen, setUploadBookModalOpen] =
-    useState<boolean>(false);
   const [isCreateSeriaModalOpen, setCreateSeriaModalOpen] =
     useState<boolean>(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const debouncedValue = useDebounce(query);
 
-  const { data, error, isLoading } = seriesApiSlice.useGetSeriesQuery<useGetQueryResponce<any>>({
+  const { data, error, isLoading } = seriesApiSlice.useGetSeriesQuery<useGetQueryResponce<SeriesData>>({
     page,
     limit,
     query: debouncedValue,
   });
 
   const [
-    deleteSeria,
-    { data: deleteData, error: deleteError, isLoading: deleteIsLoading },
-  ] = seriesApiSlice.useDeleteSeriaMutation();
-  const [
     updateSeria,
     { data: updateSeriaData, error: updateSeriaError, isLoading: updateSeriaIsLoading },
   ] = seriesApiSlice.useUpdateSeriaMutation();
 
   useShowErrorToast(error);
-  useShowErrorToast(deleteError);
   useShowErrorToast(updateSeriaError);
 
-  const booksCount = data?.series?.length;
+  const seriesCount = data?.series?.length;
 
   useEffect(() => {
     if (query) {
       setPage(defaultStartPage);
     }
   }, [query]);
-
-  useEffect(() => {
-    if (!!deleteData) {
-      setDeleteModalOpen(false);
-    }
-  }, [deleteData]);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,15 +74,6 @@ const Series: FC = () => {
       window.scrollTo(0, 0);
     }
     setPage(value - 1);
-  };
-
-  const onDeleteBook = (id: number) => {
-    setDeleteId(id);
-    setDeleteModalOpen(true);
-  };
-
-  const onDelete = () => {
-    deleteSeria(deleteId);
   };
 
   return (
@@ -141,21 +114,8 @@ const Series: FC = () => {
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: '100%' }}
       >
-        {booksCount && (
-          <List
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-around',
-              flexWrap: 'wrap',
-              gap: 2,
-              width: '100%',
-              bgcolor: 'background.paper',
-            }}
-          >
-            {data.books.map((book: ILocalBook, index: number) => (<LocalBookItem book={book} key={`book ${index}`} />))}
-          </List>
-        )}
-        {!booksCount && !isLoading && (
+        {seriesCount && <CardsList items={data.series} renderItem={(seria) => <SeriaItem seria={seria} key={`book ${seria.id}`} />} />}
+        {!seriesCount && !isLoading && (
           <Typography
             sx={{
               display: 'flex',
@@ -171,7 +131,7 @@ const Series: FC = () => {
             {'Нет данных'}
           </Typography>
         )}
-        {booksCount && (
+        {seriesCount && (
           <Pagination
             count={data.totalPages}
             color="primary"
@@ -183,12 +143,6 @@ const Series: FC = () => {
         )}
         {!!isLoading && <BooksSkeleton />}
       </Box>
-      <DeleteModal
-        deleteFunction={onDelete}
-        deleteLabel="Серию"
-        isModalOpen={isDeleteModalOpen}
-        setModalOpen={setDeleteModalOpen}
-      />
       <CreateSeriaModal
         isModalOpen={isCreateSeriaModalOpen}
         setModalOpen={setCreateSeriaModalOpen}

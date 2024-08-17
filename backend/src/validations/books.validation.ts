@@ -37,6 +37,7 @@ export const updateBookValidation = validate(
       link: Joi.string().max(512),
       downloads: Joi.string().max(512),
       source: Joi.string().max(512),
+      seria_id: Joi.number().allow(null),
       primory_link: Joi.string().max(512),
     }),
     params: Joi.object({

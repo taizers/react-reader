@@ -48,16 +48,19 @@ export default (sequelize, DataTypes) => {
     Seria.hasMany(models.Book, {
       onDelete: 'cascade',
       foreignKey: 'seria_id',
-      as: 'seria',
+      as: 'seriabooks',
     });
     Seria.belongsToMany(models.Genre, {
       through: 'seria_genres',
       onDelete: 'cascade',
+      foreignKey: 'seria_id'
     });
     Seria.belongsToMany(models.Tag, {
       through: 'seria_tags',
       onDelete: 'cascade',
+      foreignKey: 'seria_id'
     });
+    Seria.belongsTo(models.User, { onDelete: 'cascade', foreignKey: 'user_id' });
   };
 
   return Seria;

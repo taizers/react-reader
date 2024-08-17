@@ -4,13 +4,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import GroupIcon from '@mui/icons-material/Group';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import BookIcon from '@mui/icons-material/Book';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 
 import { Sidebar } from '../constants/enums';
 
 export const menuItems = [
   {
-    title: Sidebar.Main,
+    title: Sidebar.Main, 
     path: '/',
     icon: GroupIcon,
     access: 'all',
@@ -31,6 +32,12 @@ export const menuItems = [
     title: Sidebar.Books,
     path: '/books',
     icon: MenuBookIcon,
+    access: 'private',
+  },
+  {
+    title: Sidebar.Series,
+    path: '/series',
+    icon: LibraryBooksIcon,
     access: 'private',
   },
 ];

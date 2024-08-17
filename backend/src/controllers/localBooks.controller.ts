@@ -1,5 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
-import { getAllBooks, getBook, updateBook, deleteBook, createBook, getPaginatedBooks, getBookFields } from '../services/db/books.services';
+import { getBook, updateBook, deleteBook, createBook, getPaginatedBooks, getBookFields } from '../services/db/books.services';
 import logger from '../helpers/logger';
 import { DontHaveAccessError, UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
@@ -15,13 +15,13 @@ export const createBookAction = async (
     return next(new UnProcessableEntityError('File Not Found'));
   }
 
-  const user_id = req.user?.id;
-  // const cover = `${req.file?.destination}${req.file?.filename}`; // обложка cover: req.file ? cover : null, 
-  const payload = {...req?.body, private: req?.body.privat === 'true' ? true : false, user_id, link: `${req.file?.destination}${req.file?.filename}`};
-
-  logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
-
   try {
+    const user_id = req.user?.id;
+    // const cover = `${req.file?.destination}${req.file?.filename}`; // обложка cover: req.file ? cover : null, 
+    const payload = {...req?.body, private: req?.body.privat === 'true' ? true : false, user_id, link: `${req.file?.destination}${req.file?.filename}`};
+  
+    logger.info(`Create Book Action: { payload: ${JSON.stringify(payload)} }`);
+
     const {genres, tags, ...data} = payload;
 
     const book = await createBook(data, genres?.split(';'), tags?.split(';'));
@@ -29,23 +29,6 @@ export const createBookAction = async (
     res.status(200).json(book);
   } catch (error) {
     logger.error('Create Book Action - Cannot create book', error);
-    next(error);
-  }
-};
-
-export const getAllBooksAction = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  logger.info('Get All Books Action');
-
-  try {
-    const books = await getAllBooks();
-    
-    res.status(200).json(books);
-  } catch (error) {
-    logger.error('Get All Books Action - Cannot get books', error);
     next(error);
   }
 };
@@ -82,13 +65,34 @@ export const getBookAction = async (
 
   try {
     const book = await getBook({id}, user_id);
+    
+    res.status(200).json(book);
+  } catch (error) {
+    logger.error('Get Book Action - Cannot get book', error);
+    next(error);
+  }
+};
+
+export const getBooksTextAction = async (
+  req: IRequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  const id = req.params.id;
+  const user_id = req.user?.id;
+
+  logger.info(`Get Books Text Action: { id: ${id}, user_id: ${user_id} }`);
+
+  try {
+    const book = await getBookFields({id}, ['link', 'title'], user_id);
+
     const text = await getJsonBook(book.link);
 
     // const translatedChapter = await getTranslatedChapter(text.content[4])
 
-    res.status(200).json({book, text});
+    res.status(200).json({title: book.title, text});
   } catch (error) {
-    logger.error('Get Book Action - Cannot get book', error);
+    logger.error('Get Books Text Action - Cannot get books text', error);
     next(error);
   }
 };

@@ -72,7 +72,7 @@ export default (sequelize, DataTypes) => {
     Book.belongsTo(models.Seria, {
       onDelete: 'cascade',
       foreignKey: 'seria_id',
-      as: 'seria',
+      as: 'seriabooks',
     });
     Book.belongsTo(models.User, { onDelete: 'cascade', foreignKey: 'user_id' });
     Book.belongsToMany(models.Genre, {
