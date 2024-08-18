@@ -39,29 +39,54 @@ ul {
 }
 
 .container{
-  padding: 0 15px!important;
+  padding: 10px 15px!important;
+  margin-top: 10px;
 }
 
 @media (min-width: 575.98px){
-  container {
-    padding: 0 calc(50% - 270px)!important;
+  .container {
+    padding: 10px calc(50% - 270px)!important;
   }
 }
 
 @media (min-width: 767.98px){
-  container {
-    padding: 0 calc(50% - 360px)!important;
+  .container {
+    padding: 10px calc(50% - 360px)!important;
   }
 }
 
 @media (min-width: 991.98px) {
-  container {
-    padding: 0 calc(50% - 480px)!important;
+  .container {
+    padding: 10px calc(50% - 480px)!important;
   }
 }
 
 @media (min-width: 1199.98px){
-  container {
-    padding: 0 calc(50% - 590px)!important;
+  .container {
+    padding: 10px calc(50% - 590px)!important;
+  }
+}
+
+@media (min-width: 1599.98px){
+  .container {
+    padding: 10px calc(50% - 780px)!important;
+  }
+}
+
+@media (min-width: 1799.98px){
+  .container {
+    padding: 10px calc(50% - 870px)!important;
+  }
+}
+
+@media (min-width: 1999.98px){
+  .container {
+    padding: 20px calc(50% - 970px)!important;
+  }
+}
+
+@media (min-width: 2199.98px){
+  .container {
+    padding: 30px 80px!important;
   }
 }

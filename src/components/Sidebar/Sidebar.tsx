@@ -134,7 +134,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Меню
+            {'Меню'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -199,7 +199,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
           )}
         </List>
       </Drawer>
-      <Main open={open}>
+      <Main className='container' open={open}>
         <DrawerHeader />
         {child}
       </Main>
