@@ -67,6 +67,7 @@ const SeriaItem: FC<SeriaItemType> = ({ seria }) => {
         bgcolor: '#f1f4f862',
         display: 'flex',
         justifySelf: 'center',
+        '@media(max-width: 1000px)' : { justifyContent: 'space-evenly', flexBasis: 300, flexDirection: 'column'}
       }}
     >
       <Image
@@ -79,7 +80,7 @@ const SeriaItem: FC<SeriaItemType> = ({ seria }) => {
         width="200px"
         styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)' }}
       />
-      <Box sx={{ ml: 1, alignSelf: 'start' }}>
+      <Box sx={{ ml: 1, alignSelf: 'start', width: '100%', display: 'flex', flexDirection: 'column'  }}>
         <Box>
           <Typography
             component="h3"

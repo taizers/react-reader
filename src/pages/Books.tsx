@@ -68,7 +68,7 @@ const Books: FC = () => {
         component="form"
         onSubmit={onSubmit}
         noValidate
-        sx={{ mt: 1, display: 'flex' }}
+        sx={{ mt: 1, display: 'flex', '@media(max-width: 780px)' : { flexDirection: 'column', alignItems: 'center'} }}
       >
         <TextField
           margin="normal"
@@ -85,7 +85,7 @@ const Books: FC = () => {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%' }}
+          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%', '@media(max-width: 780px)' : { m: '10px 0' } }}
         >
           Найти
         </Button>

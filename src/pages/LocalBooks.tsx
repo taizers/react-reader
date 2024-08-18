@@ -6,7 +6,6 @@ import Pagination from '@mui/material/Pagination';
 import AddIcon from '@mui/icons-material/Add';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import BookmarksIcon from '@mui/icons-material/Bookmarks';
 
 import { ILocalBook } from '../constants/tsSchemes';
 import { defaultLimit, defaultStartPage } from '../constants/constants';
@@ -16,7 +15,6 @@ import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import LocalBookItem from '../components/LocalBookItem';
 import CreateTagModal from '../containers/CreateTagModal';
 import CreateGenreModal from '../containers/CreateGenreModal';
-import CreateSeriaModal from '../containers/CreateSeriaModal';
 import BooksSkeleton from '../skeletons/BooksSkeleton';
 import CardsList from '../components/CardsList';
 import NoDataText from '../components/NoDataText';
@@ -37,10 +35,6 @@ const LocalBooks: FC = () => {
     useState<boolean>(false);
   const [isUploadBookModalOpen, setUploadBookModalOpen] =
     useState<boolean>(false);
-  const [isCreateSeriaModalOpen, setCreateSeriaModalOpen] =
-    useState<boolean>(false);
-  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const debouncedValue = useDebounce(query);
 
@@ -84,55 +78,52 @@ const LocalBooks: FC = () => {
         component="form"
         onSubmit={onSubmit}
         noValidate
-        sx={{ mt: 1, display: 'flex' }}
+        sx={{ mt: 1,width: '100%', display: 'flex', flexGrow: 1,'@media(max-width: 780px)' : { flexDirection: 'column'}, }}
       >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="query"
-          label="Название"
-          name="query"
-          autoComplete="text"
-          autoFocus
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%' }}
-        >
-          Найти
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setUploadBookModalOpen(true)}
-        >
-          <CloudUploadIcon />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateTagModalOpen(true)}
-        >
-          <AddIcon />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateGenreModalOpen(true)}
-        >
-          <AddCircleIcon />
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ m: 2 }}
-          onClick={() => setCreateSeriaModalOpen(true)}
-        >
-          <BookmarksIcon />
-        </Button>
+        <Box sx={{display: 'flex', flexGrow: 1, '@media(max-width: 780px)' : { width: '100%',  flexDirection: 'column', alignItems: 'center'}, }} >
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="query"
+            label="Название"
+            name="query"
+            autoComplete="text"
+            autoFocus
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%', '@media(max-width: 780px)' : { m: '10px 0' }}}
+          >
+            Найти
+          </Button>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-evenly', '@media(max-width: 780px)' : { width: '100%', flexDirection: 'column', alignItems: 'center'}, }}>
+          <Button
+            variant="contained"
+            sx={{ m: 2, '@media(max-width: 780px)' : { maxWidth: '20%'}, }}
+            onClick={() => setUploadBookModalOpen(true)}
+          >
+            <CloudUploadIcon />
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ m: 2, '@media(max-width: 780px)' : { maxWidth: '20%'}, }}
+            onClick={() => setCreateTagModalOpen(true)}
+          >
+            <AddIcon />
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ m: 2, '@media(max-width: 780px)' : { maxWidth: '20%'}, }}
+            onClick={() => setCreateGenreModalOpen(true)}
+          >
+            <AddCircleIcon />
+          </Button>
+        </Box>
       </Box>
       <Box
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', height: '100%' }}
@@ -162,10 +153,6 @@ const LocalBooks: FC = () => {
       <CreateGenreModal
         isModalOpen={isCreateGenreModalOpen}
         setModalOpen={setCreateGenreModalOpen}
-      />
-      <CreateSeriaModal
-        isModalOpen={isCreateSeriaModalOpen}
-        setModalOpen={setCreateSeriaModalOpen}
       />
     </Box>
   );

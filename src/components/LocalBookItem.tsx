@@ -37,6 +37,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
     genres,
     user_id,
     link,
+    library_book,
     id,
     UsersBooks,
     release_date,
@@ -122,6 +123,14 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
     }
   }
 
+  const getLibraryStatusComponent = () => {
+    if (UsersBooks !== undefined) {
+      return <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} statuses={libraryBookStatuses} />
+    }
+    if (library_book !== undefined) {
+      return <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={library_book?.state} statuses={libraryBookStatuses} />
+    }
+  }
   // TODO добавить поиск/страницу показывающий только приватные книги(свои)
   // TODO добавить кликабельность тэгов
   // TODO добавить кликабельность жанров
@@ -133,6 +142,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
         bgcolor: '#f1f4f862',
         display: 'flex',
         justifySelf: 'center',
+        '@media(max-width: 1000px)' : { justifyContent: 'space-evenly', flexBasis: 300, flexDirection: 'column'}
       }}
     >
       <Image
@@ -145,7 +155,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
         width="200px"
         styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)' }}
       />
-      <Box sx={{ ml: 1, alignSelf: 'start' }}>
+      <Box sx={{ ml: 1, mt:1, alignSelf: 'start', width: '100%', display: 'flex', flexDirection: 'column' }}>
         <Box>
           <Typography
             component="h3"
@@ -184,7 +194,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
             {getPrivateIcon()}
           </Box>}
         </Box>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '5px', mt: 2, '@media(max-width: 1000px)' : { alignSelf: 'center', flexDirection: 'column'} }}>
           <Button
             variant="contained"
             sx={{ m: 1 }}
@@ -201,7 +211,7 @@ const LocalBookItem: FC<LocalBookItemType> = ({ book, type = 'local' }) => {
           >
             <DeleteIcon />
           </Button>}
-          {UsersBooks !== undefined && <LibraryBookStatusComponent onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={UsersBooks[0]?.library_book?.state} statuses={libraryBookStatuses} />}
+          {getLibraryStatusComponent()}
         </Box>
         <DeleteModal
           deleteFunction={onDelete}

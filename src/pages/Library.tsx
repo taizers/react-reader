@@ -79,27 +79,29 @@ const Library: FC = () => {
         component="form"
         onSubmit={onSubmit}
         noValidate
-        sx={{ mt: 1, display: 'flex' }}
+        sx={{ mt: 1, display: 'flex', gap: '20px', '@media(max-width: 780px)' : { flexDirection: 'column', alignItems: 'center', gap: '20px'} }}
       >
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="query"
-          label="Название"
-          name="query"
-          autoComplete="text"
-          autoFocus
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%' }}
-        >
-          Найти
-        </Button>
+        <Box sx={{display: 'flex', flexGrow: 1, '@media(max-width: 780px)' : { width: '100%', flexDirection: 'column', alignItems: 'center' },}}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="query"
+            label="Название"
+            name="query"
+            autoComplete="text"
+            autoFocus
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.currentTarget.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%', '@media(max-width: 780px)' : { m: '10px 0' } }}
+          >
+            Найти
+          </Button>
+        </Box>
         <LibraryBookStatusComponent styles={{alignSelf: 'center', ml: 2, width: 'auto'}} onDeleteFunction={onDeleteBookFromLibrary} onUpdateStatusFunction={onUpdateBookStatusAtLibrary} state={state} statuses={libraryBookStatusesForSearch} />
       </Box>
       <Box

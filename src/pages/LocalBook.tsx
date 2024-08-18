@@ -33,16 +33,16 @@ const LocalBook: FC = ({}) => {
   return (
     <Box>
       <Box
-        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
+        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px', '@media(max-width: 780px)' : { flexDirection: 'column', alignItems: 'center'} }}
       >
         <Image
           src={cover ? `${baseUrl}/${cover}` : `/static/images/no-image.png`}
           alt="Book cover"
-          height="160px"
-          width="100px"
+          height="320px"
+          width="200px"
           styles={{ m: 0, boxShadow: '0px 5px 10px 0px rgba(0, 0, 0, 0.7)', '@media(min-width: 780px)' : {width:"200px", height:"320px"}}}
         />
-        <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ flexGrow: 1, '@media(max-width: 780px)' : { alignSelf: 'start'} }}>
           {!!title && <TypographyComponent title={'Название:'} data={title} />}
           {!!annotation && (
             <TypographyComponent title={'Аннотация:'} data={annotation} />

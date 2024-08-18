@@ -22,15 +22,10 @@ interface SeriesData {
   page: number
 }
 
-
 const Series: FC = () => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(defaultStartPage);
   const [limit, setLimit] = useState<number>(defaultLimit);
-  const [isCreateTagModalOpen, setCreateTagModalOpen] =
-    useState<boolean>(false);
-  const [isCreateGenreModalOpen, setCreateGenreModalOpen] =
-    useState<boolean>(false);
   const [isCreateSeriaModalOpen, setCreateSeriaModalOpen] =
     useState<boolean>(false);
 
@@ -42,13 +37,7 @@ const Series: FC = () => {
     query: debouncedValue,
   });
 
-  const [
-    updateSeria,
-    { data: updateSeriaData, error: updateSeriaError, isLoading: updateSeriaIsLoading },
-  ] = seriesApiSlice.useUpdateSeriaMutation();
-
   useShowErrorToast(error);
-  useShowErrorToast(updateSeriaError);
 
   const seriesCount = data?.series?.length;
 
@@ -82,7 +71,7 @@ const Series: FC = () => {
         component="form"
         onSubmit={onSubmit}
         noValidate
-        sx={{ mt: 1, display: 'flex' }}
+        sx={{ mt: 1, display: 'flex', gap: '20px', '@media(max-width: 780px)' : { flexDirection: 'column', alignItems: 'center', gap: '20px'} }}
       >
         <TextField
           margin="normal"
@@ -99,13 +88,13 @@ const Series: FC = () => {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%' }}
+          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%', '@media(max-width: 780px)' : { m: '10px 0' } }}
         >
           Найти
         </Button>
         <Button
           variant="contained"
-          sx={{ m: 2 }}
+          sx={{ ml: 3, mt: '16px', mb: '8px', width: '20%', '@media(max-width: 780px)' : { m: 0 } }}
           onClick={() => setCreateSeriaModalOpen(true)}
         >
           <BookmarksIcon />

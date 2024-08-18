@@ -23,14 +23,14 @@ const Seria: FC = () => {
   return (
     <Box>
       <Box
-        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
+        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px', '@media(max-width: 768px)' : { flexDirection: 'column'} }}
       >
         <Image
           src={data?.cover ? `${baseUrl}/${data.cover}` : `/static/images/no-image.png`}
           alt="Book cover"
           height="300px"
           width="200px"
-          styles={{ m: 0 }}
+          styles={{ m: 0, '@media(max-width: 768px)' : { alignSelf: 'center'} }}
         />
         <Box sx={{ flexGrow: 1 }}>
           {!!data?.title && <TypographyComponent title={'Название:'} data={data.title} />}

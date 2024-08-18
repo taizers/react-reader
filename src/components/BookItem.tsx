@@ -24,6 +24,7 @@ const BookItem: FC<BookItemType> = ({ book }) => {
         bgcolor: '#cad2de',
         display: 'flex',
         justifySelf: 'center',
+        '@media(max-width: 780px)' : { flexDirection: 'column', alignItems: 'center', gap: '20px'}
       }}
     >
       <Image
