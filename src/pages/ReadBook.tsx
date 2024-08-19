@@ -10,6 +10,7 @@ import { getToken, setToken } from '../utils';
 import { useShowErrorToast } from '../hooks';
 import { useGetQueryResponce } from '../models/requests';
 import { BookText } from '../constants/tsSchemes';
+import BookBar from '../components/BookBar';
 
 const defaultScrollValue = 0;
 const defaultChaptureValue = 0;
@@ -103,11 +104,15 @@ interface ReadData {
 const ReadBook: FC = () => {
   const { id } = useParams();
   const [currentChapter, setCurrentChapter] = useState<number>();
+  const [fontSize, setFontSize] = useState<number>(16);
+  const [font, setFont] = useState<string>('Roboto');
   const [scrollPosition, setScrollPosition] = useState<number>();
   const [defaultLastScrollPosition, setDefaultLastScrollPosition] =
     useState<number>();
 
   const { data, error, isLoading } = booksApiSlice.useGetBooksTextQuery<useGetQueryResponce<ReadData>>(id);
+
+  const chapters = data?.text?.content?.map(item =>  item.title || item.content.trim().slice(0,10));
 
   useShowErrorToast(error);
 
@@ -148,71 +153,77 @@ const ReadBook: FC = () => {
         }, 200)
     }
   }, [defaultLastScrollPosition]);
-  //TODO добавить синхронизацию последней страницы с бэкендом
-  return (
-    <Box>
-      <Box
-        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
-      >
-        <Box sx={{ flexGrow: 1 }}>
-          {!!data?.title && <TypographyComponent data={data.title} sx={{fontSize: '20px'}} />}
-        </Box>
-      </Box>
-      <Box
-        sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '20px',
-            width: '100%',
-          }}
-        >
-          <Box
-            sx={{ textIndent: '30px', fontSize: '2vw', alignSelf: 'center', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
-          >
-            {data?.text?.title}
-          </Box>
-          <Box
-            sx={{ textIndent: '30px', fontSize: '2vw', alignSelf: 'center', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
-          >{`Автор: ${getAuthor(data?.text?.author)}`}</Box>
-          <Box>
-            {data?.text?.annotation?.map((item: string, index: number) => {
-              return (
-                <Box sx={{ textIndent: '30px' }} key={index}>
-                  {item}
-                </Box>
-              );
-            })}
-          </Box>
-          {data?.text?.genre && (
-            <Box sx={{ textIndent: '30px' }}>{`Жанры: ${data?.text?.genre?.join(
-              ', '
-            )}`}</Box>
-          )}
 
-          {currentChapter !== undefined &&
-            id &&
-            getChangeChapterButtons(
-              setCurrentChapter,
-              setScrollPosition,
-              currentChapter,
-              data?.text?.content?.length,
-              id
+  //TODO добавить синхронизацию последней страницы с бэкендом
+
+  return (
+    <Box sx={{position: 'relative'}}>
+      {currentChapter && <BookBar setFont={setFont} font={font} setFontSize={setFontSize} fontSize={fontSize} chapterInfo={{chapters, currentChapter, setCurrentChapter}} />}
+      <Box sx={{overflowY: 'auto', mt: '-63px'}}>
+        <Box
+          sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
+        >
+          <Box sx={{ flexGrow: 1 }}>
+            {!!data?.title && <TypographyComponent data={data.title} sx={{fontSize: '20px'}} />}
+          </Box>
+        </Box>
+        <Box
+          sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
+        >
+
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+              width: '100%',
+            }}
+          >
+            <Box
+              sx={{ textIndent: '30px', fontSize: `${fontSize+4}px`, alignSelf: 'center', fontFamily: font }}
+            >
+              {data?.text?.title}
+            </Box>
+            <Box
+              sx={{ textIndent: '30px', fontSize: `${fontSize+2}px`, alignSelf: 'center', fontFamily: font }}
+            >{`Автор: ${getAuthor(data?.text?.author)}`}</Box>
+            <Box>
+              {data?.text?.annotation?.map((item: string, index: number) => {
+                return (
+                  <Box sx={{ textIndent: '30px', fontFamily: font }} key={index}>
+                    {item}
+                  </Box>
+                );
+              })}
+            </Box>
+            {data?.text?.genre && (
+              <Box sx={{ textIndent: '30px', fontFamily: font }}>{`Жанры: ${data?.text?.genre?.join(
+                ', '
+              )}`}</Box>
             )}
-          {currentChapter !== undefined && data?.text?.content.length && (
-            <Slide data={data?.text?.content[currentChapter]} />
-          )}
-          {currentChapter !== undefined &&
-            id &&
-            getChangeChapterButtons(
-              setCurrentChapter,
-              setScrollPosition,
-              currentChapter,
-              data?.text?.content?.length,
-              id
+
+            {currentChapter !== undefined &&
+              id &&
+              getChangeChapterButtons(
+                setCurrentChapter,
+                setScrollPosition,
+                currentChapter,
+                data?.text?.content?.length,
+                id
+              )}
+            {currentChapter !== undefined && data?.text?.content.length && (
+              <Slide data={data?.text?.content[currentChapter]} fontSize={fontSize} font={font} />
             )}
+            {currentChapter !== undefined &&
+              id &&
+              getChangeChapterButtons(
+                setCurrentChapter,
+                setScrollPosition,
+                currentChapter,
+                data?.text?.content?.length,
+                id
+              )}
+          </Box>
         </Box>
       </Box>
     </Box>

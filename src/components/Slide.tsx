@@ -8,13 +8,15 @@ type SlideItemType = {
     title: string;
     content: string;
   };
+  fontSize: number;
+  font: string;
 };
 
-const Slide: FC<SlideItemType> = ({ data }) => {
+const Slide: FC<SlideItemType> = ({ data, fontSize, font }) => {
   return (
     <Box>
       <Typography
-        sx={{ textIndent: '30px' }}
+        sx={{ textIndent: '30px', fontSize: `${fontSize+4}px`, fontFamily: font }}
         component="h3"
         variant="h4"
         color="text.primary"
@@ -25,7 +27,7 @@ const Slide: FC<SlideItemType> = ({ data }) => {
         {data.content?.split('\n').map((item: string, index: number) => {
           return (
             <Typography
-              sx={{ textIndent: '30px', fontSize: '1.8vw', '@media(max-width: 780px)' : {fontSize: '2.5vw'}, '@media(max-width: 550px)' : {fontSize: '3.3vw'}, '@media(max-width: 420px)' : {fontSize: '4.3vw'} }}
+              sx={{ textIndent: '30px', fontSize: `${fontSize}px`, fontFamily: font }}
               component="p"
               color="text.primary"
               key={index}
