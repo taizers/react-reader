@@ -15,7 +15,7 @@ export interface loginRequest extends Request {
   };
 }
 
-export interface requestWithCookiesToken extends Request {
+export interface IRequestWithCookiesToken extends Request {
   cookies: {
     refresh_token: string;
   };

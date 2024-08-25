@@ -3,14 +3,16 @@ import { useLocation } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks';
-import { getToken } from '../utils';
 
 const RequireAuth: FC = () => {
-  const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
-  const localToken = getToken();
 
-  return token || localToken ? (
+  if (user === null) {
+    return null;
+  }
+
+  return user ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />

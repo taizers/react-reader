@@ -16,8 +16,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useNavigate } from 'react-router-dom';
 import { authApiSlice } from '../store/reducers/AuthApiSlice';
 import { useAppDispatch, useShowErrorToast } from '../hooks';
-import { setUserData, setUserToken } from '../store/reducers/AuthSlice';
-import { setToken } from '../utils';
+import { setUserData } from '../store/reducers/AuthSlice';
+import { getUserFromToken, setToken } from '../utils';
 import { createToast } from '../utils/toasts';
 import Loader from '../components/Loader';
 
@@ -42,7 +42,7 @@ const Copyright = (props: any) => {
 const theme = createTheme();
 
 const Login: FC = () => {
-  let history = useNavigate();
+  const history = useNavigate();
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -51,20 +51,14 @@ const Login: FC = () => {
   useShowErrorToast(error);
 
   useEffect(() => {
-    if (data?.user?.id) {
-      const token = data.user_session?.access_token;
+    if (data) {
+      const token = data.access_token;
+      const user = getUserFromToken(token);
 
-      dispatch(setUserData(data.user));
-      dispatch(setUserToken(token));
+      dispatch(setUserData(user));
       setToken(token);
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   if (error && 'status' in error) {
-  //     createToast.error(error.data, error.status);
-  //   }
-  // }, [error]);
 
   const onSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault();

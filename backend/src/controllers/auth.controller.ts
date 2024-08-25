@@ -5,16 +5,16 @@ import { getUser, createUser } from '../services/db/users.services';
 import {
   signUpRequest,
   loginRequest,
-  requestWithCookiesToken,
+  IRequestWithCookiesToken,
 } from '../types/requests/auth.request.type';
-import { UserSessionType, IUser } from '../types/entities/global.entities.type';
+import { IUser } from '../types/entities/global.entities.type';
 import logger from '../helpers/logger';
 import { ResourceNotFoundError, BadCredentialsError, ApplicationError, UnAuthorizedError } from '../helpers/error';
 import UserDto from '../dtos/user.dto';
 import { generateTokens, saveToken, validateRefreshToken, findToken, removeToken } from '../services/db/token.services';
+import { IRequestWithUser } from '../types/requests/global.request.type';
 
-const getUserSession = async (userData: {id: number, role?: string}) => {
-  console.log(userData);
+const getUserSession = async (userData: {id: number, name: string, role: string}) => {
   const session = generateTokens(userData);
 
   await saveToken(userData?.id, session.refresh_token);
@@ -47,13 +47,12 @@ export const signUpAction = async (
   const encryptedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const user = await createUser({
+    await createUser({
       email,
       password: encryptedPassword,
       name,
     });
 
-    // return customResponse(res, 201, {...new UserDto(user)});
     return customResponse(res, 201, 'ok');
   } catch (error) {
     logger.error('SignUp Action - Cannot create user', error);
@@ -83,9 +82,7 @@ export const loginAction = async (
       throw new BadCredentialsError('Неправильный пароль');
     }
 
-    const user_session = await getUserSession({id: user?.id, role: user?.role});
-
-    const dtosUser = new UserDto(user);
+    const user_session = await getUserSession({id: user.id, role: user.role, name: user.name});
 
     res.cookie('refresh_token', user_session?.refresh_token, {
       maxAge: Number(process.env.JWT_REFRESH_MAX_AGE) * 1000,
@@ -93,7 +90,7 @@ export const loginAction = async (
       secure: process.env.NODE_ENV === 'development' ? false : true,
     });
 
-    return customResponse(res, 200, { user_session, user: dtosUser });
+    return customResponse(res, 200, { access_token: user_session.access_token });
   } catch (error) {
     logger.error('Login Action - Cannot login user', error);
     next(error);
@@ -101,7 +98,7 @@ export const loginAction = async (
 };
 
 export const refreshAction = async (
-  req: requestWithCookiesToken,
+  req: IRequestWithCookiesToken,
   res: Response,
   next: NextFunction
 ) => {
@@ -130,10 +127,7 @@ export const refreshAction = async (
       throw new UnAuthorizedError();
     }
   
-    const user_session = await getUserSession({id: user?.id, role: user?.role});
-  
-    const dtosUser = new UserDto(user);
-
+    const user_session = await getUserSession({id: user.id, role: user.role, name: user.name});
 
     res.cookie('refresh_token', user_session.refresh_token, {
       maxAge: Number(process.env.JWT_REFRESH_MAX_AGE) * 1000,
@@ -141,7 +135,7 @@ export const refreshAction = async (
       secure: false,
     });
 
-    return customResponse(res, 200, { user_session, user: dtosUser });
+    return customResponse(res, 200, { access_token: user_session.access_token });
   } catch (error) {
     logger.error('Refresh Action - Cannot refresh', error);
     next(error);
@@ -149,7 +143,7 @@ export const refreshAction = async (
 };
 
 export const logoutAction = async (
-  req: requestWithCookiesToken,
+  req: IRequestWithCookiesToken,
   res: Response,
   next: NextFunction
 ) => {
@@ -168,14 +162,14 @@ export const logoutAction = async (
 };
 
 export const getProfileAction = async (
-  req: any,
+  req: IRequestWithUser,
   res: Response,
   next: NextFunction
 ) => {
-  logger.info(`Get Profile Action: { id: ${req?.user?.id} }`);
+  logger.info(`Get Profile Action: { id: ${req.user.id} }`);
 
   try {
-    const user = await getUser({ id: req?.user?.id });
+    const user = await getUser({ id: req.user.id });
 
     const dtosUser = new UserDto(user);
 

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { Box, Button } from '@mui/material';
@@ -11,9 +11,7 @@ import { useShowErrorToast } from '../hooks';
 import { useGetQueryResponce } from '../models/requests';
 import { BookText } from '../constants/tsSchemes';
 import BookBar from '../components/BookBar';
-
-const defaultScrollValue = 0;
-const defaultChaptureValue = 0;
+import { defaultChaptureValue, defaultScrollValue } from '../constants/constants';
 
 const getAuthor = (author: any) => {
   let str = '';
@@ -31,7 +29,6 @@ const onChapterChange = (
   value: number,
   countOfChapters: number,
   operation: '+' | '-',
-  bookId: string
 ) => {
   let operatedValue = value;
 
@@ -45,7 +42,6 @@ const onChapterChange = (
   setScrollValue(defaultScrollValue);
   setCurrentChapter(operatedValue);
   window.scrollTo(defaultScrollValue, defaultScrollValue);
-  setToken(`${operatedValue};${defaultScrollValue}`, `book ${bookId}`);
 };
 
 const getChangeChapterButtons = (
@@ -53,7 +49,6 @@ const getChangeChapterButtons = (
   setScrollValue: (value: number) => void,
   currentChapterValue: number,
   countOfChapters: number,
-  bookId: string
 ) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -67,7 +62,6 @@ const getChangeChapterButtons = (
             currentChapterValue,
             countOfChapters,
             '-',
-            bookId
           )
         }
       >
@@ -86,7 +80,6 @@ const getChangeChapterButtons = (
             currentChapterValue,
             countOfChapters,
             '+',
-            bookId
           )
         }
       >
@@ -103,48 +96,47 @@ interface ReadData {
 
 const ReadBook: FC = () => {
   const { id } = useParams();
-  const [currentChapter, setCurrentChapter] = useState<number>();
+  const [currentChapter, setCurrentChapter] = useState<number>(defaultChaptureValue);
   const [fontSize, setFontSize] = useState<number>(16);
   const [font, setFont] = useState<string>('Roboto');
-  const [scrollPosition, setScrollPosition] = useState<number>();
   const [defaultLastScrollPosition, setDefaultLastScrollPosition] =
     useState<number>();
 
-  const { data, error, isLoading } = booksApiSlice.useGetBooksTextQuery<useGetQueryResponce<ReadData>>(id);
+  const ref = useRef<{font: string, fontSize: number, chapter: number, scroll: number}>(null!);
+
+  const { data, error } = booksApiSlice.useGetBooksTextQuery<useGetQueryResponce<ReadData>>(id);
 
   const chapters = data?.text?.content?.map(item =>  item.title || item.content.trim().slice(0,10));
 
   useShowErrorToast(error);
 
+  const onScroll = () => {
+    const scroll = Math.round(window.scrollY);
+
+    ref.current.scroll = scroll;
+  };
+
   useEffect(() => {
-    const lastPageData = getToken(`book ${id}`)?.split(';');
+    const settings = JSON.parse(getToken(`book ${id} settings`) || '');
 
-    if (lastPageData?.length) {
-      const lastPage = lastPageData[0] || defaultChaptureValue;
-      const lastScrollPosition = lastPageData[1] || defaultScrollValue;
+    if (settings?.font) {
+      setCurrentChapter(settings.chapter);
+      setDefaultLastScrollPosition(settings.scroll);
+      setFontSize(settings.fontSize);
+      setFont(settings.font);
 
-      setCurrentChapter(+lastPage);
-      setDefaultLastScrollPosition(+lastScrollPosition);
+      ref.current = {font: settings.font, fontSize: settings.fontSize, chapter: settings.chapter, scroll: settings.scroll};
     } else {
-      setCurrentChapter(defaultChaptureValue);
-      setScrollPosition(defaultScrollValue);
-
-      setToken(`${defaultChaptureValue};${defaultScrollValue}`, `book ${id}`);
+      ref.current = {font, fontSize, chapter: currentChapter, scroll: defaultScrollValue};
     }
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      setScrollPosition(Math.round(window.scrollY));
-    };
-
-    currentChapter !== undefined &&
-      scrollPosition !== undefined &&
-      setToken(`${currentChapter};${scrollPosition}`, `book ${id}`);
 
     window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [scrollPosition]);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      setToken(JSON.stringify(ref.current), `book ${id} settings`);
+    }
+  }, []);
 
   useEffect(() => {
     if (defaultLastScrollPosition !== undefined ) {
@@ -154,12 +146,28 @@ const ReadBook: FC = () => {
     }
   }, [defaultLastScrollPosition]);
 
+  const handleChapterChange = (data: number) => {
+    setCurrentChapter(data);
+    ref.current.chapter = data;
+  }
+  const handleScrollPositionChange = (data: number) => {
+    ref.current.scroll = data;
+  }
+  const handleFontChange = (data: string) => {
+    setFont(data);
+    ref.current.font = data;
+  }
+  const handleFontSizeChange = (data: number) => {
+    setFontSize(data);
+    ref.current.fontSize = data;
+  }
+
   //TODO добавить синхронизацию последней страницы с бэкендом
 
   return (
-    <Box sx={{position: 'relative'}}>
-      {currentChapter && <BookBar setFont={setFont} font={font} setFontSize={setFontSize} fontSize={fontSize} chapterInfo={{chapters, currentChapter, setCurrentChapter}} />}
-      <Box sx={{overflowY: 'auto', mt: '-63px'}}>
+    <Box sx={{pb:3}}>
+      <BookBar setFont={handleFontChange} font={font} setFontSize={handleFontSizeChange} fontSize={fontSize} chapterInfo={{chapters, currentChapter, setCurrentChapter}} />
+      <Box sx={{overflowY: 'auto'}}>
         <Box
           sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
         >
@@ -205,11 +213,10 @@ const ReadBook: FC = () => {
             {currentChapter !== undefined &&
               id &&
               getChangeChapterButtons(
-                setCurrentChapter,
-                setScrollPosition,
+                handleChapterChange,
+                handleScrollPositionChange,
                 currentChapter,
                 data?.text?.content?.length,
-                id
               )}
             {currentChapter !== undefined && data?.text?.content.length && (
               <Slide data={data?.text?.content[currentChapter]} fontSize={fontSize} font={font} />
@@ -217,11 +224,10 @@ const ReadBook: FC = () => {
             {currentChapter !== undefined &&
               id &&
               getChangeChapterButtons(
-                setCurrentChapter,
-                setScrollPosition,
+                handleChapterChange,
+                handleScrollPositionChange,
                 currentChapter,
                 data?.text?.content?.length,
-                id
               )}
           </Box>
         </Box>

@@ -83,7 +83,7 @@ const SideBar: FC<SideBartype> = ({ child }) => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-  const { token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const [logout, { data, isLoading, error }] = authApiSlice.useLogoutMutation();
 
   useShowErrorToast(error);
@@ -106,10 +106,10 @@ const SideBar: FC<SideBartype> = ({ child }) => {
   }, [data]);
 
   const getAccess = (item: { access: string }) => {
-    if (item.access === 'private' && token) {
+    if (item.access === 'private' && user?.id) {
       return true;
     }
-    if (item.access === 'public' && !token) {
+    if (item.access === 'public' && !user?.id) {
       return true;
     }
     if (item.access === 'all') {

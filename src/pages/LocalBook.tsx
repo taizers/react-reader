@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { Box, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import Image from '../components/Image/Image';
 import { baseUrl } from '../constants/constants';
 import TypographyComponent from '../components/TypographyComponent';
@@ -13,6 +14,7 @@ import { ILocalBook } from '../constants/tsSchemes';
 
 const LocalBook: FC = ({}) => {
   const { id } = useParams();
+  const history = useNavigate();
 
   const { data, error, isLoading } = booksApiSlice.useGetBookQuery<useGetQueryResponce<ILocalBook>>(id);
 
@@ -72,7 +74,7 @@ const LocalBook: FC = ({}) => {
           )}
         </Box>
         <Box>
-            <Button variant="contained" href={`/local-books/${id}/read`}>{'Читать'}</Button>
+            <Button variant="contained" onClick={()=> history(`/local-books/${id}/read`)}>{'Читать'}</Button>
         </Box>
       </Box>
     </Box>

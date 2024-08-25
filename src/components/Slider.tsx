@@ -13,7 +13,7 @@ const SliderComponent: FC<SliderComponentProps> = ({setFontSize, fontSize}) => {
     };
 
     return (
-        <Box sx={{ minWidth: 250 }}>
+        <Box sx={{ minWidth: 250, flexGrow: 1 }}>
             <Slider
                 aria-label="FontSize"
                 defaultValue={16}

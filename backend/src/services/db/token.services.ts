@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { EntityNotFoundError } from '../../helpers/error';
 import { JwtUserType } from '../../types/requests/global.request.type';
 // eslint-disable-next-line @typescript-eslint/no-var-requires

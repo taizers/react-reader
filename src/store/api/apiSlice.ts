@@ -1,13 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { localLogout, setUserToken, setUserData } from '../reducers/AuthSlice';
+import { localLogout, setUserData } from '../reducers/AuthSlice';
 import { apiUrl } from '../../constants/constants';
-import { clearToken, getToken, setToken } from '../../utils';
+import { clearToken, getToken, getUserFromToken, setToken } from '../../utils';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${apiUrl}`,
   credentials: 'include',
   prepareHeaders: (headers, state: any) => {
-    const token = state.getState().auth.token;
+    // const token = state.getState().auth.token;
+    const token = getToken();
     try {
       headers.set(
         'Access-Control-Allow-Methods',
@@ -25,14 +26,6 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-type IRefreshResultData = {
-  user: object;
-  user_session: {
-    access_token: string;
-    refresh_token: string;
-  };
-};
-
 const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
   let result = await baseQuery(args, api, extraOptions);
 
@@ -42,14 +35,13 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
 
     if (refreshResult?.data) {
-      const resultData = { ...refreshResult.data } as IRefreshResultData;
+      const resultData = { ...refreshResult.data } as { access_token: string };
 
-      const token = resultData.user_session?.access_token;
-      const user = resultData.user;
+      const token = resultData.access_token;
 
+      const user = getUserFromToken(token);
       //store the new token
       setToken(token);
-      api.dispatch(setUserToken(token));
 
       api.dispatch(setUserData(user));
 
