@@ -117,7 +117,7 @@ const ReadBook: FC = () => {
   };
 
   useEffect(() => {
-    const settings = JSON.parse(getToken(`book ${id} settings`) || '');
+    const settings = JSON.parse(getToken(`book ${id} settings`) || '{}');
 
     if (settings?.font) {
       setCurrentChapter(settings.chapter);
