@@ -23,65 +23,28 @@ const getAuthor = (author: any) => {
   return str;
 };
 
-const onChapterChange = (
-  setCurrentChapter: (value: number) => void,
-  setScrollValue: (value: number) => void,
-  value: number,
-  countOfChapters: number,
-  operation: '+' | '-',
-) => {
-  let operatedValue = value;
-
-  if (operation === '+' && value < countOfChapters - 1) {
-    operatedValue += 1;
-  }
-  if (operation === '-' && value > defaultChaptureValue) {
-    operatedValue -= 1;
-  }
-
-  setScrollValue(defaultScrollValue);
-  setCurrentChapter(operatedValue);
-  window.scrollTo(defaultScrollValue, defaultScrollValue);
-};
-
 const getChangeChapterButtons = (
   setChapterValue: (value: number) => void,
-  setScrollValue: (value: number) => void,
   currentChapterValue: number,
   countOfChapters: number,
 ) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', '@media(max-width: 400px)' : { flexDirection: 'column' } }}>
       <Button
         variant="contained"
         sx={{ m: 2 }}
-        onClick={() =>
-          onChapterChange(
-            setChapterValue,
-            setScrollValue,
-            currentChapterValue,
-            countOfChapters,
-            '-',
-          )
-        }
+        onClick={() =>currentChapterValue > defaultChaptureValue && setChapterValue(currentChapterValue - 1)}
       >
         <ArrowBackIcon />
       </Button>
-      <Box sx={{ alignSelf: 'center' }}>{`Страница: ${
-        currentChapterValue + 1
-      } из ${countOfChapters}`}</Box>
+      <Box sx={{ alignSelf: 'center', display: 'flex', '@media(max-width: 400px)' : { order: -1 } }}>
+        <Box >{'Страница: '}</Box>
+        <Box>{`${currentChapterValue + 1} из ${countOfChapters}`}</Box>
+      </Box>
       <Button
         variant="contained"
         sx={{ m: 2 }}
-        onClick={() =>
-          onChapterChange(
-            setChapterValue,
-            setScrollValue,
-            currentChapterValue,
-            countOfChapters,
-            '+',
-          )
-        }
+        onClick={() => currentChapterValue < countOfChapters - 1 && setChapterValue(currentChapterValue + 1)}
       >
         <ArrowForwardIcon />
       </Button>
@@ -146,12 +109,15 @@ const ReadBook: FC = () => {
     }
   }, [defaultLastScrollPosition]);
 
+
+  const handleScrollPositionChange = (data: number) => {
+    ref.current.scroll = data;
+  }
   const handleChapterChange = (data: number) => {
     setCurrentChapter(data);
     ref.current.chapter = data;
-  }
-  const handleScrollPositionChange = (data: number) => {
-    ref.current.scroll = data;
+    handleScrollPositionChange(defaultScrollValue);
+    window.scrollTo(defaultScrollValue, defaultScrollValue);
   }
   const handleFontChange = (data: string) => {
     setFont(data);
@@ -166,7 +132,7 @@ const ReadBook: FC = () => {
 
   return (
     <Box sx={{pb:3}}>
-      <BookBar setFont={handleFontChange} font={font} setFontSize={handleFontSizeChange} fontSize={fontSize} chapterInfo={{chapters, currentChapter, setCurrentChapter}} />
+      <BookBar setFont={handleFontChange} font={font} setFontSize={handleFontSizeChange} fontSize={fontSize} chapterInfo={{chapters, currentChapter, setCurrentChapter: handleChapterChange}} />
       <Box sx={{overflowY: 'auto'}}>
         <Box
           sx={{ display: 'flex', width: '100%', flexWrap: 'wrap', gap: '20px' }}
@@ -214,7 +180,6 @@ const ReadBook: FC = () => {
               id &&
               getChangeChapterButtons(
                 handleChapterChange,
-                handleScrollPositionChange,
                 currentChapter,
                 data?.text?.content?.length,
               )}
@@ -225,7 +190,6 @@ const ReadBook: FC = () => {
               id &&
               getChangeChapterButtons(
                 handleChapterChange,
-                handleScrollPositionChange,
                 currentChapter,
                 data?.text?.content?.length,
               )}
