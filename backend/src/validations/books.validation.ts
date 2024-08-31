@@ -67,3 +67,35 @@ export const getPaginatedBooksValidation = validate(
     stripUnknown: true,
   }
 );
+
+export const translateBookValidation = validate(
+  {
+    query: Joi.object({
+      book: Joi.number().required(),
+      lang: Joi.string().required(),
+    }),
+  },
+  {
+    context: true,
+  },
+  {
+    stripUnknown: true,
+  }
+);
+
+export const getBookTextValidation = validate(
+  {
+    params: Joi.object({
+      id: Joi.string().required(),
+    }),
+    query: Joi.object({
+      lang: Joi.string().allow(''),
+    }),
+  },
+  {
+    context: true,
+  },
+  {
+    stripUnknown: true,
+  }
+);

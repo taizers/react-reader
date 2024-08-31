@@ -1,10 +1,11 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { getBook, updateBook, deleteBook, createBook, getPaginatedBooks, getBookFields } from '../services/db/books.services';
 import logger from '../helpers/logger';
 import { DontHaveAccessError, UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
-import { getBookText, saveBookInJson } from '../utils/booktojson';
+import { getBookText, saveBookInJson, saveBookTranslation } from '../utils/booktojson';
 import { IRequestWithUser } from '../types/requests/global.request.type';
+import { languages } from '../constants/global';
 
 export const createBookAction = async (
   req: CreateBookRequest,
@@ -81,6 +82,7 @@ export const getBooksTextAction = async (
   next: NextFunction
 ) => {
   const id = req.params.id;
+  const { lang } = req.query;
   const user_id = req.user?.id;
 
   logger.info(`Get Books Text Action: { id: ${id}, user_id: ${user_id} }`);
@@ -88,11 +90,49 @@ export const getBooksTextAction = async (
   try {
     const book = await getBookFields({id}, ['link', 'title'], user_id);
 
-    const text = await getBookText(book.link);
+    const text = await getBookText(book.link, lang as string);
 
     res.status(200).json({title: book.title, text});
   } catch (error) {
     logger.error('Get Books Text Action - Cannot get books text', error);
+    next(error);
+  }
+};
+
+export const translateBookAction = async (
+  req: IRequestWithUser,
+  res: Response,
+  next: NextFunction
+) => {
+  const { lang } = req.query;
+  const id = req.params.id;
+  const user_id = req.user?.id;
+
+  logger.info(`Translate Book Action: { book id: ${id}, language: ${lang}, user_id: ${user_id} }`);
+
+  try {
+    const book = await getBookFields({id}, ['link', 'title'], user_id);
+
+    await saveBookTranslation(book.link, lang as string);
+
+    res.status(200).json('translated');
+  } catch (error) {
+    logger.error('Translate Book Action - Cannot translate book', error);
+    next(error);
+  }
+};
+
+export const getTranslateListAction = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  logger.info(`Get Translate List Action`);
+
+  try {
+    res.status(200).json(languages);
+  } catch (error) {
+    logger.error('Get Translate List Action - Cannot get translate list', error);
     next(error);
   }
 };

@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import EPub from 'epub';
 import * as xml2js from 'xml2js';
-// import { translate } from '@vitalets/google-translate-api';
-// import { HttpProxyAgent } from 'http-proxy-agent';
+import { ApplicationError } from '../helpers/error';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const translatte = require('translatte');
 
 interface EbookContent {
     title: string;
@@ -17,15 +18,17 @@ interface EbookData {
     language?: string;
     content?: EbookContent[];
 }
-
-// export const getTranslatedChapter = async (chapter: {title: string, content: string}) => {
-//     const agent = new HttpProxyAgent('http://172.105.13.173');
-
-//     const translatedTitle = chapter.title?.length && await translate(chapter.title, { to: 'ru', fetchOptions: { agent } }) ;
-//     const translatedContent = chapter.content?.length && await translate(chapter.content, { to: 'ru', fetchOptions: { agent } }) ;
-
-//     return {title: translatedTitle, content: translatedContent }
-// }
+interface EbookData {
+    title: string;
+    author: string;
+    annotation?: string | null;
+    genre?: Array<string> | null;
+    language?: string;
+    content?: {
+        title: string;
+        content: string;
+    }[];
+}
 
 async function parseEbook(filePath: string): Promise<EbookData> {
     const fileExtension = filePath.split('.').pop()?.toLowerCase();
@@ -137,7 +140,6 @@ export const saveBookInJson = async (link?: string | null) => {
 
     const {path} = getBookPathAndEnd(link, '/');
 
-
     fs.writeFile(`${path}/book.txt`, JSON.stringify(text), 'utf8', (err) => { 
       if (err) {
        throw new Error('Cannot write book text to file');
@@ -145,16 +147,125 @@ export const saveBookInJson = async (link?: string | null) => {
     });
 };
 
-export const getBookText = async (link: string | null | undefined) => {
+export const getBookText = async (link: string | null, language?: string) => {
     return new Promise((resolve, reject) => {
-        const {path} = getBookPathAndEnd(link, '/');
-
-        fs.readFile(`${path}/book.txt`, 'utf8', (err, data) => { 
-        if (err) {
-            return reject('Cannot read book text from file');
+        if (!link) {
+            return reject('Have no link to original book');
         }
 
-        return resolve(JSON.parse(data));
+        const {path} = getBookPathAndEnd(link, '/');
+        const filePath = language ? `${path}/book-${language}.txt` : `${path}/book.txt`;
+
+        if (!fs.existsSync(filePath)) {
+            throw new ApplicationError("Text doesn't exists!", 404);
+        }
+
+        fs.readFile(filePath, 'utf8', (err, data) => { 
+            if (err) {
+                return reject('Cannot read book text from file');
+            }
+
+            return resolve(JSON.parse(data));
         });
     })
 };
+
+function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function translateText(text: string, to: string): Promise<string> {
+    try {
+        const res = await translatte(text, { to });
+        return res.text;
+    } catch (err) {
+        throw new Error('Translate error');
+    }
+}
+
+function splitText(text: string, maxLength: number): string[] {
+    const parts = [];
+    let start = 0;
+    while (start < text.length) {
+        let end = Math.min(start + maxLength, text.length);
+        if (end < text.length) {
+            const lastSpace = text.lastIndexOf(' ', end);
+            if (lastSpace > start) {
+                end = lastSpace;
+            }
+        }
+        parts.push(text.slice(start, end));
+        start = end + 1;
+    }
+    return parts;
+}
+
+async function translateEbook(ebook: EbookData, targetLanguage: string): Promise<EbookData> {
+    let delayValue = 500;
+
+    const translateField = async (field: string | undefined, isChapterPart?: boolean): Promise<string | undefined> => {
+        if (!field) return undefined;
+
+        isChapterPart ? delayValue +=1000 : delayValue+=500;
+        
+        await delay(delayValue);
+        return await translateText(field, targetLanguage);
+    };
+
+    const translatedTitle = await translateField(ebook.title);
+    const translatedAuthor = await translateField(ebook.author);
+    const translatedAnnotation = await translateField(ebook.annotation);
+
+    const translatedGenre = ebook.genre ? await Promise.all(ebook.genre.map(async (genre) => {
+        return translateField(genre);
+    })) : null;
+
+    const translatedContent = ebook.content ? await Promise.all(ebook.content.map(async (chapter) => {
+        const translatedChapterTitle = await translateField(chapter.title);
+
+        const contentParts = splitText(chapter.content, 10000);
+
+        const translatedContentParts = await Promise.all(contentParts.map(async (part) => {
+            return translateField(part, true);
+        }));
+
+        const translatedChapterContent = translatedContentParts.join(' ');
+
+        return {
+            title: translatedChapterTitle,
+            content: translatedChapterContent
+        };
+    })) : undefined;
+
+    return {
+        title: translatedTitle!,
+        author: translatedAuthor!,
+        annotation: translatedAnnotation,
+        genre: translatedGenre,
+        language: targetLanguage,
+        content: translatedContent
+    };
+}
+
+export const saveBookTranslation = async (link: string | null, language: string) => {
+    if (!link) {
+        throw new Error('Have no link to original book');
+    }
+
+    const {path} = getBookPathAndEnd(link, '/');
+    const filePath = `${path}/book-${language}.txt`;
+
+    if (fs.existsSync(filePath)) {
+        throw new ApplicationError('Translate already exists', 409);
+    }
+
+    const text = await getBookText(link) as EbookData;
+
+    const translatedBook = await translateEbook(text, language);
+
+    fs.writeFile(filePath, JSON.stringify(translatedBook), 'utf8', (err) => { 
+        if (err) {
+         throw new Error('Cannot write book text to file');
+        }
+    });
+}
