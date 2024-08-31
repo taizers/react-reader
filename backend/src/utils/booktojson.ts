@@ -119,10 +119,42 @@ async function parseFb2(filePath: string): Promise<EbookData> {
     });
 }
 
-export const getJsonBook = async (link: string | null | undefined): Promise<EbookData> => {
-    if (!link) {
-        return null;
-    }
+const getBookPathAndEnd = (data: string, separator: string) => {
+    const arr = data.split(separator);
 
-    return await parseEbook(link);
+    const path = arr.slice(0,-1).join(separator);
+    const end = arr[arr.length - 1];
+
+    return {path, end};
+}
+
+export const saveBookInJson = async (link?: string | null) => {
+    if (!link) {
+        throw new Error('Have no link to original book');
+    }
+    
+    const text = await parseEbook(link);
+
+    const {path} = getBookPathAndEnd(link, '/');
+
+
+    fs.writeFile(`${path}/book.txt`, JSON.stringify(text), 'utf8', (err) => { 
+      if (err) {
+       throw new Error('Cannot write book text to file');
+      }
+    });
+};
+
+export const getBookText = async (link: string | null | undefined) => {
+    return new Promise((resolve, reject) => {
+        const {path} = getBookPathAndEnd(link, '/');
+
+        fs.readFile(`${path}/book.txt`, 'utf8', (err, data) => { 
+        if (err) {
+            return reject('Cannot read book text from file');
+        }
+
+        return resolve(JSON.parse(data));
+        });
+    })
 };

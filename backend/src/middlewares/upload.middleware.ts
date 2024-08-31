@@ -23,25 +23,30 @@ const filesStorage = multer.diskStorage({
 
 const booksStorage = multer.diskStorage({
   destination(req, file, callback) {
-    // const id = req.params?.bookId;
-    // const dir = `storage/books/${id}/`;
-
-    // if (!fs.existsSync(dir)){
-    //   fs.mkdirSync(dir);
-    // }
-    
-    // callback(null, dir);
-
-    // TODO добавить создание папки для книги 
-    // TODO добавить перевод и его сохранение json в файл
-
-    
-    callback(null, 'storage/books/');
-  },
-  filename(req, file, callback) {
     const date = moment().format('DDMMYYYY-HHmmss_SSS');
 
-    callback(null, `${date}---${file.originalname}`);
+    const getNameWithoutFormat = (name: string) => {
+      const arr = name.split('.')
+      return arr.slice(0,-1).join('.');
+    }
+    
+    const dir = `storage/books/${date}---${getNameWithoutFormat(file.originalname)}/`;
+
+    if (!fs.existsSync(dir)){
+      fs.mkdirSync(dir);
+    }
+    
+    callback(null, dir);
+
+    // TODO добавить перевод и его сохранение json в файл
+  },
+  filename(req, file, callback) {
+    const getFormat = (name: string) => {
+      const arr = name.split('.')
+      return arr[arr.length -1];
+    }
+
+    callback(null, `originalbook.${getFormat(file.originalname)}`);
   },
 });
 

@@ -29,9 +29,9 @@ const BookBar: FC<BookBarProps> = ({font, setFont, fontSize, setFontSize, chapte
                     <Button sx={{justifySelf: 'end', p: 0, order:4, '@media(max-width: 780px)' : { order: 0, }}}  onClick={() => setVissible(!isVisible)}>
                         <CloseIcon sx={{fontSize: '50px'}} />
                     </Button>
-                    <Box sx={{ display: 'flex', gap: '20px', alignItems: 'center', '@media(max-width: 780px)' : { flexDirection: 'column', gap: '20px', alignItems: 'stretch', width: '100%'} }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1, gap: '20px', alignItems: 'center', '@media(max-width: 780px)' : { flexDirection: 'column', gap: '20px', alignItems: 'stretch', width: '100%'} }}>
                         <SelectComponent array={fonts} setValue={setFont} value={font} name="font-select" />
-                        <Box sx={{display: 'flex', gap: '10px', alignItems: 'center'}}><SliderComponent fontSize={fontSize} setFontSize={setFontSize} /><span>{`${fontSize}px`}</span></Box>
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px', alignItems: 'center'}}><SliderComponent fontSize={fontSize} setFontSize={setFontSize} /><span>{`${fontSize}px`}</span></Box>
                         <SelectComponent array={chapterInfo.chapters} index setValue={(value: string) => {chapterInfo.setCurrentChapter(+value)}} value={chapterInfo.currentChapter.toString()} name="chapter-select" />
                     </Box>
             </Box>}

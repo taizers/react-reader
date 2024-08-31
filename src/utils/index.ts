@@ -1,3 +1,5 @@
+import { createToast } from "./toasts";
+
 const TOKEN_KEY = 'access_token';
 
 const isToken = (tokenName: string = TOKEN_KEY) => {
@@ -19,17 +21,24 @@ const clearToken = (tokenName: string = TOKEN_KEY) => {
 export { isToken, getToken, setToken, clearToken };
 
 export const getUserFromToken = (token: string) => {
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  const currentDate = Date.parse(new Date().toString())/1000;
-
-  //TODO change > to <
-  if (currentDate < payload.exp) {
-    return {
-      name: payload.name,
-      id: payload.id,
-      role: payload.role,
-    };
-  } else {
-    clearToken();
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const currentDate = Date.parse(new Date().toString())/1000;
+  
+    //TODO change > to <
+    if (currentDate < payload.exp) {
+      return {
+        name: payload.name,
+        id: payload.id,
+        role: payload.role,
+      };
+    } else {
+      clearToken();
+    }
+  } catch (error) {
+    if (error) {
+      createToast.error('Invalid Token');
+    }
   }
+
 };

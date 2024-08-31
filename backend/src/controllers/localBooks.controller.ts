@@ -1,9 +1,9 @@
-import { NextFunction, Response, Request } from 'express';
+import { NextFunction, Response } from 'express';
 import { getBook, updateBook, deleteBook, createBook, getPaginatedBooks, getBookFields } from '../services/db/books.services';
 import logger from '../helpers/logger';
 import { DontHaveAccessError, UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
-import { getJsonBook } from '../utils/booktojson';
+import { getBookText, saveBookInJson } from '../utils/booktojson';
 import { IRequestWithUser } from '../types/requests/global.request.type';
 
 export const createBookAction = async (
@@ -25,6 +25,8 @@ export const createBookAction = async (
     const {genres, tags, ...data} = payload;
 
     const book = await createBook(data, genres?.split(';'), tags?.split(';'));
+
+    await saveBookInJson(book.link);
     
     res.status(200).json(book);
   } catch (error) {
@@ -86,9 +88,7 @@ export const getBooksTextAction = async (
   try {
     const book = await getBookFields({id}, ['link', 'title'], user_id);
 
-    const text = await getJsonBook(book.link);
-
-    // const translatedChapter = await getTranslatedChapter(text.content[4])
+    const text = await getBookText(book.link);
 
     res.status(200).json({title: book.title, text});
   } catch (error) {
