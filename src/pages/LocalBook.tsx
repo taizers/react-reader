@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Image from '../components/Image/Image';
 import { baseUrl } from '../constants/constants';
@@ -9,16 +9,39 @@ import TypographyComponent from '../components/TypographyComponent';
 import moment from 'moment';
 import { useShowErrorToast } from '../hooks';
 import { useGetQueryResponce } from '../models/requests';
-import { ILocalBook } from '../constants/tsSchemes';
-
+import { IBookTranslateItem, ILocalBookResponce } from '../constants/tsSchemes';
+import SelectComponent from '../components/Select';
 
 const LocalBook: FC = ({}) => {
   const { id } = useParams();
   const history = useNavigate();
+  const [lang, setLang] = useState<string>(''!);
+  const [langBook, setLangBook] = useState<string>(''!);
 
-  const { data, error, isLoading } = booksApiSlice.useGetBookQuery<useGetQueryResponce<ILocalBook>>(id);
-
+  const { data, error, isLoading } = booksApiSlice.useGetBookQuery<useGetQueryResponce<ILocalBookResponce>>(id);
+  const { data: trlanslateVariantsListData, error: trlanslateVariantsListError } = booksApiSlice.useGetBooksTranslateListQuery<useGetQueryResponce<IBookTranslateItem[]>>('');
+  const [ translateBook, { data: trlanslateData, error: trlanslateError, isLoading: translateIsloading }] = booksApiSlice.useTranslateBookMutation();
+  
   useShowErrorToast(error);
+  useShowErrorToast(trlanslateVariantsListError);
+  useShowErrorToast(trlanslateError);
+
+  useEffect(() => {
+    if (data?.translates?.length) {
+      let index = -1;
+
+      data.translates.find((item, i) => {
+        if (item.field === 'original') {
+          index = i;
+          return true;
+        }
+      });
+
+      if (index !== -1) {
+        setLangBook(index.toString());
+      }
+    }
+  }, [data]);
 
   const {
     cover,
@@ -30,7 +53,15 @@ const LocalBook: FC = ({}) => {
     seriabooks,
     source,
     tags,
-  } = data || {};
+  } = data?.book || {};
+
+  const onReadBookButtonClick = () => {
+    if (langBook === null || data.translates[+langBook].field === 'original') {
+      return history(`/local-books/${id}/read`);
+    }
+
+    return history(`/local-books/${id}/read?lang=${data.translates[+langBook].field}`);
+  }
 
   return (
     <Box>
@@ -73,8 +104,17 @@ const LocalBook: FC = ({}) => {
             />
           )}
         </Box>
-        <Box>
-            <Button variant="contained" onClick={()=> history(`/local-books/${id}/read`)}>{'Читать'}</Button>
+        <Box  sx={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
+          {trlanslateVariantsListData &&<Box sx={{display: 'flex', gap: '20px'}}>
+            <SelectComponent minWidth={200} disabled={translateIsloading} label={'Available Translations'} name={'Translate variants'} value={lang} setValue={setLang} index array={trlanslateVariantsListData?.map(item => item.label)} />
+            <Button variant="contained" disabled={translateIsloading || lang === ''} onClick={()=> translateBook({id, lang: trlanslateVariantsListData[+lang].field })}>{translateIsloading ? 'Идёт перевод' : 'Перевести'}</Button>
+            {translateIsloading && <CircularProgress color="inherit" />} 
+          </Box>}
+          {!!data?.translates.length && <Box sx={{display: 'flex', gap: '20px'}}>
+              <SelectComponent minWidth={200} label={'Book Translations'} name={'Translate variants'} value={langBook} setValue={setLangBook} index array={data.translates?.map(item => item.label)} />
+
+              <Button variant="contained" onClick={onReadBookButtonClick}>{'Читать'}</Button>
+          </Box>}
         </Box>
       </Box>
     </Box>

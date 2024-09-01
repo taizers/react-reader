@@ -70,8 +70,10 @@ export const getPaginatedBooksValidation = validate(
 
 export const translateBookValidation = validate(
   {
+    params: Joi.object({
+      id: Joi.string().required(),
+    }),
     query: Joi.object({
-      book: Joi.number().required(),
       lang: Joi.string().required(),
     }),
   },

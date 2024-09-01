@@ -108,7 +108,18 @@ export interface ILocalBook extends IDateValues {
   user_id: number;
   UsersBooks?: Array<UsersBooksType>;
   library_book?: ILibraryBook;
+  
 };
+
+export interface ILocalBookResponce {
+  book: ILocalBook;
+  translates: IBookTranslateItem[];
+}
+
+export interface IBookTranslateItem {
+  field: string,
+  label: string,
+}
 
 export type AuthorType = {
   author: Array<AuthorItemType>;

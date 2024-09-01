@@ -1,4 +1,7 @@
 export const defaultPageLimit = 10;
+export const countSymbolsAtChapterPart = 20000;
+export const delayForChapterPartTrnaslate = 1000;
+export const delayForTrnaslate = 500;
 
 export const langs = {
     'af': 'Afrikaans',

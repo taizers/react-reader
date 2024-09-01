@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { booksApiSlice } from '../store/reducers/BooksApiSlice';
 import { Box, Button } from '@mui/material';
 import TypographyComponent from '../components/TypographyComponent';
@@ -52,6 +52,18 @@ const getChangeChapterButtons = (
   );
 };
 
+const getLang = (searchParams: string) => {
+  const paramsArr = searchParams.split('&');
+
+  const lang = paramsArr.find(item => item.includes('lang'));
+
+  if (lang) {
+    return lang.split('=')[1];
+  } else {
+    return undefined;
+  }
+};
+
 interface ReadData {
   text: BookText;
   title: string;
@@ -62,12 +74,13 @@ const ReadBook: FC = () => {
   const [currentChapter, setCurrentChapter] = useState<number>(defaultChaptureValue);
   const [fontSize, setFontSize] = useState<number>(16);
   const [font, setFont] = useState<string>('Roboto');
+  const [searchParams, setSearchParams] = useSearchParams();
   const [defaultLastScrollPosition, setDefaultLastScrollPosition] =
     useState<number>();
 
   const ref = useRef<{font: string, fontSize: number, chapter: number, scroll: number}>(null!);
 
-  const { data, error } = booksApiSlice.useGetBooksTextQuery<useGetQueryResponce<ReadData>>(id);
+  const { data, error } = booksApiSlice.useGetBooksTextQuery<useGetQueryResponce<ReadData>>({id, lang: getLang(searchParams.toString())});
 
   const chapters = data?.text?.content?.map(item =>  item.title || item.content.trim().slice(0,10));
 

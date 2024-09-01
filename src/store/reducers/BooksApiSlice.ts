@@ -17,10 +17,22 @@ export const booksApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Book'],
     }),
     getBooksText: builder.query({
-      query: (id) => ({
-        url: `/books/${id}/text`,
+      query: ({id, lang}) => ({
+        url: lang ? `/books/${id}/text?lang=${lang}` : `/books/${id}/text`,
       }),
       providesTags: ['Book'],
+    }),
+    getBooksTranslateList: builder.query({
+      query: () => ({
+        url: `/books/translate-list`,
+      }),
+    }),
+    translateBook: builder.mutation({
+      query: ({ id, lang }) => ({
+        url: `/books/translate/${id}?lang=${lang}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Book'],
     }),
     getBooks: builder.query({
       query: ({ page, limit, query }) => ({

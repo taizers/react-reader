@@ -3,7 +3,7 @@ import { getBook, updateBook, deleteBook, createBook, getPaginatedBooks, getBook
 import logger from '../helpers/logger';
 import { DontHaveAccessError, UnProcessableEntityError } from '../helpers/error';
 import { CreateBookRequest } from '../types/requests/books.request.type';
-import { getBookText, saveBookInJson, saveBookTranslation } from '../utils/booktojson';
+import { getBookText, getBookTranslates, getBookTranslations, saveBookInJson, saveBookTranslation } from '../utils/booktojson';
 import { IRequestWithUser } from '../types/requests/global.request.type';
 import { languages } from '../constants/global';
 
@@ -68,8 +68,10 @@ export const getBookAction = async (
 
   try {
     const book = await getBook({id}, user_id);
-    
-    res.status(200).json(book);
+
+    const translates = await getBookTranslations(book.link);
+
+    res.status(200).json({book, translates});
   } catch (error) {
     logger.error('Get Book Action - Cannot get book', error);
     next(error);

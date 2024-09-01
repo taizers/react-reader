@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import EPub from 'epub';
 import * as xml2js from 'xml2js';
 import { ApplicationError } from '../helpers/error';
+import { countSymbolsAtChapterPart, delayForChapterPartTrnaslate, delayForTrnaslate, languages } from '../constants/global';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const translatte = require('translatte');
 
@@ -28,6 +29,10 @@ interface EbookData {
         title: string;
         content: string;
     }[];
+}
+
+function removeSpecialChars(str: string) {
+    return str.replace(/&[a-z]+;/gi, '');
 }
 
 async function parseEbook(filePath: string): Promise<EbookData> {
@@ -176,7 +181,7 @@ function delay(ms: number) {
 
 async function translateText(text: string, to: string): Promise<string> {
     try {
-        const res = await translatte(text, { to });
+        const res = await translatte(removeSpecialChars(text), { to });
         return res.text;
     } catch (err) {
         throw new Error('Translate error');
@@ -201,12 +206,12 @@ function splitText(text: string, maxLength: number): string[] {
 }
 
 async function translateEbook(ebook: EbookData, targetLanguage: string): Promise<EbookData> {
-    let delayValue = 500;
+    let delayValue = delayForTrnaslate;
 
     const translateField = async (field: string | undefined, isChapterPart?: boolean): Promise<string | undefined> => {
         if (!field) return undefined;
 
-        isChapterPart ? delayValue +=1000 : delayValue+=500;
+        isChapterPart ? delayValue +=delayForChapterPartTrnaslate : delayValue+=delayForTrnaslate;
         
         await delay(delayValue);
         return await translateText(field, targetLanguage);
@@ -223,7 +228,7 @@ async function translateEbook(ebook: EbookData, targetLanguage: string): Promise
     const translatedContent = ebook.content ? await Promise.all(ebook.content.map(async (chapter) => {
         const translatedChapterTitle = await translateField(chapter.title);
 
-        const contentParts = splitText(chapter.content, 10000);
+        const contentParts = splitText(chapter.content, countSymbolsAtChapterPart);
 
         const translatedContentParts = await Promise.all(contentParts.map(async (part) => {
             return translateField(part, true);
@@ -238,8 +243,8 @@ async function translateEbook(ebook: EbookData, targetLanguage: string): Promise
     })) : undefined;
 
     return {
-        title: translatedTitle!,
-        author: translatedAuthor!,
+        title: translatedTitle,
+        author: translatedAuthor,
         annotation: translatedAnnotation,
         genre: translatedGenre,
         language: targetLanguage,
@@ -267,5 +272,45 @@ export const saveBookTranslation = async (link: string | null, language: string)
         if (err) {
          throw new Error('Cannot write book text to file');
         }
+    });
+}
+
+export const getBookTranslates = (files: string[]) => {
+    const translates = [] as {field: string, label: string}[];
+
+    files.forEach(file => {
+        const fileArr = file.split('.');
+
+        if (fileArr[1] === 'txt') {
+            if (file === 'book.txt') {
+                translates.push({field: 'original', label: 'Original Book'});
+            } else {
+                const fileLang = fileArr[0].split('-')[1];
+
+                translates.push(languages.find(item => item.field === fileLang));
+            }
+        }
+    })
+
+    return translates;
+}
+
+export const getBookTranslations = async (link: string | null) => {
+    return new Promise((resolve, reject) => {
+        if (!link) {
+            return reject('Have no link to original book');
+        }
+
+        const {path} = getBookPathAndEnd(link, '/');
+
+        fs.readdir(path, (err, files) => {
+            if (err) {
+                return reject('Cannot get book text or translations');
+            }
+
+            const translates = getBookTranslates(files);
+
+            return resolve(translates);
+        });
     });
 }
